@@ -3,226 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CivilMate - Smart Estimation for Civil Engineers</title>
-    <!-- Using Google Fonts for that Google Workspace&trade; feel -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    
-    <link rel="stylesheet" href="style.css">
+    <title>Tester Hub | Beta Program</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: #eff6ff;
+            --secondary: #f8fafc;
+            --success: #16a34a;
+            --danger: #dc2626;  
+            --danger-hover: #b91c1c;
+            --warning: #d97706;
+            --warning-bg: #fffbeb;
+            --warning-border: #fcd34d;
+            --warning-text: #92400e;
+            --bg-main: #f1f5f9;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --card-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            --focus-ring: 0 0 0 3px rgba(37,99,235,0.2);
+        }
+
+        html, body { margin: 0; padding: 0; width: 100%; min-height: 100vh; background: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: var(--text-main); display: flex; justify-content: center; align-items: flex-start; }
+        
+        .tester-container { width: 100%; max-width: 650px; margin: 40px auto; background: #fff; border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--card-shadow); overflow: hidden; }
+        
+        .header { background: var(--secondary); padding: 30px 30px 0 30px; border-bottom: 1px solid var(--border); text-align: center; }
+        .header h2 { margin: 0 0 10px 0; font-size: 1.5rem; font-weight: 800; color: var(--text-main); }
+        .header p { margin: 0 0 25px 0; font-size: 0.95rem; color: var(--text-muted); line-height: 1.5; }
+        
+        .tab-nav { display: flex; justify-content: center; gap: 10px; margin-bottom: -1px; flex-wrap: wrap; }
+        .tab-btn { background: transparent; border: 1px solid transparent; border-bottom: none; padding: 12px 20px; font-size: 0.9rem; font-weight: 600; color: var(--text-muted); cursor: pointer; border-radius: 8px 8px 0 0; transition: all 0.2s; position: relative; bottom: -1px; }
+        .tab-btn:hover { color: var(--primary); background: var(--primary-light); }
+        .tab-btn.active { background: #fff; border-color: var(--border); color: var(--primary); font-weight: 700; box-shadow: 0 -4px 6px -4px rgba(0,0,0,0.05); }
+
+        .form-section { padding: 30px; display: none; animation: fadeIn 0.3s ease-out forwards; }
+        .form-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Dashboard Styles */
+        .dash-container { background: var(--bg-main); border: 1px solid var(--border); border-radius: 10px; padding: 15px; margin-bottom: 25px; }
+        .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .dash-header h4 { margin: 0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); }
+        
+        .dash-actions { display: flex; align-items: center; gap: 12px; }
+        .live-indicator { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 600; color: var(--success); }
+        .pulse-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(22, 163, 74, 0); } 100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); } }
+        
+        /* Refresh Button Styles */
+        .refresh-btn { background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; font-size: 0.7rem; font-weight: 600; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 4px; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.02); }
+        .refresh-btn:hover { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
+        .refresh-icon { width: 12px; height: 12px; }
+        .is-refreshing .refresh-icon { animation: spin 1s linear infinite; }
+        .sync-note { font-size: 0.7rem; color: var(--text-muted); text-align: right; margin-top: 10px; font-style: italic; }
+
+        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
+        .stat-card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 12px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.02); }
+        .stat-val { font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 4px; line-height: 1; }
+        .stat-val.primary { color: var(--primary); }
+        .stat-val.danger { color: var(--danger); }
+        .stat-val.warning { color: var(--warning); }
+        .stat-label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); }
+
+        /* Compact Feedback Table */
+        .dash-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+        .dash-table th { background: var(--secondary); padding: 8px 10px; font-size: 0.7rem; text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid var(--border); text-align: left; }
+        .dash-table td { padding: 8px 10px; font-size: 0.8rem; border-bottom: 1px solid var(--border); color: var(--text-main); font-weight: 500; vertical-align: middle; }
+        .dash-table tr:last-child td { border-bottom: none; }
+        .progress-bar-bg { width: 100%; background: var(--border); border-radius: 4px; height: 5px; margin-top: 4px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; background: var(--primary); border-radius: 4px; transition: width 0.5s ease; }
+
+        /* Form Components */
+        .form-group { margin-bottom: 20px; position: relative; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px; }
+        .form-control { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; font-family: inherit; color: var(--text-main); background: #fff; box-sizing: border-box; transition: all 0.2s; }
+        .form-control:focus { outline: none; border-color: var(--primary); box-shadow: var(--focus-ring); }
+        .form-control.is-invalid { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15); }
+        .error-text { color: var(--danger); font-size: 0.75rem; font-weight: 600; margin-top: 6px; display: none; }
+        textarea.form-control { resize: vertical; min-height: 100px; }
+        select.form-control { appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 12px center; background-size: 16px; padding-right: 40px; }
+        .helper-text { font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; display: block; }
+        
+        .checkbox-group { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 25px; }
+        .checkbox-group input[type="checkbox"] { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--primary); cursor: pointer; }
+        .checkbox-group label { font-size: 0.85rem; color: var(--text-main); font-weight: 400; line-height: 1.5; margin: 0; cursor: pointer; }
+
+        .btn-submit { width: 100%; padding: 14px; border: none; border-radius: 8px; font-size: 1rem; font-weight: 700; color: #fff; background: var(--primary); cursor: pointer; transition: background 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .btn-submit:hover { background: var(--primary-hover); }
+        .btn-submit.btn-danger { background: var(--danger); }
+        .btn-submit.btn-danger:hover { background: var(--danger-hover); }
+
+        .success-state { text-align: center; padding: 40px 20px; display: none; flex-direction: column; align-items: center; justify-content: center; animation: fadeIn 0.4s ease-out; }
+        .success-icon { width: 64px; height: 64px; background: #dcfce7; color: var(--success); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; }
+        .success-icon svg { width: 32px; height: 32px; }
+        .success-state h3 { margin: 0 0 10px 0; font-size: 1.3rem; color: var(--text-main); }
+        .success-state p { margin: 0 0 25px 0; color: var(--text-muted); line-height: 1.5; }
+        .btn-outline { background: transparent; border: 1px solid var(--border); padding: 10px 20px; border-radius: 8px; font-weight: 600; color: var(--text-main); cursor: pointer; transition: 0.2s; }
+        .btn-outline:hover { background: var(--bg-main); }
+
+        .spinner { border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top: 3px solid #fff; width: 18px; height: 18px; animation: spin 1s linear infinite; display: none; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .is-loading .btn-text { display: none; }
+        .is-loading .spinner { display: block; }
+        
+        @media (max-width: 480px) {
+            .header { padding: 20px 20px 0 20px; }
+            .tab-btn { padding: 10px 12px; font-size: 0.85rem; }
+            .form-section { padding: 20px; }
+            .stat-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
 </head>
 <body>
-
-    <header>
-        <div class="logo">
-            <img src="logo.jpg" alt="CivilMate Logo" width="32" height="32" style="border-radius:4px;">
-            <a href="index.html" style="color: inherit;">CivilMate</a>
-        </div>
-        <div class="nav-links">
-            <a href="index.html#features">Features</a>
-            <a href="index.html#learn-section">Learn</a>
-            <a href="index.html#tester-hub-section">Tester Hub</a>
-            <a href="faq.html">FAQ</a>
-            <a href="live-tenders.html">Tenders</a>
-            <div class="dropdown">
-                <a href="#" style="cursor:default">Legal &#9662;</a>
-                <div class="dropdown-content">
-                    <div class="dropdown-group">CivilMate Add-On</div>
-                    <a href="addon-privacy.html">Privacy Policy</a>
-                    <a href="addon-terms.html">Terms of Service</a>
-                    <div class="dropdown-divider"></div>
-                    <div class="dropdown-group">CivilMate Extension</div>
-                    <a href="extension-privacy.html">Privacy Policy</a>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <section class="hero">
-        <h1>Smart Estimation Tools for Civil Engineers</h1>
-        <p>The essential ecosystem combining a powerful Google Workspace&trade; Add-on and a Chrome&trade; Extension. Streamline your estimating, upload bills to HEWP seamlessly, and extract BoQs effortlessly.</p>
-        <div class="hero-actions" style="flex-direction: column; align-items: center; gap: 12px;">
-            <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
-                <a href="https://workspace.google.com/marketplace/app/civilmate/716518784539" target="_blank" class="btn btn-primary">Install Google Sheets&trade; Add-on</a>
-                <a href="https://chromewebstore.google.com/detail/paadmpfoldjolnnojnihfobplhplbobh?utm_source=item-share-cb" target="_blank" class="btn btn-secondary">Get Google Chrome&trade; Extension</a>
-                <a href="https://microsoftedge.microsoft.com/addons/detail/civilmate-extension/lgagpkhicfddhcihofkkbjgmfhangbel" target="_blank" class="btn btn-secondary">Get Microsoft Edge Extension</a>
-            </div>
-            <p style="font-size: 13px; color: var(--text-secondary); margin: 0;">* The Microsoft Edge extension supports Android devices.</p>
-        </div>
-    </section>
-
-    <section id="features" class="features">
-        <div class="features-container">
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <span class="material-icons">table_chart</span>
-                </div>
-                <h3>Google Sheets&trade; Add-on</h3>
-                <p>Integrates directly into Google Sheets&trade;. Eliminate manual data entry, format, validate, and compile your structural estimates seamlessly.</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <span class="material-icons">extension</span>
-                </div>
-                <h3>Chrome&trade; Extension for HEWP</h3>
-                <p>Push estimates and bills data straight to the Haryana Engineering Works Portal (HEWP), or extract BoQs and Detailed Estimates directly into your spreadsheet.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <span class="material-icons">sync</span>
-                </div>
-                <h3>To-Fro Data Movement</h3>
-                <p>Keep your data consistent. Prepare in Google Sheets&trade;, push to HEWP using the extension, or import PDFs from HEWP back into sheets.</p>
-            </div>
-        </div>
-    </section>
-
-        <section id="learn-section">
-        <div class="learn-content">
-        <div class="header-text">
-            <h2>Why Top Engineers Choose Cloud over Desktop</h2>
-            <p>Stop wrestling with outdated software, security warnings, and manual updates. See why CivilMate is the smart upgrade.</p>
-        </div>
-
-        <div class="grid-container">
-            <div class="card card-old">
-                <h3 class="card-title">Traditional Add-ins</h3>
-                <div class="card-subtitle">The old way of working</div>
-                <ul class="features">
-                    <li>
-                        <svg class="icon icon-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <div>
-                            <span class="feature-title">Security Warnings</span>
-                            <span class="feature-desc">Requires downloading .exe files that trigger Antivirus alarms.</span>
-                        </div>
-                    </li>
-                    <li>
-                        <svg class="icon icon-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <div>
-                            <span class="feature-title">Tethered to One PC</span>
-                            <span class="feature-desc">Only works on the specific Windows machine where installed.</span>
-                        </div>
-                    </li>
-                    <li>
-                        <svg class="icon icon-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <div>
-                            <span class="feature-title">Manual Updates</span>
-                            <span class="feature-desc">Must manually download and reinstall new patches constantly.</span>
-                        </div>
-                    </li>
-                    <li>
-                        <svg class="icon icon-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <div>
-                            <span class="feature-title">Data Loss Risk</span>
-                            <span class="feature-desc">Vulnerable to hard drive crashes and corrupted Excel files.</span>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="card card-new">
-                <div class="winner-badge">The Smart Choice</div>
-                <h3 class="card-title">CivilMate</h3>
-                <div class="card-subtitle">Modern Google Workspace&#8482; Ecosystem</div>
-                <ul class="features">
-                    <li>
-                        <svg class="icon icon-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <div>
-                            <span class="feature-title">100% Cloud-Based</span>
-                            <span class="feature-desc">Zero .exe downloads. Installs safely in Google Workspace&#8482;.</span>
-                        </div>
-                    </li>
-                    <li>
-                        <svg class="icon icon-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <div>
-                            <span class="feature-title">Work From Anywhere</span>
-                            <span class="feature-desc">Access estimates on PC, Mac, iPad, or mobile devices.</span>
-                        </div>
-                    </li>
-                    <li>
-                        <svg class="icon icon-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <div>
-                            <span class="feature-title">Silent Auto-Updates</span>
-                            <span class="feature-desc">Always on the latest version. We update the cloud instantly.</span>
-                        </div>
-                    </li>
-                    <li>
-                        <svg class="icon icon-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <div>
-                            <span class="feature-title">Automated Backups</span>
-                            <span class="feature-desc">Every keystroke saved to Google Drive&#8482;. Never lose an estimate.</span>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="header-text">
-            <h2>CivilMate Pricing Comparison</h2>
-            <p>We build tools for our comrades. See how our pricing stacks up against traditional desktop software.</p>
-        </div>
-
-        <div class="pricing-container">
-            <div class="card card-old">
-                <h3 class="card-title">Traditional Desktop Add-ins</h3>
-                <div class="price-container">
-                    <div class="price strike-price">₹4,999<span>/yr</span></div>
-                    <div class="footnote" style="margin-top: 5px;">or up to ₹5,999/yr for premium</div>
-                </div>
-                <ul class="features">
-                    <li><span class="icon icon-cross">✕</span> <span>Expensive yearly renewals</span></li>
-                    <li><span class="icon icon-cross">✕</span> <span>Paid trials (up to ₹99 just to test)</span></li>
-                    <li><span class="icon icon-cross">✕</span> <span>Locked to a single PC/Device</span></li>
-                    <li><span class="icon icon-cross">✕</span> <span>Manual downloads for updates</span></li>
-                </ul>
-                <div class="btn-outline">Outdated Model</div>
-            </div>
-
-            <div class="card card-new">
-                <div class="badge">Early Adopter Advantage</div>
-                <h3 class="card-title">CivilMate (Beta)</h3>
-                <div class="price-container">
-                    <div class="price">₹0<span>/Beta Phase</span></div>
-                    <div class="footnote" style="margin-top: 5px;">No credit card or payment required</div>
-                </div>
-                <ul class="features">
-                    <li><span class="icon icon-check">✓</span> <span><strong>100% Free</strong> during Beta & stable rollout</span></li>
-                    <li><span class="icon icon-check">✓</span> <span><strong>Zero</strong> paid trials or hidden setup fees</span></li>
-                    <li><span class="icon icon-check">✓</span> <span>Cloud-synced across all your devices</span></li>
-                    <li><span class="icon icon-check">✓</span> <span>Transparent, community-first future pricing</span></li>
-                </ul>
-                <a href="#tester-hub-section" class="btn btn-primary btn-full">Join the Free Beta</a>
-                <p class="footnote">* Future subscriptions will be minimal and strictly to balance server expenditures.</p>
-            </div>
-        </div>
-
-        <div class="install-links">
-            <h3>Get CivilMate Today</h3>
-            <div class="install-buttons">
-                <a href="https://workspace.google.com/marketplace/app/civilmate/716518784539" target="_blank" class="btn btn-primary">
-                    <span class="material-icons" style="margin-right: 8px;">grid_on</span> Google Workspace&#8482; Add-on
-                </a>
-                <a href="https://chromewebstore.google.com/detail/paadmpfoldjolnnojnihfobplhplbobh?utm_source=item-share-cb" target="_blank" class="btn btn-secondary">
-                    <span class="material-icons" style="margin-right: 8px;">extension</span> Google Chrome&#8482; Extension
-                </a>
-                <a href="https://microsoftedge.microsoft.com/addons/detail/civilmate-extension/lgagpkhicfddhcihofkkbjgmfhangbel" target="_blank" class="btn btn-secondary">
-                    <span class="material-icons" style="margin-right: 8px;">public</span> Microsoft Edge Extension
-                </a>
-            </div>
-        </div>
-    </div>
-
-    
-    </section>
-
-    
-
-    <section id="tester-hub-section" style="background: var(--bg-gray); padding: 40px 0;">
-    <h2 style="text-align:center; font-size: 32px; margin-bottom: 24px;">Tester & Feedback Hub</h2>
-    
 
 <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="handleIframeLoad()"></iframe>
 
@@ -423,28 +317,7 @@
     </div>
 </div>
 
-
-</section>
-<section id="support" class="support">
-        <h2>Need Help or Support?</h2>
-        <p>If you are experiencing issues with calculations, database syncing, or generating reports, we are here to help. We aim to respond within 24-48 hours.</p>
-        <div class="contact-box">
-            <span class="material-icons" style="color: var(--google-blue)">email</span>
-            <a href="mailto:civilmateindia@gmail.com">civilmateindia@gmail.com</a>
-        </div>
-    </section>
-
-    <footer>
-        <div>&copy; 2026 CivilMate. All rights reserved.</div>
-        <div class="footer-links">
-            <a href="addon-privacy.html">Add-on Privacy Policy</a>
-            <a href="addon-terms.html">Add-on Terms of Service</a>
-            <a href="extension-privacy.html">Extension Privacy Policy</a>
-        </div>
-    </footer>
-
-    <script>
-
+<script>
     const headerContent = {
         join: { title: "Beta Tester Onboarding", desc: "Help us shape the future of the CivilMate add-on before it hits the Google Workspace Marketplace." },
         feedback: { title: "Feedback & Issue Tracking", desc: "Found a bug? Have a suggestion? Let us know so we can improve the add-on." },
@@ -667,7 +540,6 @@
     }
 
     window.addEventListener('DOMContentLoaded', fetchAndPopulateDashboards);
-
 </script>
 </body>
 </html>

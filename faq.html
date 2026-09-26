@@ -1,0 +1,401 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CivilMate FAQ</title>
+    <!-- Common styling for navbar -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --text-main: #1f2937;
+            --text-muted: #4b5563;
+            --bg-light: #f3f4f6;
+            --border: #e5e7eb;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-main);
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+            padding-top: 80px;
+            background: transparent;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 40px auto;
+            flex: 1;
+            padding: 0 20px;
+            width: 100%;
+        }
+
+        /* Search Bar */
+        .search-box {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-box:focus {
+            border-color: var(--primary);
+        }
+
+        /* Category Filters */
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            background: #fff;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+        /* Accordion Items */
+        .faq-section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 24px 0 12px 0;
+            color: var(--text-main);
+        }
+
+        .faq-item {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            width: 100%;
+            text-align: left;
+            padding: 16px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-main);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-question:hover {
+            background: var(--bg-light);
+        }
+
+        .icon {
+            font-size: 20px;
+            transition: transform 0.3s ease;
+            color: var(--text-muted);
+        }
+
+        .faq-item.active .icon {
+            transform: rotate(45deg);
+            color: var(--primary);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background: #fff;
+        }
+
+        .faq-answer-inner {
+            padding: 0 16px 16px 16px;
+            color: var(--text-muted);
+        }
+
+        .seo-footer {
+            margin-top: 40px;
+            font-size: 0.9em;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <img src="logo.jpg" alt="CivilMate Logo" width="32" height="32" style="border-radius:4px;">
+            <a href="index.html" style="color: inherit;">CivilMate</a>
+        </div>
+        <div class="nav-links">
+            <a href="index.html#features">Features</a>
+            <a href="index.html#learn-section">Learn</a>
+            <a href="index.html#tester-hub-section">Tester Hub</a>
+            <a href="faq.html">FAQ</a>
+            <a href="live-tenders.html">Tenders</a>
+            <div class="dropdown">
+                <a href="#" style="cursor:default">Legal &#9662;</a>
+                <div class="dropdown-content">
+                    <div class="dropdown-group">CivilMate Add-On</div>
+                    <a href="addon-privacy.html">Privacy Policy</a>
+                    <a href="addon-terms.html">Terms of Service</a>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-group">CivilMate Extension</div>
+                    <a href="extension-privacy.html">Privacy Policy</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+<div class="faq-container">
+    
+    <input type="text" class="search-box" id="searchInput" placeholder="Search FAQs...">
+
+    <div class="filters" id="filterContainer">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="general">General & Setup</button>
+        <button class="filter-btn" data-filter="features">Features & Capabilities</button>
+        <button class="filter-btn" data-filter="integration">Integration & Billing</button>
+    </div>
+
+    <div class="faq-group" data-category="general">
+        <div class="faq-section-title">General & Setup</div>
+        
+        <div class="faq-item">
+            <button class="faq-question">What is CivilMate and who is it designed for? <span class="icon">+</span></button>
+            <div class="faq-answer">
+                <div class="faq-answer-inner">CivilMate is a powerful, cloud-based Google Sheets&trade; Add-on built exclusively for civil engineers, contractors, and government officials. It transforms a standard spreadsheet into a highly automated estimating and billing ecosystem, allowing you to manage construction data, perform complex structural calculations, and generate engineering reports instantly.</div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">Do I need to install heavy software to use CivilMate? <span class="icon">+</span></button>
+            <div class="faq-answer">
+                <div class="faq-answer-inner">No. Because CivilMate operates entirely within Google Workspace&trade;, there are no large files to download or complex installations. It takes less than 10 seconds and just 3 clicks to install. You can access your estimates anywhere—on a PC, Mac, tablet, or even via mobile setups like Samsung DeX and Pixel Desktop.</div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">Is my estimating and project data secure? <span class="icon">+</span></button>
+            <div class="faq-answer">
+                <div class="faq-answer-inner">Absolutely. CivilMate is an independent, third-party tool that operates securely within your own Google account. Your measurement books, estimates, and billing data remain safely stored in your personal Google Drive&trade;. We do not collect, view, or sell your project data.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="faq-group" data-category="features">
+        <div class="faq-section-title">Features & Capabilities</div>
+        
+        <div class="faq-item">
+            <button class="faq-question">Does CivilMate automate Bar Bending Schedules (BBS) and steel calculations? <span class="icon">+</span></button>
+            <div class="faq-answer">
+                <div class="faq-answer-inner">Yes. CivilMate features an automated Bar Bending Schedule tool natively within your sheet. It effortlessly handles complex structural steel calculations, allowing you to generate perfect rectangular cages and other rebar configurations without manual math.</div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">Can it calculate complex earthwork, excavation, and footing quantities? <span class="icon">+</span></button>
+            <div class="faq-answer">
+                <div class="faq-answer-inner">Yes. The ecosystem is engineered to handle heavy mathematical lifting. With the Magic Compile tool, you can instantly format and calculate earthwork volumes, excavation for trenches, various footing shuttering, and complex Pipe PCC quantities with complete accuracy.</div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">How quickly can I generate DOQ and AOC reports? <span class="icon">+</span></button>
+            <div class="faq-answer">
+                <div class="faq-answer-inner">With CivilMate, you can generate complete, professional Details of Quantities (DOQ) and Abstract of Cost (AOC) reports in a single click. The tool also automatically performs material, labour, and machinery analysis for precise project costing.</div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">Does CivilMate support unit conversions? <span class="icon">+</span></button>
+            <div class="faq-answer">
+                <div class="faq-answer-inner">Yes. The built-in Unit Converter allows for seamless, instant transitions between imperial and metric systems directly within your working sheet, eliminating the need for external calculators.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="faq-group" data-category="integration">
+        <div class="faq-section-title">Integration & Billing</div>
+        
+        <div class="faq-item">
+            <button class="faq-question">Can I upload my estimates to the Haryana Engineering Works Portal (HEWP)? <span class="icon">+</span></button>
+            <div class="faq-answer">
+                <div class="faq-answer-inner">Yes. This is one of our most powerful features. Using the companion CivilMate Extension, you can export your compiled estimates and data directly to the HEWP (www.works.haryana.gov.in) with a single click, completely eliminating hours of manual, repetitive data entry.</div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">Does CivilMate handle contractor billing and measurement books? <span class="icon">+</span></button>
+            <div class="faq-answer">
+                <div class="faq-answer-inner">Currently, CivilMate excels at estimation, structural calculations, and portal uploads. However, a dynamic, automated Billing Module is coming soon, which will further streamline the process of tracking payments and generating running bills.</div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">Can I share and use pre-built estimates? <span class="icon">+</span></button>
+            <div class="faq-answer">
+                <div class="faq-answer-inner">We are actively developing a community-driven template hub. Soon, users will be able to share, rate, and deploy highly-rated, pre-built engineering estimate templates, making starting a new project faster than ever.</div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">How does CivilMate help with my HEWP login and data entry? <span class="icon">+</span></button>
+            <div class="faq-answer">
+                <div class="faq-answer-inner">CivilMate bridges the gap between your spreadsheets and your HEWP login. Instead of logging into the HEWP portal to manually type out every row of your estimate, CivilMate allows you to perform your estimation in Google Sheets&trade; and push it to the portal automatically.</div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">Is this add-on officially connected to the Haryana Engineering Works Portal? <span class="icon">+</span></button>
+            <div class="faq-answer">
+                <div class="faq-answer-inner">No. CivilMate is an independent, powerful third-party tool built to assist engineers and contractors who use the Haryana engineering works portal. It is designed to make compiling and formatting your estimate for the Haryana works portal drastically faster.</div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">Do I still need to use HEWP Haryana directly? <span class="icon">+</span></button>
+            <div class="faq-answer">
+                <div class="faq-answer-inner">Yes. You will still use your standard credentials for HEWP Haryana when submitting final bills or estimates. CivilMate simply acts as the ultimate estimation calculator and automated data-entry assistant for the Haryana engineering works ecosystem.</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    <div>&copy; 2026 CivilMate. All rights reserved.</div>
+    <div class="footer-links">
+        <a href="addon-privacy.html">Privacy Policy</a>
+        <a href="addon-terms.html">Terms of Service</a>
+    </div>
+</footer>
+
+<script>
+    // Accordion Logic
+    const faqQuestions = document.querySelectorAll('.faq-question');
+    
+    faqQuestions.forEach(question => {
+        question.addEventListener('click', () => {
+            const item = question.parentElement;
+            const answer = question.nextElementSibling;
+            const isActive = item.classList.contains('active');
+            
+            // Close all other open items
+            document.querySelectorAll('.faq-item').forEach(otherItem => {
+                otherItem.classList.remove('active');
+                otherItem.querySelector('.faq-answer').style.maxHeight = null;
+            });
+
+            // Toggle current item
+            if (!isActive) {
+                item.classList.add('active');
+                answer.style.maxHeight = answer.scrollHeight + "px";
+            }
+        });
+    });
+
+    // Filtering Logic (Category Buttons)
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const faqGroups = document.querySelectorAll('.faq-group');
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Update active button state
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            const filterValue = btn.getAttribute('data-filter');
+            
+            faqGroups.forEach(group => {
+                if (filterValue === 'all' || group.getAttribute('data-category') === filterValue) {
+                    group.classList.remove('hidden');
+                } else {
+                    group.classList.add('hidden');
+                }
+            });
+            
+            // Clear search when clicking category filters
+            searchInput.value = '';
+            filterSearch('');
+        });
+    });
+
+    // Search Logic
+    const searchInput = document.getElementById('searchInput');
+    const allFaqItems = document.querySelectorAll('.faq-item');
+
+    function filterSearch(query) {
+        query = query.toLowerCase();
+        let activeFilter = document.querySelector('.filter-btn.active').getAttribute('data-filter');
+
+        allFaqItems.forEach(item => {
+            const questionText = item.querySelector('.faq-question').textContent.toLowerCase();
+            const answerText = item.querySelector('.faq-answer-inner').textContent.toLowerCase();
+            const parentGroup = item.closest('.faq-group');
+            const categoryMatch = (activeFilter === 'all' || parentGroup.getAttribute('data-category') === activeFilter);
+            const textMatch = questionText.includes(query) || answerText.includes(query);
+
+            if (categoryMatch && textMatch) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+
+        // Hide empty group headers
+        faqGroups.forEach(group => {
+            if (activeFilter === 'all' || group.getAttribute('data-category') === activeFilter) {
+                const visibleItems = group.querySelectorAll('.faq-item[style="display: block;"], .faq-item:not([style])');
+                let hasVisible = false;
+                visibleItems.forEach(vi => {
+                    if(vi.style.display !== 'none') hasVisible = true;
+                });
+                group.style.display = hasVisible ? 'block' : 'none';
+            }
+        });
+    }
+
+    searchInput.addEventListener('input', (e) => {
+        filterSearch(e.target.value);
+    });
+</script>
+
+</body>
+</html>

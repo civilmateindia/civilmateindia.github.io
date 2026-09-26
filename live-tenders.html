@@ -1,0 +1,813 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Tenders Dashboard - CivilMate</title>
+    <!-- Common styling for navbar -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #eff6ff;
+            --secondary: #f8fafc;
+            --success: #16a34a;
+            --warning: #ea580c; 
+            --danger: #dc2626;  
+            --bg-main: #f1f5f9;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --card-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+        }
+
+        body { 
+            margin: 0; padding: 0; padding-top: 80px; width: 100%; overflow-x: hidden; background: transparent; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            color: var(--text-main); 
+            display: flex; flex-direction: column; min-height: 100vh; 
+        }
+        .dashboard-container { max-width: 1200px; margin: 0 auto; padding: 15px; box-sizing: border-box; flex: 1; width: 100%; }
+
+        /* ================= ANIMATIONS & VIEW TOGGLING ================= */
+        .view-section { animation: fadeIn 0.3s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .hidden { display: none !important; }
+
+        /* ================= QUICK GLANCE METRICS ================= */
+        .glance-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .metric-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 15px 20px; box-shadow: var(--card-shadow); display: flex; flex-direction: column; border-left: 5px solid var(--border); }
+        .metric-card.m-live { border-left-color: var(--primary); }
+        .metric-card.m-open { border-left-color: var(--success); }
+        .metric-card.m-close { border-left-color: var(--danger); }
+        .metric-title { font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.5px; }
+        .metric-value { font-size: 2rem; font-weight: 800; margin-top: 5px; color: var(--text-main); }
+
+        /* ================= GRAPHICAL TIMELINE ================= */
+        .timeline-section { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 25px; box-shadow: var(--card-shadow); }
+        .timeline-title-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .timeline-title { font-size: 1.1rem; font-weight: 700; margin: 0; color: var(--text-main); }
+        .timeline-legend { display: flex; gap: 15px; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); }
+        .legend-item { display: flex; align-items: center; gap: 6px; }
+        .legend-color { width: 14px; height: 14px; border-radius: 4px; }
+        .legend-color.pub { background: linear-gradient(180deg, #22c55e 0%, #86efac 100%); }
+        .legend-color.close { background: linear-gradient(180deg, #3b82f6 0%, #93c5fd 100%); }
+        
+        .timeline-chart { display: flex; align-items: flex-end; justify-content: space-between; padding-bottom: 8px; border-bottom: 2px solid var(--border); overflow-x: auto; scrollbar-width: thin; position: relative; min-height: 180px; gap: 10px; }
+        .timeline-chart::before { content: ''; position: absolute; left: 0; right: 0; bottom: 50px; border-top: 1px dashed #e2e8f0; z-index: 0; }
+        
+        .timeline-day-group { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; flex: 1; min-width: 65px; z-index: 1; }
+        .timeline-bars { display: flex; align-items: flex-end; justify-content: center; gap: 6px; height: 110px; width: 100%; }
+        
+        .timeline-bar-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; width: 26px; transition: transform 0.2s, opacity 0.3s, filter 0.3s; cursor: pointer; }
+        .timeline-bar-wrapper:hover { transform: translateY(-4px); z-index: 10; }
+        .timeline-bar-wrapper.dimmed { opacity: 0.3; filter: grayscale(50%); }
+        
+        .timeline-count { font-size: 0.75rem; font-weight: 800; margin-bottom: 8px; padding: 3px 8px; border-radius: 12px; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .timeline-count.pub { color: #166534; background: #dcfce7; border: 1px solid #86efac; }
+        .timeline-count.close { color: #1e40af; background: #dbeafe; border: 1px solid #93c5fd; }
+        
+        .timeline-bar-container { height: 100%; width: 100%; display: flex; align-items: flex-end; justify-content: center; }
+        .timeline-bar { width: 100%; border-radius: 6px 6px 0 0; transition: height 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+        .timeline-bar.pub { background: linear-gradient(180deg, #22c55e 0%, #86efac 100%); }
+        .timeline-bar.close { background: linear-gradient(180deg, #3b82f6 0%, #93c5fd 100%); }
+        
+        .timeline-date { font-size: 0.7rem; color: var(--text-muted); margin-top: 12px; text-align: center; font-weight: 600; white-space: nowrap; padding: 4px 8px; border-radius: 6px; }
+        .timeline-date.is-today { background: var(--bg-main); color: var(--text-main); font-weight: 800; border: 1px solid var(--border); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+
+        /* ================= ADVANCED FILTERS ================= */
+        .filter-section { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 25px; box-shadow: var(--card-shadow); }
+        .filter-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; align-items: end; }
+        .filter-group { display: flex; flex-direction: column; gap: 6px; }
+        .filter-group label { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+        .filter-control { padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; outline: none; background: #fff; color: var(--text-main); font-family: inherit; }
+        .filter-control:focus { border-color: var(--primary); }
+        .filter-actions { display: flex; gap: 10px; align-items: flex-end; }
+        .btn-reset { padding: 10px 15px; background: var(--bg-main); border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: 0.2s; color: var(--text-main); }
+        .btn-reset:hover { background: #e2e8f0; }
+
+        /* ================= CONTROLS & TOGGLES ================= */
+        .controls-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; }
+        .view-toggle { display: flex; background: #fff; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+        .toggle-btn { background: transparent; border: none; padding: 10px 16px; font-size: 0.9rem; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
+        .toggle-btn.active { background: var(--primary); color: #fff; }
+
+        /* ================= STATUS BADGES & TAGS ================= */
+        .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+        .status-badge .pulse { width: 8px; height: 8px; border-radius: 50%; }
+        .status-active { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+        .status-active .pulse { background: #22c55e; animation: pulse-green 1.5s infinite; }
+        .status-warning { background: #ffedd5; color: #9a3412; border: 1px solid #fdba74; }
+        .status-warning .pulse { background: #f97316; animation: pulse-orange 1.5s infinite; }
+        .status-danger { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+        .status-danger .pulse { background: #ef4444; animation: pulse-red 1s infinite; }
+        .status-closed { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+        .status-closed .pulse { background: #94a3b8; }
+        
+        .tag-today-open { color: var(--success); font-weight: 800; font-size: 0.7rem; background: #dcfce7; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 4px; }
+        .tag-today-close { color: var(--danger); font-weight: 800; font-size: 0.7rem; background: #fee2e2; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 4px; animation: pulse-text 1s infinite alternate;}
+        
+        @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); } 70% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); } 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); } }
+        @keyframes pulse-orange { 0% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.7); } 70% { box-shadow: 0 0 0 6px rgba(249, 115, 22, 0); } 100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); } }
+        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+        @keyframes pulse-text { from { opacity: 1; } to { opacity: 0.6; } }
+
+        /* ================= TILES VIEW ================= */
+        .tenders-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+        .tender-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: var(--card-shadow); transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; }
+        .tender-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.08); border-color: #cbd5e1; }
+        .card-is-closed { background: #f8fafc; filter: grayscale(80%); opacity: 0.8; }
+        .card-is-closed:hover { transform: none; box-shadow: var(--card-shadow); border-color: var(--border);}
+
+        .card-meta-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+        .tender-dept { font-size: 0.7rem; text-transform: uppercase; color: var(--primary); font-weight: 800; display: block; margin-bottom: 4px;}
+        .cat-badge { background: var(--bg-main); color: var(--text-muted); padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: 600; border: 1px solid var(--border); display: inline-block;}
+        .tender-title { font-size: 1.1rem; font-weight: 700; margin: 0 0 16px 0; line-height: 1.4; color: var(--text-main); }
+
+        .card-grid-details { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 10px; margin-bottom: 15px; background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid var(--border); }
+        .detail-item { display: flex; flex-direction: column; gap: 2px; }
+        .detail-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+        .detail-value { font-size: 0.85rem; font-weight: 600; display: block;}
+        
+        .fee-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 12px 0; border-top: 1px dashed var(--border); margin-top: auto; margin-bottom: 15px;}
+        .fee-item { text-align: center; }
+        .fee-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 2px; }
+        .fee-val { font-size: 0.85rem; font-weight: 700; color: var(--text-main); }
+
+        .btn-view-details { width: 100%; padding: 10px; background: var(--bg-main); border: 1px solid var(--border); border-radius: 8px; font-weight: 600; font-size: 0.9rem; color: var(--primary); cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 6px; }
+        .btn-view-details:hover { background: #e2e8f0; color: var(--primary); }
+
+        /* ================= TABLE VIEW ================= */
+        .table-responsive { width: 100%; overflow-x: auto; background: #fff; border: 1px solid var(--border); border-radius: 12px; }
+        .tender-table { width: 100%; border-collapse: collapse; min-width: 1200px; text-align: left; }
+        .tender-table th, .tender-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 0.85rem; vertical-align: middle; }
+        .tender-table th { background: var(--secondary); font-weight: 700; font-size: 0.7rem; text-transform: uppercase; color: var(--text-muted); }
+        .tender-table tr:hover { background: #f8fafc; }
+        .row-is-closed { background: #f8fafc; filter: grayscale(80%); opacity: 0.7; }
+
+        /* ================= TENDER DETAILS VIEW (SPA) ================= */
+        .details-wrapper { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 30px; box-shadow: var(--card-shadow); }
+        
+        .btn-back { display: inline-flex; align-items: center; gap: 8px; background: transparent; border: none; font-size: 0.95rem; font-weight: 600; color: var(--text-muted); cursor: pointer; padding: 0; margin-bottom: 24px; transition: color 0.2s; }
+        .btn-back:hover { color: var(--primary); }
+        .btn-back svg { width: 18px; height: 18px; }
+
+        .details-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
+        .details-title { font-size: 1.6rem; font-weight: 800; color: var(--text-main); margin: 0; line-height: 1.3; flex: 1; min-width: 300px; }
+        
+        .details-info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .info-card { background: var(--secondary); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+        .info-card h4 { font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); margin: 0 0 15px 0; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+        
+        .info-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.9rem; align-items: flex-start; gap: 10px;}
+        .info-row:last-child { margin-bottom: 0; }
+        .info-lbl { color: var(--text-muted); font-weight: 500; min-width: 120px; }
+        .info-val { font-weight: 600; text-align: right; color: var(--text-main); }
+        .info-val.highlight { color: var(--success); font-weight: 700; font-size: 1rem; }
+
+        /* Integrated Action Panel */
+        .action-panel { border-top: 1px solid var(--border); padding-top: 25px; margin-top: 30px; display: flex; flex-direction: column; gap: 12px; }
+        .action-buttons { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; }
+        
+        .btn-portal { display: inline-flex; justify-content: center; align-items: center; gap: 8px; padding: 14px; border-radius: 8px; font-weight: 700; font-size: 1rem; background: var(--primary); color: #fff; transition: background 0.2s; text-decoration: none; border: 1px solid transparent; }
+        .btn-portal:hover { background: #1d4ed8; }
+        .btn-portal.disabled { background: #cbd5e1; pointer-events: none; }
+        
+        /* Vibrant Amber/Orange Gradient for CivilMate Add-On Button */
+        .btn-civilmate { display: inline-flex; justify-content: center; align-items: center; gap: 8px; padding: 14px; border-radius: 8px; font-weight: 700; font-size: 1rem; background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%); color: #fff; border: none; box-shadow: 0 4px 12px rgba(234, 88, 12, 0.25); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); text-decoration: none; }
+        .btn-civilmate:hover { transform: translateY(-3px); box-shadow: 0 8px 16px rgba(234, 88, 12, 0.35); color: #fff; filter: brightness(1.05); }
+        
+        .civilmate-note { font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-top: 4px; line-height: 1.5; }
+        .civilmate-note svg { width: 14px; height: 14px; vertical-align: text-bottom; margin-right: 4px; color: var(--warning); }
+
+        /* ================= UTILS ================= */
+        .status-message { text-align: center; padding: 40px; color: var(--text-muted); background: #fff; border: 1px dashed var(--border); border-radius: 12px; }
+        .disclaimer-footer { margin-top: 40px; padding: 20px; background: var(--bg-main); border: 1px solid var(--border); border-radius: 8px; font-size: 0.75rem; color: var(--text-muted); line-height: 1.5; text-align: justify; }
+        .disclaimer-footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
+
+        @media (max-width: 768px) {
+            .filter-grid { grid-template-columns: 1fr; }
+            .timeline-chart { height: 80px; }
+            .details-wrapper { padding: 20px; }
+            .details-title { font-size: 1.3rem; }
+            .info-row { flex-direction: column; text-align: left; gap: 2px; margin-bottom: 16px; }
+            .info-val { text-align: left; }
+            .civilmate-note { text-align: left; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <img src="logo.jpg" alt="CivilMate Logo" width="32" height="32" style="border-radius:4px;">
+            <a href="index.html" style="color: inherit;">CivilMate</a>
+        </div>
+        <div class="nav-links">
+            <a href="index.html#features">Features</a>
+            <a href="index.html#learn-section">Learn</a>
+            <a href="index.html#tester-hub-section">Tester Hub</a>
+            <a href="faq.html">FAQ</a>
+            <a href="live-tenders.html">Tenders</a>
+            <div class="dropdown">
+                <a href="#" style="cursor:default">Legal &#9662;</a>
+                <div class="dropdown-content">
+                    <div class="dropdown-group">CivilMate Add-On</div>
+                    <a href="addon-privacy.html">Privacy Policy</a>
+                    <a href="addon-terms.html">Terms of Service</a>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-group">CivilMate Extension</div>
+                    <a href="extension-privacy.html">Privacy Policy</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+<div class="dashboard-container">
+    
+    <!-- MAIN DASHBOARD VIEW -->
+    <div id="mainDashboardView" class="view-section">
+        <!-- QUICK GLANCE METRICS -->
+        <div class="glance-grid">
+            <div class="metric-card m-live">
+                <span class="metric-title">Total Active Tenders</span>
+                <span class="metric-value" id="valTotalLive">-</span>
+            </div>
+            <div class="metric-card m-open">
+                <span class="metric-title">Published Today</span>
+                <span class="metric-value" style="color: var(--success);" id="valOpenToday">-</span>
+            </div>
+            <div class="metric-card m-close">
+                <span class="metric-title">Closing Today</span>
+                <span class="metric-value" style="color: var(--danger);" id="valCloseToday">-</span>
+            </div>
+        </div>
+
+        <!-- GRAPHICAL TIMELINE (MINI DASHBOARD) -->
+        <div class="timeline-section">
+            <div class="timeline-title-row">
+                <h3 class="timeline-title">Tender Activity (Click bars to filter)</h3>
+                <div class="timeline-legend">
+                    <div class="legend-item"><div class="legend-color pub"></div> New Published</div>
+                    <div class="legend-item"><div class="legend-color close"></div> Closures</div>
+                </div>
+            </div>
+            <div class="timeline-chart" id="timelineChart"></div>
+        </div>
+
+        <!-- ADVANCED FILTERS -->
+        <div class="filter-section">
+            <div class="filter-grid">
+                <div class="filter-group">
+                    <label>Search Tenders</label>
+                    <input type="text" id="filterSearch" class="filter-control" placeholder="Search Work, ID, or Ref...">
+                </div>
+                <div class="filter-group">
+                    <label>Department</label>
+                    <select id="filterDept" class="filter-control">
+                        <option value="">All Departments</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Category</label>
+                    <select id="filterCategory" class="filter-control">
+                        <option value="">All Categories</option>
+                    </select>
+                </div>
+                <div class="filter-actions">
+                    <button class="btn-reset" id="btnReset">Reset</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTROLS & VIEWS -->
+        <div class="controls-bar">
+            <div style="font-size: 0.95rem; font-weight: 600; color: var(--text-main);" id="resultCount">Loading...</div>
+            <div class="view-toggle">
+                <button class="toggle-btn active" id="btnTiles">Tiles View</button>
+                <button class="toggle-btn" id="btnTable">Table View</button>
+            </div>
+        </div>
+
+        <!-- DATA GRIDS -->
+        <div class="tenders-grid" id="tendersGrid">
+            <div class="status-message">Loading live data from server...</div>
+        </div>
+        <div class="table-responsive hidden" id="tableContainer">
+            <table class="tender-table">
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Department & Cat</th>
+                        <th>Tender ID</th>
+                        <th>Work Description</th>
+                        <th>Value & Fees</th>
+                        <th>Dates (Start - Close)</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- TENDER DETAILS VIEW (SPA) -->
+    <div id="tenderDetailsView" class="view-section hidden">
+        <div class="details-wrapper">
+            <button class="btn-back" onclick="hideTenderDetails()">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Back to Dashboard
+            </button>
+
+            <div class="details-header">
+                <h2 class="details-title" id="dt_title">Loading...</h2>
+                <div id="dt_status_container"></div>
+            </div>
+
+            <div class="details-info-grid">
+                <!-- Org Details -->
+                <div class="info-card">
+                    <h4>Organization Details</h4>
+                    <div class="info-row"><span class="info-lbl">Department</span><span class="info-val" id="dt_dept">-</span></div>
+                    <div class="info-row"><span class="info-lbl">Division</span><span class="info-val" id="dt_div">-</span></div>
+                    <div class="info-row"><span class="info-lbl">Category</span><span class="info-val" id="dt_cat">-</span></div>
+                </div>
+
+                <!-- Financial Details -->
+                <div class="info-card">
+                    <h4>Financial Details</h4>
+                    <div class="info-row"><span class="info-lbl">Tender Value</span><span class="info-val highlight" id="dt_val">-</span></div>
+                    <div class="info-row"><span class="info-lbl">EMD Amount</span><span class="info-val" id="dt_emd">-</span></div>
+                    <div class="info-row"><span class="info-lbl">Tender Fee</span><span class="info-val" id="dt_tfee">-</span></div>
+                    <div class="info-row"><span class="info-lbl">Processing Fee</span><span class="info-val" id="dt_pfee">-</span></div>
+                </div>
+
+                <!-- Identifiers & Dates -->
+                <div class="info-card">
+                    <h4>Timeline & Identifiers</h4>
+                    <div class="info-row"><span class="info-lbl">Tender ID</span><span class="info-val" id="dt_id">-</span></div>
+                    <div class="info-row"><span class="info-lbl">Reference No.</span><span class="info-val" id="dt_ref">-</span></div>
+                    <div class="info-row"><span class="info-lbl">Published Date</span><span class="info-val" id="dt_pub">-</span></div>
+                    <div class="info-row"><span class="info-lbl">Bid Start Date</span><span class="info-val" id="dt_start">-</span></div>
+                    <div class="info-row"><span class="info-lbl">Bid End Date</span><span class="info-val" id="dt_end">-</span></div>
+                    <div class="info-row"><span class="info-lbl">Bid Opening</span><span class="info-val" id="dt_open">-</span></div>
+                    <div class="info-row"><span class="info-lbl">Work Period</span><span class="info-val" id="dt_period">-</span></div>
+                </div>
+            </div>
+
+            <!-- Sleek Action Panel -->
+            <div class="action-panel">
+                <div class="action-buttons">
+                    <a href="https://etenders.hry.nic.in/nicgep/app" target="_blank" id="dt_action_btn" class="btn-portal">
+                        View on Haryana eTenders Portal
+                        <svg fill="none" stroke="currentColor" width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    </a>
+                    <a href="https://workspace.google.com/marketplace/search/CivilMate" target="_blank" id="dt_civilmate_btn" class="btn-civilmate hidden">
+                        Find Material & Labour Cost
+                        <svg fill="none" stroke="currentColor" width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    </a>
+                </div>
+                <div id="dt_civilmate_note" class="civilmate-note hidden">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <strong>Pro Tip:</strong> Install the CivilMate Add-On from Google Workspace&trade; and upload the BOQ file from the eTenders website to instantly generate detailed Material, Labour & Machinery Analysis.
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- PROFESSIONAL DISCLAIMER -->
+    <div class="disclaimer-footer">
+        <strong>Disclaimer:</strong> This dashboard is provided for informational and quick-reference purposes only. We do not generate, endorse, or guarantee the accuracy, completeness, or timeliness of this data. Tender statuses, dates, and amounts are subject to change by the issuing authorities without notice. In the event of any discrepancies, errors, or omissions, users are strongly advised to verify all information directly on the official Haryana Government eProcurement System portal at <a href="https://etenders.hry.nic.in/nicgep/app" target="_blank">https://etenders.hry.nic.in/nicgep/app</a> before making any bidding or financial decisions.
+    </div>
+
+</div>
+
+<footer>
+    <div>&copy; 2026 CivilMate. All rights reserved.</div>
+    <div class="footer-links">
+        <a href="addon-privacy.html">Privacy Policy</a>
+        <a href="addon-terms.html">Terms of Service</a>
+    </div>
+</footer>
+
+<script>
+    const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQUv_KKZNEYM227T5r8isAAkpwaLEKQz6gmGRzmCFFnR8eLnLRsKHFczkbNyefNAANDVqeLcQQSRAkI/pub?gid=1093550866&single=true&output=csv";
+    
+    let allActiveTenders = [];
+    let currentView = 'tiles'; 
+    let activeTimelineFilter = null; 
+
+    // DOM Elements
+    const mainDashboardView = document.getElementById('mainDashboardView');
+    const tenderDetailsView = document.getElementById('tenderDetailsView');
+    const grid = document.getElementById('tendersGrid');
+    const tableBody = document.getElementById('tableBody');
+    const tableContainer = document.getElementById('tableContainer');
+    
+    // Toggles
+    document.getElementById('btnTiles').addEventListener('click', (e) => {
+        currentView = 'tiles'; e.target.classList.add('active'); document.getElementById('btnTable').classList.remove('active');
+        grid.classList.remove('hidden'); tableContainer.classList.add('hidden');
+    });
+    document.getElementById('btnTable').addEventListener('click', (e) => {
+        currentView = 'table'; e.target.classList.add('active'); document.getElementById('btnTiles').classList.remove('active');
+        tableContainer.classList.remove('hidden'); grid.classList.add('hidden');
+    });
+
+    // Filters
+    const filterSearch = document.getElementById('filterSearch');
+    const filterDept = document.getElementById('filterDept');
+    const filterCategory = document.getElementById('filterCategory');
+    const btnReset = document.getElementById('btnReset');
+
+    [filterSearch, filterDept, filterCategory].forEach(el => { el.addEventListener('input', applyFiltersAndRender); });
+    btnReset.addEventListener('click', () => { 
+        filterSearch.value = ''; 
+        filterDept.value = ''; 
+        filterCategory.value = ''; 
+        activeTimelineFilter = null;
+        buildTimeline(); 
+        applyFiltersAndRender(); 
+    });
+
+    // Initialization
+    Papa.parse(GOOGLE_SHEET_CSV_URL, {
+        download: true,
+        header: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+            allActiveTenders = results.data
+                .filter(t => (t['Activity'] || '').trim().toLowerCase() === 'active')
+                .map((t, index) => { t._uid = 't_' + index; return t; });
+            
+            if(allActiveTenders.length === 0) {
+                grid.innerHTML = `<div class="status-message">No active tenders found or waiting for data.</div>`;
+                return;
+            }
+            
+            buildDropdowns();
+            processDashboardStats();
+            buildTimeline();
+            applyFiltersAndRender();
+        },
+        error: function() { grid.innerHTML = `<div class="status-message">Failed to connect to server.</div>`; }
+    });
+
+    function formatCurrency(valStr) {
+        if (!valStr || valStr.trim() === '-' || valStr.trim() === '0') return 'TBD';
+        let val = parseFloat(valStr.replace(/,/g, ''));
+        if (isNaN(val)) return valStr;
+        if (val >= 10000000) return `₹ ${(val/10000000).toFixed(2)} Cr`;
+        if (val >= 100000) return `₹ ${(val/100000).toFixed(2)} Lakh`;
+        return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(val);
+    }
+
+    function parseDateString(dateString) {
+        if (!dateString || dateString.trim() === '-' || dateString.trim() === '') return null;
+        const d = new Date(dateString); 
+        return isNaN(d.getTime()) ? null : d;
+    }
+
+    function getLocalYYYYMMDD(d) {
+        if (!d) return null;
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    function isExactlyToday(dateObj) {
+        if (!dateObj) return false;
+        const now = new Date();
+        return dateObj.toDateString() === now.toDateString();
+    }
+
+    function buildDropdowns() {
+        let depts = new Set(); let cats = new Set();
+        allActiveTenders.forEach(t => {
+            if (t['Department']) depts.add(t['Department'].trim());
+            if (t['Product Category']) cats.add(t['Product Category'].trim());
+        });
+        Array.from(depts).sort().forEach(d => filterDept.add(new Option(d, d)));
+        Array.from(cats).sort().forEach(c => filterCategory.add(new Option(c, c)));
+    }
+
+    function processDashboardStats() {
+        let liveCount = 0; let openToday = 0; let closeToday = 0;
+        const now = new Date();
+
+        allActiveTenders.forEach(t => {
+            const pubDate = parseDateString(t['Published Date']);
+            const closeDate = parseDateString(t['Bid Submission End Date']);
+            const isClosed = closeDate && (now > closeDate);
+            
+            if (!isClosed) {
+                liveCount++;
+                if (isExactlyToday(pubDate)) openToday++;
+                if (isExactlyToday(closeDate)) closeToday++;
+            }
+        });
+
+        document.getElementById('valTotalLive').textContent = liveCount;
+        document.getElementById('valOpenToday').textContent = openToday;
+        document.getElementById('valCloseToday').textContent = closeToday;
+    }
+
+    function buildTimeline() {
+        const timelineData = {};
+        const now = new Date(); now.setHours(0,0,0,0);
+        
+        for (let i = -3; i <= 7; i++) {
+            const d = new Date(now); d.setDate(d.getDate() + i);
+            const dateKey = getLocalYYYYMMDD(d);
+            timelineData[dateKey] = { pub: 0, close: 0, dateObj: d };
+        }
+        
+        allActiveTenders.forEach(t => {
+            const pubDate = parseDateString(t['Published Date']);
+            const closeDate = parseDateString(t['Bid Submission End Date']);
+            
+            if (pubDate) {
+                const pKey = getLocalYYYYMMDD(pubDate);
+                if (timelineData[pKey]) timelineData[pKey].pub++;
+            }
+            if (closeDate) {
+                const cKey = getLocalYYYYMMDD(closeDate);
+                if (timelineData[cKey]) timelineData[cKey].close++;
+            }
+        });
+
+        const sortedDates = Object.keys(timelineData).sort();
+        const chartContainer = document.getElementById('timelineChart');
+        chartContainer.innerHTML = '';
+
+        let maxCount = 1;
+        sortedDates.forEach(d => {
+            if (timelineData[d].pub > maxCount) maxCount = timelineData[d].pub;
+            if (timelineData[d].close > maxCount) maxCount = timelineData[d].close;
+        });
+
+        const todayKey = getLocalYYYYMMDD(now);
+
+        sortedDates.forEach(dateStr => {
+            const data = timelineData[dateStr];
+            const pubHeight = Math.max((data.pub / maxCount) * 100, 0);
+            const closeHeight = Math.max((data.close / maxCount) * 100, 0);
+            const displayDate = data.dateObj.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+            const isTodayClass = (dateStr === todayKey) ? 'is-today' : '';
+            const todayLabel = (dateStr === todayKey) ? ' (Today)' : '';
+
+            const isPubActive = activeTimelineFilter && activeTimelineFilter.date === dateStr && activeTimelineFilter.type === 'pub';
+            const isCloseActive = activeTimelineFilter && activeTimelineFilter.date === dateStr && activeTimelineFilter.type === 'close';
+            
+            const pubOpacityClass = (activeTimelineFilter && !isPubActive) ? 'dimmed' : '';
+            const closeOpacityClass = (activeTimelineFilter && !isCloseActive) ? 'dimmed' : '';
+
+            const pubBarHtml = data.pub > 0 ? `<div class="timeline-bar-wrapper ${pubOpacityClass}" onclick="toggleTimelineFilter('${dateStr}', 'pub')"><div class="timeline-count pub">${data.pub}</div><div class="timeline-bar-container"><div class="timeline-bar pub" style="height: 0%" data-target="${pubHeight}"></div></div></div>` : '';
+            const closeBarHtml = data.close > 0 ? `<div class="timeline-bar-wrapper ${closeOpacityClass}" onclick="toggleTimelineFilter('${dateStr}', 'close')"><div class="timeline-count close">${data.close}</div><div class="timeline-bar-container"><div class="timeline-bar close" style="height: 0%" data-target="${closeHeight}"></div></div></div>` : '';
+
+            const group = document.createElement('div');
+            group.className = 'timeline-day-group';
+            group.innerHTML = `<div class="timeline-bars">${pubBarHtml}${closeBarHtml}</div><div class="timeline-date ${isTodayClass}">${displayDate}${todayLabel}</div>`;
+            chartContainer.appendChild(group);
+        });
+
+        setTimeout(() => { document.querySelectorAll('.timeline-bar').forEach(bar => { bar.style.height = `${bar.getAttribute('data-target')}%`; }); }, 50);
+    }
+
+    window.toggleTimelineFilter = function(dateStr, type) {
+        if (activeTimelineFilter && activeTimelineFilter.date === dateStr && activeTimelineFilter.type === type) {
+            activeTimelineFilter = null;
+        } else {
+            activeTimelineFilter = { date: dateStr, type: type };
+        }
+        buildTimeline(); 
+        applyFiltersAndRender();
+    };
+
+    function getTenderStatus(startDate, endDate) {
+        const now = new Date();
+        if (!endDate) return { text: 'Active', badge: 'status-active', txtClass: '', isClosed: false };
+        if (now > endDate) return { text: 'Closed', badge: 'status-closed', txtClass: '', isClosed: true };
+        const diffMs = endDate - now;
+        const diffDays = diffMs / (1000 * 60 * 60 * 24);
+        if (endDate.toDateString() === now.toDateString()) return { text: 'CLOSING TODAY', badge: 'status-danger', txtClass: 'text-danger', isClosed: false };
+        if (diffDays <= 2) return { text: 'Closing Soon', badge: 'status-warning', txtClass: 'text-warning', isClosed: false };
+        return { text: 'Live', badge: 'status-active', txtClass: '', isClosed: false };
+    }
+
+    function applyFiltersAndRender() {
+        const term = filterSearch.value.toLowerCase();
+        const selDept = filterDept.value;
+        const selCat = filterCategory.value;
+        
+        let filtered = allActiveTenders.filter(t => {
+            const matchSearch = (t['Work Description'] || '').toLowerCase().includes(term) || (t['Tender ID'] || '').toLowerCase().includes(term) || (t['Tender Reference Number'] || '').toLowerCase().includes(term);
+            const matchDept = selDept === '' || (t['Department'] || '').trim() === selDept;
+            const matchCat = selCat === '' || (t['Product Category'] || '').trim() === selCat;
+            
+            let matchTimeline = true;
+            if (activeTimelineFilter) {
+                if (activeTimelineFilter.type === 'pub') {
+                    const pd = parseDateString(t['Published Date']);
+                    matchTimeline = getLocalYYYYMMDD(pd) === activeTimelineFilter.date;
+                } else if (activeTimelineFilter.type === 'close') {
+                    const cd = parseDateString(t['Bid Submission End Date']);
+                    matchTimeline = getLocalYYYYMMDD(cd) === activeTimelineFilter.date;
+                }
+            }
+
+            return matchSearch && matchDept && matchCat && matchTimeline;
+        });
+
+        const now = new Date();
+        filtered.sort((a, b) => {
+            const dateA = parseDateString(a['Bid Submission End Date']); const dateB = parseDateString(b['Bid Submission End Date']);
+            const isClosedA = dateA && (now > dateA) ? 1 : 0; const isClosedB = dateB && (now > dateB) ? 1 : 0;
+            if (isClosedA !== isClosedB) return isClosedA - isClosedB; 
+            const timeA = dateA ? dateA.getTime() : Infinity; const timeB = dateB ? dateB.getTime() : Infinity;
+            return timeA - timeB;
+        });
+
+        const activeFilteredCount = filtered.filter(t => { const endDate = parseDateString(t['Bid Submission End Date']); return !(endDate && (now > endDate)); }).length;
+        
+        let resultMsg = `Showing ${activeFilteredCount} active tenders`;
+        if (activeTimelineFilter) {
+            const fDateObj = new Date(activeTimelineFilter.date);
+            const fDateStr = fDateObj.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+            const typeStr = activeTimelineFilter.type === 'pub' ? 'Published' : 'Closing';
+            resultMsg += ` • <span style="color:var(--primary);">${typeStr} on ${fDateStr}</span>`;
+        }
+        document.getElementById('resultCount').innerHTML = resultMsg;
+        
+        renderAll(filtered);
+    }
+
+    function renderAll(data) {
+        grid.innerHTML = ''; tableBody.innerHTML = '';
+
+        if (data.length === 0) {
+            grid.innerHTML = '<div class="status-message">No matching tenders found for these filters.</div>';
+            tableBody.innerHTML = '<tr><td colspan="7" class="status-message">No matching tenders found.</td></tr>';
+            return;
+        }
+
+        data.forEach((tender) => {
+            const dept = tender['Department'] || '-';
+            const division = tender['Division'] || '-';
+            const workDesc = tender['Work Description'] || 'Untitled Work';
+            const tenderId = tender['Tender ID'] || '-';
+            const category = tender['Product Category'] || '';
+            const tenderValue = formatCurrency(tender['Tender Value']);
+            
+            const tFee = parseFloat((tender['Tender Fee'] || '0').replace(/,/g, '')) || 0;
+            const pFee = parseFloat((tender['Processing Fee'] || '0').replace(/,/g, '')) || 0;
+            const totalFeeFormatted = new Intl.NumberFormat('en-IN').format(tFee + pFee);
+            
+            let workPeriodVal = tender['Period of Work (in days)'] || tender['Period Of Work(Days)'];
+            if (!workPeriodVal) {
+                const foundKey = Object.keys(tender).find(k => k.toLowerCase().replace(/\s/g,'').includes('periodofwork'));
+                workPeriodVal = foundKey ? tender[foundKey] : '-';
+            }
+            const workPeriodDisplay = (workPeriodVal !== '-' && workPeriodVal !== '') ? `${workPeriodVal} Days` : '-';
+            
+            const pubDateStr = tender['Published Date'] || '-';
+            const startDateStr = tender['Bid Submission Start Date'] || '-';
+            const endDateStr = tender['Bid Submission End Date'] || '-';
+            
+            const pubDate = parseDateString(pubDateStr);
+            const endDate = parseDateString(endDateStr); 
+
+            const status = getTenderStatus(pubDate, endDate);
+            
+            const closesTodayHtml = isExactlyToday(endDate) ? `<span class="tag-today-close">CLOSES TODAY</span>` : '';
+
+            // --- BUILD TILE ---
+            const card = document.createElement('div');
+            card.className = `tender-card ${status.isClosed ? 'card-is-closed' : ''}`;
+            card.innerHTML = `
+                <div class="card-meta-top">
+                    <div>
+                        <span class="tender-dept">${dept}</span>
+                        ${category ? `<span class="cat-badge">${category}</span>` : ''}
+                    </div>
+                    <div class="status-badge ${status.badge}"><div class="pulse"></div> ${status.text}</div>
+                </div>
+                <h3 class="tender-title">${workDesc}</h3>
+                
+                <div class="card-grid-details">
+                    <div class="detail-item"><span class="detail-label">Division</span><span class="detail-value">${division}</span></div>
+                    <div class="detail-item"><span class="detail-label">Tender Value</span><span class="detail-value" style="color:var(--success);">${tenderValue}</span></div>
+                    <div class="detail-item"><span class="detail-label">Tender ID</span><span class="detail-value">${tenderId}</span></div>
+                    <div class="detail-item"><span class="detail-label">Bid Start</span><span class="detail-value">${startDateStr}</span></div>
+                    <div class="detail-item" style="grid-column: 1 / -1;"><span class="detail-label">Bid Closing Date (End)</span><span class="detail-value ${status.txtClass}">${endDateStr} ${closesTodayHtml}</span></div>
+                </div>
+
+                <div class="fee-grid">
+                    <div class="fee-item"><span class="fee-label">Total Fee</span><span class="fee-val">₹ ${totalFeeFormatted}</span></div>
+                    <div class="fee-item"><span class="fee-label">EMD</span><span class="fee-val">₹ ${tender['EMD Amount'] || '0'}</span></div>
+                    <div class="fee-item"><span class="fee-label">Work Period</span><span class="fee-val">${workPeriodDisplay}</span></div>
+                </div>
+                <button class="btn-view-details" onclick="showTenderDetails('${tender._uid}')">
+                    View Full Details <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+            `;
+            grid.appendChild(card);
+
+            // --- BUILD TABLE ROW ---
+            const tr = document.createElement('tr');
+            tr.className = status.isClosed ? 'row-is-closed' : '';
+            tr.innerHTML = `
+                <td><div class="status-badge ${status.badge}" style="font-size: 0.65rem; margin-bottom: 4px;"><div class="pulse"></div> ${status.text}</div></td>
+                <td><strong>${dept}</strong><br><span style="font-size:0.75rem; color:var(--text-muted);">${division}</span><br>${category ? `<span class="cat-badge" style="margin-top:4px;">${category}</span>` : ''}</td>
+                <td><span style="font-size:0.8rem;"><strong>ID:</strong> ${tenderId}</span></td>
+                <td style="max-width:300px;line-height:1.4;"><strong>${workDesc}</strong></td>
+                <td><span style="color:var(--success);font-weight:700;">${tenderValue}</span><br><span style="font-size:0.75rem; color:var(--text-muted);">Fee: ₹${totalFeeFormatted} | EMD: ₹${tender['EMD Amount'] || '0'}</span></td>
+                <td><span style="font-size:0.75rem; color:var(--text-muted);">Start:</span><br>${startDateStr}<br><span style="font-size:0.75rem; color:var(--text-muted); margin-top:4px; display:block;">End:</span><span class="${status.txtClass}"><strong>${endDateStr}</strong></span><br>${closesTodayHtml}</td>
+                <td><button class="btn-view-details" style="padding: 6px 12px; font-size: 0.75rem;" onclick="showTenderDetails('${tender._uid}')">Details</button></td>
+            `;
+            tableBody.appendChild(tr);
+        });
+    }
+
+    // ================= SPA LOGIC FOR DETAILED VIEW ================= 
+    window.showTenderDetails = function(uid) {
+        const tender = allActiveTenders.find(t => t._uid === uid);
+        if (!tender) return;
+
+        // Populate Details
+        document.getElementById('dt_title').textContent = tender['Work Description'] || 'Untitled Work';
+        document.getElementById('dt_dept').textContent = tender['Department'] || '-';
+        document.getElementById('dt_div').textContent = tender['Division'] || '-';
+        document.getElementById('dt_cat').textContent = tender['Product Category'] || '-';
+        
+        document.getElementById('dt_val').textContent = formatCurrency(tender['Tender Value']);
+        document.getElementById('dt_emd').textContent = tender['EMD Amount'] ? `₹ ${tender['EMD Amount']}` : '0';
+        document.getElementById('dt_tfee').textContent = tender['Tender Fee'] ? `₹ ${tender['Tender Fee']}` : '0';
+        document.getElementById('dt_pfee').textContent = tender['Processing Fee'] ? `₹ ${tender['Processing Fee']}` : '0';
+
+        document.getElementById('dt_id').textContent = tender['Tender ID'] || '-';
+        document.getElementById('dt_ref').textContent = tender['Tender Reference Number'] || '-';
+        
+        document.getElementById('dt_pub').textContent = tender['Published Date'] || '-';
+        document.getElementById('dt_start').textContent = tender['Bid Submission Start Date'] || '-';
+        document.getElementById('dt_end').textContent = tender['Bid Submission End Date'] || '-';
+        document.getElementById('dt_open').textContent = tender['Bid Opening Date'] || '-';
+
+        let workPeriodVal = tender['Period of Work (in days)'] || tender['Period Of Work(Days)'];
+        if (!workPeriodVal) {
+            const foundKey = Object.keys(tender).find(k => k.toLowerCase().replace(/\s/g,'').includes('periodofwork'));
+            workPeriodVal = foundKey ? tender[foundKey] : '-';
+        }
+        document.getElementById('dt_period').textContent = (workPeriodVal !== '-' && workPeriodVal !== '') ? `${workPeriodVal} Days` : '-';
+
+        // Set Status Badge in Header
+        const pubDate = parseDateString(tender['Published Date']);
+        const endDate = parseDateString(tender['Bid Submission End Date']);
+        const status = getTenderStatus(pubDate, endDate);
+        document.getElementById('dt_status_container').innerHTML = `<div class="status-badge ${status.badge}"><div class="pulse"></div> ${status.text}</div>`;
+
+        // Update Action Button Link/State
+        const actionBtn = document.getElementById('dt_action_btn');
+        if (status.isClosed) {
+            actionBtn.textContent = 'Tender Closed - View Archive';
+            actionBtn.className = 'btn-portal disabled';
+        } else {
+            actionBtn.innerHTML = `View on Haryana eTenders Portal <svg fill="none" stroke="currentColor" width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>`;
+            actionBtn.className = 'btn-portal';
+        }
+
+        // Handle Conditional CivilMate Button Display
+        const category = tender['Product Category'] || '';
+        const catLower = category.trim().toLowerCase();
+        const eligibleCats = ['civil works', 'civil works - others', 'construction works', 'electrical works'];
+        
+        if (eligibleCats.includes(catLower)) {
+            document.getElementById('dt_civilmate_btn').classList.remove('hidden');
+            document.getElementById('dt_civilmate_note').classList.remove('hidden');
+        } else {
+            document.getElementById('dt_civilmate_btn').classList.add('hidden');
+            document.getElementById('dt_civilmate_note').classList.add('hidden');
+        }
+
+        // Toggle Views
+        mainDashboardView.classList.add('hidden');
+        tenderDetailsView.classList.remove('hidden');
+        
+        // Scroll to top of widget smoothly
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.hideTenderDetails = function() {
+        tenderDetailsView.classList.add('hidden');
+        mainDashboardView.classList.remove('hidden');
+    }
+</script>
+</body>
+</html>
