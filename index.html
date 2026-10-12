@@ -24,7 +24,7 @@
         <div class="nav-links">
             <a href="index.html#features">Features</a>
             <a href="index.html#learn-section">Learn</a>
-            <a href="index.html#tester-hub-section">Estimator Hub</a>
+            <a href="index.html#register-section">Apply</a>
             <a href="faq.html">FAQ</a>
             <a href="live-tenders.html">Tenders</a>
             <div class="dropdown">
@@ -226,212 +226,97 @@
 
     
 
-    <section id="tester-hub-section" style="background: var(--bg-gray); padding: 40px 0;">
-    <h2 style="text-align:center; font-size: 32px; margin-bottom: 24px;">Estimator & Feedback Hub</h2>
-    
+    <section id="register-section" style="background: var(--bg-gray); padding: 50px 0;">
+        <h2 style="text-align:center; font-size: 32px; margin-bottom: 8px; font-family: 'Google Sans', sans-serif;">Apply for CivilMate Access</h2>
+        <p style="text-align:center; font-size: 15px; color: var(--text-secondary); max-width: 600px; margin: 0 auto 30px auto;">
+            Register your Google Workspace account to apply for access. Seats are authorized sequentially to ensure high rate-sync accuracy with the Haryana Schedule of Rates (HSR).
+        </p>
 
+        <div class="tester-container" style="max-width: 620px; margin: 0 auto; background: #fff; padding: 32px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+            <!-- Live Program Capacity Metrics (Only numbers shown) -->
+            <div class="dash-container" style="margin-bottom: 24px; border: 1px solid var(--border-color); border-radius: 8px; padding: 18px; background: var(--bg-gray);">
+                <div class="dash-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                    <h4 style="margin:0; font-size:14px; font-weight:600; text-transform:uppercase; color:var(--text-secondary); letter-spacing:0.5px;">Program Capacity</h4>
+                    <div class="dash-actions" style="display:flex; align-items:center; gap:8px;">
+                        <button type="button" class="refresh-btn" onclick="manualRefresh(this)" style="display:inline-flex; align-items:center; gap:4px; padding:4px 10px; font-size:12px; border-radius:4px; border:1px solid #dadce0; background:#fff; cursor:pointer;">
+                            <svg class="refresh-icon" style="width:14px; height:14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                            Refresh
+                        </button>
+                        <div class="live-indicator" style="display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:600; color:#137333;"><div class="pulse-dot" style="width:7px; height:7px; border-radius:50%; background:#137333;"></div> Live</div>
+                    </div>
+                </div>
+                <div class="stat-grid" style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 10px; text-align:center;">
+                    <div class="stat-card" style="background:#fff; padding:12px 6px; border-radius:6px; border:1px solid #dadce0;">
+                        <div class="stat-val" id="ui-total-apps" style="font-size:22px; font-weight:700; color:#1a73e8;">-</div>
+                        <div class="stat-label" style="font-size:11px; color:var(--text-secondary); margin-top:2px;">Applications</div>
+                    </div>
+                    <div class="stat-card" style="background:#fff; padding:12px 6px; border-radius:6px; border:1px solid #dadce0;">
+                        <div class="stat-val" id="ui-max-vac" style="font-size:22px; font-weight:700; color:#202124;">100</div>
+                        <div class="stat-label" style="font-size:11px; color:var(--text-secondary); margin-top:2px;">Max Capacity</div>
+                    </div>
+                    <div class="stat-card" style="background:#fff; padding:12px 6px; border-radius:6px; border:1px solid #dadce0;">
+                        <div class="stat-val" id="ui-filled" style="font-size:22px; font-weight:700; color:#137333;">-</div>
+                        <div class="stat-label" style="font-size:11px; color:var(--text-secondary); margin-top:2px;">Allocated</div>
+                    </div>
+                    <div class="stat-card" style="background:#fff; padding:12px 6px; border-radius:6px; border:1px solid #dadce0;">
+                        <div class="stat-val primary" id="ui-avail" style="font-size:22px; font-weight:700; color:#b06000;">-</div>
+                        <div class="stat-label" style="font-size:11px; color:var(--text-secondary); margin-top:2px;">Available</div>
+                    </div>
+                </div>
+            </div>
 
+            <!-- Single Dedicated Application Form -->
+            <form id="form-join" onsubmit="handleSupabaseSubmit(event, 'join')">
+                <div class="form-group" style="margin-bottom:16px;">
+                    <label style="display:block; font-size:13px; font-weight:500; margin-bottom:6px;">Full Name</label>
+                    <input type="text" id="join-name" class="form-control" required placeholder="e.g. Rahul Sharma" style="width:100%; padding:10px 14px; border:1px solid #dadce0; border-radius:6px; font-size:14px; box-sizing:border-box;">
+                </div>
+                <div class="form-group" style="margin-bottom:16px;">
+                    <label style="display:block; font-size:13px; font-weight:500; margin-bottom:6px;">Google Workspace Email (Crucial)</label>
+                    <input type="email" id="join-email" class="form-control" required placeholder="name@gmail.com" oninput="clearError(this)" style="width:100%; padding:10px 14px; border:1px solid #dadce0; border-radius:6px; font-size:14px; box-sizing:border-box;">
+                    <div class="error-text" style="color:#c5221f; font-size:12px; display:none; margin-top:4px;">Please enter a valid @gmail.com address.</div>
+                    <span class="helper-text" style="display:block; font-size:12px; color:var(--text-secondary); margin-top:4px;">This exact email will be authorized to install the CivilMate add-on.</span>
+                </div>
+                <div class="form-group" style="margin-bottom:16px;">
+                    <label style="display:block; font-size:13px; font-weight:500; margin-bottom:6px;">Profession / Role</label>
+                    <select id="join-role" class="form-control" required style="width:100%; padding:10px 14px; border:1px solid #dadce0; border-radius:6px; font-size:14px; box-sizing:border-box;">
+                        <option value="" disabled selected>Select your role...</option>
+                        <option value="Engineer">Engineer</option>
+                        <option value="Contractor">Contractor</option>
+                        <option value="Estimator/QS">Estimator/QS</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="checkbox-group" style="display:flex; align-items:center; gap:8px; margin-bottom:20px;">
+                    <input type="checkbox" id="join-terms" required>
+                    <label for="join-terms" style="font-size:13px; color:var(--text-secondary); cursor:pointer;">I agree to the CivilMate Early Access program guidelines.</label>
+                </div>
+                <button type="submit" class="btn-submit" id="btn-join" style="width:100%; padding:12px; background:var(--google-blue); color:#fff; border:none; border-radius:6px; font-family:'Google Sans', sans-serif; font-size:15px; font-weight:500; cursor:pointer;">
+                    <span class="btn-text">Apply for Access</span>
+                    <div class="spinner"></div>
+                </button>
+            </form>
 
-<div class="tester-container">
-    <div class="header">
-        <h2 id="headerTitle">Estimator Onboarding</h2>
-        <p id="headerDesc">Apply for early access to the CivilMate add-on and estimation workspace.</p>
-        
-        <div class="tab-nav">
-            <button class="tab-btn active" onclick="switchTab('join', this)">Apply for Access</button>
-            <button class="tab-btn" onclick="switchTab('feedback', this)">Feedback & Requests</button>
-            <button class="tab-btn" onclick="switchTab('optout', this)">Revoke Access</button>
-        </div>
-    </div>
-
-    <!-- TAB 1: JOIN BETA -->
-    <div id="tab-join" class="form-section active">
-        
-        <div class="dash-container">
-            <div class="dash-header">
-                <h4>Program Capacity</h4>
-                <div class="dash-actions">
-                    <button type="button" class="refresh-btn" onclick="manualRefresh(this)">
-                        <svg class="refresh-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                        Refresh
+            <!-- Success State -->
+            <div id="success-state" class="success-state" style="display:none; text-align:center; padding:30px 10px; flex-direction:column; align-items:center;">
+                <div class="success-icon" style="width:52px; height:52px; border-radius:50%; background:#e6f4ea; color:#137333; display:flex; align-items:center; justify-content:center; margin-bottom:16px;">
+                    <svg style="width:28px; height:28px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <h3 id="success-title" style="margin:0 0 8px 0; font-size:22px; font-family:'Google Sans', sans-serif;">Application Received!</h3>
+                <p id="success-desc" style="margin:0 0 22px 0; font-size:14px; color:var(--text-secondary); max-width:480px; line-height:1.5;">Thank you. Your application has been logged. You can sign into the portal with your Google account to track your authorization status.</p>
+                <div style="display:flex; gap:12px;">
+                    <a href="portal.html" class="btn" style="background:var(--google-blue); color:#fff; padding:10px 22px; border-radius:6px; text-decoration:none; font-weight:500;">
+                        Open Estimator Portal
+                    </a>
+                    <button class="btn" onclick="resetRegisterForm()" style="background:#fff; border:1px solid #dadce0; color:var(--text-primary); padding:10px 18px; border-radius:6px; cursor:pointer;">
+                        Submit Another
                     </button>
-                    <div class="live-indicator"><div class="pulse-dot"></div> Live</div>
                 </div>
             </div>
-            <div class="stat-grid">
-                <div class="stat-card">
-                    <div class="stat-val" id="ui-total-apps">-</div>
-                    <div class="stat-label">Total Applications</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-val" id="ui-max-vac">-</div>
-                    <div class="stat-label">Maximum Capacity</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-val" id="ui-filled">-</div>
-                    <div class="stat-label">Allocated Seats</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-val primary" id="ui-avail">-</div>
-                    <div class="stat-label">Available Seats</div>
-                </div>
-            </div>
-            <div class="sync-note">* Note: Data synchronization may take up to 5 minutes to reflect recent submissions.</div>
         </div>
+    </section>
 
-        <form id="form-join" onsubmit="handleSupabaseSubmit(event, 'join')">
-            <div class="form-group">
-                <label>Full Name</label>
-                <input type="text" name="entry.1107456327" class="form-control" required placeholder="e.g. Rahul Sharma">
-            </div>
-            <div class="form-group">
-                <label>Google Workspace Email (Crucial)</label>
-                <input type="email" name="entry.1606526757" class="form-control" required placeholder="name@gmail.com" oninput="clearError(this)">
-                <div class="error-text">Please enter a valid @gmail.com address.</div>
-                <span class="helper-text">This exact email will be authorized to install the CivilMate add-on.</span>
-            </div>
-            <div class="form-group">
-                <label>Profession / Role</label>
-                <select name="entry.410117516" class="form-control" required>
-                    <option value="" disabled selected>Select your role...</option>
-                    <option value="Engineer">Engineer</option>
-                    <option value="Contractor">Contractor</option>
-                    <option value="Estimator/QS">Estimator/QS</option>
-                    <option value="Other">Other</option>
-                </select>
-            </div>
-            <div class="checkbox-group">
-                <input type="checkbox" name="entry.1068792119" value="I agree" id="join-terms" required>
-                <label for="join-terms">I agree to the CivilMate Early Access program guidelines.</label>
-            </div>
-            <button type="submit" class="btn-submit" id="btn-join">
-                <span class="btn-text">Apply for Access</span>
-                <div class="spinner"></div>
-            </button>
-        </form>
-    </div>
-
-    <!-- TAB 2: FEEDBACK / BUG REPORT -->
-    <div id="tab-feedback" class="form-section">
-        
-        <form id="form-feedback" onsubmit="handleSupabaseSubmit(event, 'feedback')">
-            <div class="form-group">
-                <label>Registered Email Address</label>
-                <input type="email" name="entry.979849551" class="form-control" required placeholder="Your whitelisted @gmail.com address" oninput="clearError(this)">
-                <div class="error-text">Please enter a valid @gmail.com address.</div>
-            </div>
-            <div class="form-group">
-                <label>Feedback Type</label>
-                <select name="entry.1389584312" class="form-control" required>
-                    <option value="" disabled selected>Select feedback type...</option>
-                    <option value="Bug / Calculation Error">Bug / Calculation Error</option>
-                    <option value="Feature Suggestion">Feature Suggestion</option>
-                    <option value="UI/UX Improvement">UI/UX Improvement</option>
-                    <option value="Calculation/Data Correction">Calculation/Data Correction</option>
-                    <option value="Database Update">Database Update</option>
-                    <option value="Others">Others</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Description</label>
-                <textarea name="entry.1107496639" class="form-control" required placeholder="Please describe the issue or suggestion in detail..."></textarea>
-            </div>
-            <div class="form-group">
-                <label>Steps to Reproduce (Optional)</label>
-                <textarea name="entry.599739827" class="form-control" placeholder="If reporting a bug, what were you doing when it happened?"></textarea>
-            </div>
-            <button type="submit" class="btn-submit" id="btn-feedback">
-                <span class="btn-text">Submit Feedback</span>
-                <div class="spinner"></div>
-            </button>
-        </form>
-
-        <div class="dash-container" style="margin-top: 30px; margin-bottom: 0;">
-            <div class="dash-header">
-                <h4>Pipeline Resolution Tracker</h4>
-                <div class="dash-actions">
-                    <button type="button" class="refresh-btn" onclick="manualRefresh(this)">
-                        <svg class="refresh-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                        Refresh
-                    </button>
-                    <div class="live-indicator"><div class="pulse-dot"></div> Live</div>
-                </div>
-            </div>
-            <table class="dash-table" id="ui-feedback-pivot">
-                <thead>
-                    <tr>
-                        <th style="width: 45%">Classification</th>
-                        <th style="width: 20%; text-align: center;">Submitted</th>
-                        <th style="width: 35%">Resolution</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td colspan="3" style="text-align:center; padding: 15px;">Loading live metrics...</td></tr>
-                </tbody>
-            </table>
-            <div class="sync-note">* Note: Data synchronization may take up to 5 minutes to reflect recent submissions.</div>
-        </div>
-
-    </div>
-
-    <!-- TAB 3: OPT OUT -->
-    <div id="tab-optout" class="form-section">
-        
-        <div class="dash-container">
-            <div class="dash-header">
-                <h4>Revocation Status</h4>
-                <div class="dash-actions">
-                    <button type="button" class="refresh-btn" onclick="manualRefresh(this)">
-                        <svg class="refresh-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                        Refresh
-                    </button>
-                    <div class="live-indicator"><div class="pulse-dot"></div> Live</div>
-                </div>
-            </div>
-            <div class="stat-grid" style="margin-top: 10px;">
-                <div class="stat-card">
-                    <div class="stat-val" id="ui-optout-total">-</div>
-                    <div class="stat-label">Total Requests</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-val warning" id="ui-optout-pending">-</div>
-                    <div class="stat-label">Pending Revocation</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-val danger" id="ui-optout-removed">-</div>
-                    <div class="stat-label">Successfully Opted-Out</div>
-                </div>
-            </div>
-            <div class="sync-note">* Note: Data synchronization may take up to 5 minutes to reflect recent submissions.</div>
-        </div>
-
-        <form id="form-optout" onsubmit="handleSupabaseSubmit(event, 'optout')">
-            <div class="form-group">
-                <label>Registered Email Address</label>
-                <input type="email" name="entry.2014970164" class="form-control" required placeholder="Your whitelisted @gmail.com address" oninput="clearError(this)">
-                <div class="error-text">Please enter a valid @gmail.com address.</div>
-            </div>
-            <button type="submit" class="btn-submit btn-danger" id="btn-optout">
-                <span class="btn-text">Revoke Access & Revoke Access</span>
-                <div class="spinner"></div>
-            </button>
-        </form>
-    </div>
-
-    <!-- SUCCESS MESSAGE STATE -->
-    <div id="success-state" class="success-state">
-        <div class="success-icon">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-        </div>
-        <h3 id="success-title">Request Submitted</h3>
-        <p id="success-desc">Thank you. We have received your request.</p>
-        <button class="btn-outline" onclick="resetForms()">Return to Forms</button>
-    </div>
-</div>
-
-
-</section>
-<section id="support" class="support">
+    <section id="support" class="support">
         <h2>Need Help or Support?</h2>
         <p>If you are experiencing issues with calculations, database syncing, or generating reports, we are here to help. We aim to respond within 24-48 hours.</p>
         <div class="contact-box">
@@ -451,7 +336,7 @@
 
     <script>
     /*
-     * CivilMate Supabase Integration & UI Controller
+     * CivilMate Landing Page Controller
      */
     const SUPABASE_CONFIG = {
         url: "https://qizuppfogzugazpvvaxg.supabase.co",
@@ -472,13 +357,7 @@
     }
     getSbClient();
 
-    const headerContent = {
-        join: { title: "Estimator Onboarding", desc: "Apply for early access to the CivilMate add-on and estimation workspace." },
-        feedback: { title: "Feedback & Feature Requests", desc: "Found an issue or have a feature suggestion? Let our engineering team know." },
-        optout: { title: "Access Revocation", desc: "Fill out the form below to remove your email from the whitelist and revoke access." }
-    };
-
-    // Live Dashboard Metrics Query
+    // Live Dashboard Metrics Query (Only numbers)
     async function fetchAndPopulateDashboards() {
         const client = getSbClient();
         if (!client) return;
@@ -486,12 +365,8 @@
         try {
             let totalApps = 0;
             let approvedSeats = 0;
-            let waitlistedSeats = 0;
-            let optedOutSeats = 0;
             const maxVacancies = 100;
-            let feedbackStats = {};
 
-            // 1. Attempt fast RPC stats first
             let rpcSucceeded = false;
             try {
                 const { data, error } = await client.rpc('get_beta_program_stats');
@@ -500,101 +375,32 @@
                     const p = data.profiles || data;
                     totalApps = p.total_applications || 0;
                     approvedSeats = p.allocated_seats || 0;
-                    waitlistedSeats = p.waitlisted_seats || 0;
-                    optedOutSeats = p.opted_out_seats || 0;
-                    if (data.feedback) feedbackStats = data.feedback;
                 }
             } catch (e) {
                 console.warn("RPC stats note:", e);
             }
 
-            // 2. Direct query fallback
             if (!rpcSucceeded) {
                 const { data: profiles } = await client.from('user_profiles').select('status');
                 if (profiles && profiles.length > 0) {
                     totalApps = profiles.length;
                     approvedSeats = profiles.filter(p => p.status === 'approved').length;
-                    waitlistedSeats = profiles.filter(p => p.status === 'waitlisted').length;
-                    optedOutSeats = profiles.filter(p => p.status === 'opted_out').length;
-                }
-
-                const { data: feedbackRows } = await client.from('beta_feedback').select('feedback_type, status');
-                if (feedbackRows) {
-                    feedbackRows.forEach(row => {
-                        const type = row.feedback_type || 'Others';
-                        if (!feedbackStats[type]) feedbackStats[type] = { submitted: 0, resolved: 0 };
-                        feedbackStats[type].submitted++;
-                        if (row.status === 'resolved') feedbackStats[type].resolved++;
-                    });
                 }
             }
 
-            // 3. Populate Join Section
             const availableSeats = Math.max(0, maxVacancies - approvedSeats);
-            const elTotalApps = document.getElementById('ui-total-apps');
-            const elMaxVac = document.getElementById('ui-max-vac');
+            const elTotal = document.getElementById('ui-total-apps');
+            const elMax = document.getElementById('ui-max-vac');
             const elFilled = document.getElementById('ui-filled');
             const elAvail = document.getElementById('ui-avail');
 
-            if (elTotalApps) elTotalApps.textContent = totalApps;
-            if (elMaxVac) elMaxVac.textContent = maxVacancies;
+            if (elTotal) elTotal.textContent = totalApps;
+            if (elMax) elMax.textContent = maxVacancies;
             if (elFilled) elFilled.textContent = approvedSeats;
             if (elAvail) elAvail.textContent = availableSeats;
 
-            // 4. Populate Revoke Access Section
-            const elOptTotal = document.getElementById('ui-optout-total');
-            const elOptPending = document.getElementById('ui-optout-pending');
-            const elOptRemoved = document.getElementById('ui-optout-removed');
-
-            if (elOptTotal) elOptTotal.textContent = optedOutSeats;
-            if (elOptPending) elOptPending.textContent = "0";
-            if (elOptRemoved) elOptRemoved.textContent = optedOutSeats;
-
-            // 5. Populate Feedback Table
-            const categories = [
-                "Bug / Calculation Error",
-                "Feature Suggestion",
-                "UI/UX Improvement",
-                "Calculation/Data Correction",
-                "Database Update",
-                "Others"
-            ];
-
-            let pivotHtml = '';
-            let activeFeedbackCount = 0;
-
-            categories.forEach(cat => {
-                const data = feedbackStats[cat];
-                if (data && data.submitted > 0) {
-                    activeFeedbackCount++;
-                    const pct = Math.min(100, Math.max(0, Math.round((data.resolved / data.submitted) * 100)));
-                    pivotHtml += `
-                        <tr>
-                            <td>${escapeHtml(cat)}</td>
-                            <td style="text-align: center;"><strong>${data.submitted}</strong></td>
-                            <td>
-                                <div style="display: flex; justify-content: space-between; font-size: 0.7rem; font-weight: 600;">
-                                    <span>${data.resolved} Resolved</span>
-                                    <span>${pct}%</span>
-                                </div>
-                                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${pct}%;"></div></div>
-                            </td>
-                        </tr>
-                    `;
-                }
-            });
-
-            if (activeFeedbackCount === 0) {
-                pivotHtml = '<tr><td colspan="3" style="text-align:center; padding: 15px; color: #64748b;">No feedback reports have been submitted yet.</td></tr>';
-            }
-
-            const pivotTbody = document.querySelector('#ui-feedback-pivot tbody');
-            if (pivotTbody) pivotTbody.innerHTML = pivotHtml;
-
         } catch (error) {
             console.error("Dashboard Sync Error:", error);
-            const pivotTbody = document.querySelector('#ui-feedback-pivot tbody');
-            if (pivotTbody) pivotTbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding: 15px; color: #dc2626;">Unable to sync live data.</td></tr>';
         }
     }
 
@@ -606,27 +412,10 @@
         }, 500);
     }
 
-    // Tab Switching
-    function switchTab(tabId, btnElement) {
-        document.querySelectorAll('.form-section').forEach(el => el.classList.remove('active'));
-        const successState = document.getElementById('success-state');
-        if (successState) successState.style.display = 'none';
-        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-        
-        const targetTab = document.getElementById('tab-' + tabId);
-        if (targetTab) targetTab.classList.add('active');
-        if (btnElement) btnElement.classList.add('active');
-        
-        const hTitle = document.getElementById('headerTitle');
-        const hDesc = document.getElementById('headerDesc');
-        if (hTitle && headerContent[tabId]) hTitle.textContent = headerContent[tabId].title;
-        if (hDesc && headerContent[tabId]) hDesc.textContent = headerContent[tabId].desc;
-    }
-
     function clearError(inputElement) {
         inputElement.classList.remove('is-invalid');
-        const errorText = inputElement.parentElement.querySelector('.error-text');
-        if (errorText) errorText.style.display = 'none';
+        const err = inputElement.parentElement.querySelector('.error-text');
+        if (err) err.style.display = 'none';
     }
 
     function escapeHtml(str) {
@@ -639,153 +428,75 @@
             .replace(/'/g, '&#039;');
     }
 
-    function showSuccess(title, htmlDesc) {
-        document.querySelectorAll('.form-section').forEach(el => el.classList.remove('active'));
-        const sTitle = document.getElementById('success-title');
-        const sDesc = document.getElementById('success-desc');
-        const sState = document.getElementById('success-state');
-        if (sTitle) sTitle.textContent = title;
-        if (sDesc) sDesc.innerHTML = htmlDesc;
-        if (sState) sState.style.display = 'flex';
+    function resetRegisterForm() {
+        document.getElementById('success-state').style.display = 'none';
+        document.getElementById('form-join').style.display = 'block';
+        document.getElementById('form-join').reset();
     }
 
-    function resetForms() {
-        const sState = document.getElementById('success-state');
-        if (sState) sState.style.display = 'none';
-        const activeTabBtn = document.querySelector('.tab-btn.active');
-        if (activeTabBtn && activeTabBtn.textContent.includes('Become')) {
-            document.getElementById('tab-join')?.classList.add('active');
-        } else if (activeTabBtn && activeTabBtn.textContent.includes('Report')) {
-            document.getElementById('tab-feedback')?.classList.add('active');
-        } else {
-            document.getElementById('tab-optout')?.classList.add('active');
-        }
-    }
-
-    // Unified Supabase Form Handler
+    // Application Form Submission
     async function handleSupabaseSubmit(event, type) {
         if (event) event.preventDefault();
         const client = getSbClient();
         if (!client) {
-            alert("Database service is connecting. Please refresh and try again.");
+            alert("Database service connecting. Please refresh and try again.");
             return false;
         }
 
-        const form = event.target;
-        const emailInput = form.querySelector('input[type="email"]');
-        if (emailInput) {
-            const emailValue = emailInput.value.trim().toLowerCase();
-            if (!emailValue.endsWith('@gmail.com')) {
-                emailInput.classList.add('is-invalid');
-                const errorText = form.querySelector('.error-text');
-                if (errorText) errorText.style.display = 'block';
-                emailInput.focus();
-                return false;
-            }
+        const form = document.getElementById('form-join');
+        const emailInput = document.getElementById('join-email');
+        const nameInput = document.getElementById('join-name');
+        const roleSelect = document.getElementById('join-role');
+
+        const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+        if (!email.endsWith('@gmail.com')) {
+            emailInput.classList.add('is-invalid');
+            const errorText = form.querySelector('.error-text');
+            if (errorText) errorText.style.display = 'block';
+            emailInput.focus();
+            return false;
         }
 
-        const btn = document.getElementById('btn-' + type);
+        const fullName = nameInput ? nameInput.value.trim() : 'Estimator';
+        const role = roleSelect ? roleSelect.value : 'Engineer';
+        const btn = document.getElementById('btn-join');
+
         if (btn) btn.classList.add('is-loading');
 
         try {
-            if (type === 'join') {
-                const fullNameInput = form.querySelector('input[type="text"]');
-                const roleSelect = form.querySelector('select');
-                const fullName = fullNameInput ? fullNameInput.value.trim() : 'Estimator';
-                const email = emailInput.value.trim().toLowerCase();
-                const role = roleSelect ? roleSelect.value : 'Engineer';
-
-                // Insert into user_profiles
-                const { error: profileErr } = await client.from('user_profiles').upsert([
-                    {
-                        email: email,
-                        full_name: fullName,
-                        status: 'waitlisted',
-                        role: role
-                    }
-                ], { onConflict: 'email' });
-
-                if (profileErr) {
-                    console.warn("Profile table note:", profileErr.message);
+            // Upsert user into user_profiles
+            await client.from('user_profiles').upsert([
+                {
+                    email: email,
+                    full_name: fullName,
+                    status: 'waitlisted',
+                    role: role
                 }
+            ], { onConflict: 'email' });
 
-                // Also log to beta_feedback as application entry
-                await client.from('beta_feedback').insert([
-                    {
-                        user_email: email,
-                        feedback_type: 'Beta Application',
-                        description: `New beta application from ${fullName} (Profession: ${role})`,
-                        status: 'new'
-                    }
-                ]);
-
-                showSuccess(
-                    "Application Received!",
-                    `Thank you, <strong>${escapeHtml(fullName)}</strong>! Your beta application has been recorded. You can now visit the <a href="portal.html" style="color:var(--google-blue); font-weight:600; text-decoration:underline;">Tester Portal</a> to sign in with your Google account and track your whitelist status in real time.`
-                );
-                form.reset();
-
-            } else if (type === 'feedback') {
-                const email = emailInput.value.trim().toLowerCase();
-                const typeSelect = form.querySelector('select');
-                const textareas = form.querySelectorAll('textarea');
-                const feedbackType = typeSelect ? typeSelect.value : 'Others';
-                const desc = textareas[0] ? textareas[0].value.trim() : '';
-                const steps = textareas[1] ? textareas[1].value.trim() : '';
-
-                const { error } = await client.from('beta_feedback').insert([
-                    {
-                        user_email: email,
-                        feedback_type: feedbackType,
-                        description: desc,
-                        steps_to_reproduce: steps,
-                        status: 'new'
-                    }
-                ]);
-
-                if (error) throw error;
-
-                showSuccess(
-                    "Feedback Submitted",
-                    "Thank you for helping us improve CivilMate. Our development team has received your report and will review it promptly."
-                );
-                form.reset();
-
-            } else if (type === 'optout') {
-                const email = emailInput.value.trim().toLowerCase();
-
-                // 1. Call secure opt out function
-                let optOutHandled = false;
-                try {
-                    const { error: rpcErr } = await client.rpc('request_opt_out', { p_email: email });
-                    if (!rpcErr) optOutHandled = true;
-                } catch (e) {
-                    console.warn("Opt out RPC note:", e);
+            // Log submission
+            await client.from('beta_feedback').insert([
+                {
+                    user_email: email,
+                    feedback_type: 'Access Application',
+                    description: `New access application from ${fullName} (Profession: ${role})`,
+                    status: 'new'
                 }
+            ]);
 
-                // 2. Also log revocation request in beta_feedback so admin sees it
-                await client.from('beta_feedback').insert([
-                    {
-                        user_email: email,
-                        feedback_type: 'Revoke Access Request',
-                        description: `User requested access revocation and whitelist removal for ${email}`,
-                        status: 'new'
-                    }
-                ]);
-
-                showSuccess(
-                    "Revoke Access Request Received",
-                    `Your request to revoke beta access for <strong>${escapeHtml(email)}</strong> has been registered. You have been removed from the active whitelist.`
-                );
-                form.reset();
+            form.style.display = 'none';
+            const successState = document.getElementById('success-state');
+            const descEl = document.getElementById('success-desc');
+            if (descEl) {
+                descEl.innerHTML = `Thank you, <strong>${escapeHtml(fullName)}</strong>! Your application for <strong>${escapeHtml(email)}</strong> has been recorded in the priority queue. You can sign into the <a href="portal.html" style="color:var(--google-blue); font-weight:600; text-decoration:underline;">Estimator Portal</a> anytime with your Google account to track authorization status.`;
             }
+            if (successState) successState.style.display = 'flex';
 
-            // Sync updated counter numbers immediately
             fetchAndPopulateDashboards();
 
         } catch (err) {
             console.error("Submission failed:", err);
-            alert("Could not complete submission: " + (err.message || "Please check your internet connection."));
+            alert("Submission error: " + (err.message || "Please check network connection."));
         } finally {
             if (btn) btn.classList.remove('is-loading');
         }
@@ -795,6 +506,5 @@
 
     window.addEventListener('DOMContentLoaded', fetchAndPopulateDashboards);
 </script>
-
 </body>
 </html>

@@ -41,11 +41,11 @@
             flex-direction: column;
         }
 
-        /* Responsive Portal Shell */
+        /* Responsive Portal Shell - 100px top padding guarantees header never overlaps content */
         .portal-wrapper {
             max-width: 1040px;
             margin: 0 auto;
-            padding: 30px 20px 80px 20px;
+            padding: 100px 20px 80px 20px;
             width: 100%;
             box-sizing: border-box;
             flex: 1;
@@ -71,8 +71,8 @@
             border-radius: 12px;
             padding: 40px;
             max-width: 440px;
-            margin: 40px auto;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin: 30px auto;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.06);
             text-align: center;
         }
 
@@ -156,7 +156,6 @@
             height: 18px;
         }
 
-        /* Divider */
         .auth-divider {
             display: flex;
             align-items: center;
@@ -179,7 +178,6 @@
             padding: 0 10px;
         }
 
-        /* Form Inputs */
         .auth-form-group {
             text-align: left;
             margin-bottom: 16px;
@@ -247,11 +245,6 @@
             font-weight: 500;
         }
 
-        .auth-toggle-link a:hover {
-            text-decoration: underline;
-        }
-
-        /* Alerts in auth card */
         .alert-box {
             padding: 10px 14px;
             border-radius: 6px;
@@ -328,6 +321,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            flex-wrap: wrap;
         }
 
         .btn-dash-action {
@@ -355,6 +349,16 @@
         }
         .btn-dash-action.btn-signout:hover {
             background: var(--portal-danger-bg);
+        }
+
+        .btn-dash-action.btn-feedback-action {
+            background: #e6f4ea;
+            color: #137333;
+            border-color: #ceead6;
+            font-weight: 500;
+        }
+        .btn-dash-action.btn-feedback-action:hover {
+            background: #ceead6;
         }
 
         .btn-dash-action.btn-admin {
@@ -399,7 +403,6 @@
             border: 1px solid #fad2cf;
         }
 
-        /* Rotating animation */
         @keyframes spinAnimation {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -513,6 +516,9 @@
             color: #c5221f;
             border-color: #fad2cf;
             background: #fce8e6;
+        }
+        .btn-action-small.btn-danger:hover {
+            background: #fad2cf;
         }
         .btn-action-small.btn-warn {
             color: #b06000;
@@ -650,8 +656,8 @@
 
         .hub-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 20px;
             margin-bottom: 30px;
         }
 
@@ -659,7 +665,7 @@
             background: #fff;
             border: 1px solid var(--portal-card-border);
             border-radius: 12px;
-            padding: 26px;
+            padding: 24px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -680,8 +686,8 @@
         }
 
         .hub-icon {
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -689,13 +695,14 @@
         }
 
         .hub-icon.addon { background: #e8f0fe; color: #1a73e8; }
-        .hub-icon.extension { background: #fef7e0; color: #b06000; }
-        .hub-icon.community { background: #fce8e6; color: #d93025; }
+        .hub-icon.chrome { background: #fef7e0; color: #b06000; }
+        .hub-icon.edge { background: #e1f5fe; color: #0288d1; }
+        .hub-icon.youtube { background: #fce8e6; color: #d93025; }
 
-        .hub-icon .material-icons { font-size: 26px; }
+        .hub-icon .material-icons { font-size: 24px; }
 
         .hub-badge {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
             text-transform: uppercase;
             padding: 3px 8px;
@@ -705,18 +712,18 @@
         }
 
         .hub-card h3 {
-            margin: 0 0 8px 0;
-            font-size: 18px;
+            margin: 0 0 6px 0;
+            font-size: 16px;
             font-family: 'Google Sans', sans-serif;
             font-weight: 500;
             color: var(--text-primary);
         }
 
         .hub-card p {
-            margin: 0 0 20px 0;
+            margin: 0 0 18px 0;
             font-size: 13px;
             color: var(--text-secondary);
-            line-height: 1.5;
+            line-height: 1.45;
             flex-grow: 1;
         }
 
@@ -724,8 +731,8 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            padding: 10px 16px;
+            gap: 6px;
+            padding: 9px 14px;
             border-radius: 6px;
             font-size: 13px;
             font-weight: 500;
@@ -765,7 +772,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             flex-wrap: wrap;
             gap: 12px;
         }
@@ -834,16 +841,30 @@
             display: inline-block;
         }
 
-        /* Modal Dialog */
+        .auto-delete-notice {
+            background: #f8f9fa;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Modal Dialogs */
         .portal-modal-backdrop {
             display: none;
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.45);
+            background: rgba(0,0,0,0.5);
             z-index: 10001;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            animation: fadeIn 0.2s ease-in-out;
         }
         .portal-modal-backdrop.active {
             display: flex;
@@ -852,14 +873,16 @@
             background: #fff;
             border-radius: 12px;
             padding: 28px;
-            max-width: 540px;
+            max-width: 500px;
             width: 100%;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
             box-sizing: border-box;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         @media (max-width: 600px) {
-            .portal-wrapper { padding: 20px 14px 60px 14px; }
+            .portal-wrapper { padding: 90px 14px 60px 14px; }
             .dash-topbar { flex-direction: column; align-items: flex-start; }
             .dash-topbar-actions { width: 100%; justify-content: space-between; }
             .activity-search { width: 100%; }
@@ -868,7 +891,7 @@
 </head>
 <body>
 
-    <!-- Unified Site Header -->
+    <!-- Unified Site Header (Fixed Navbar) -->
     <header>
         <div class="logo">
             <img src="logo.jpg" alt="CivilMate Logo" width="32" height="32" style="border-radius:4px;">
@@ -877,7 +900,7 @@
         <div class="nav-links">
             <a href="index.html#features">Features</a>
             <a href="index.html#learn-section">Learn</a>
-            <a href="index.html#tester-hub-section">Estimator Hub</a>
+            <a href="index.html#register-section">Apply</a>
             <a href="faq.html">FAQ</a>
             <a href="live-tenders.html">Tenders</a>
             <div class="dropdown">
@@ -957,9 +980,9 @@
                         <span id="pwdHelperText" style="display:none; font-size: 11px; color: var(--text-secondary); margin-top: 4px;">Minimum 6 characters</span>
                     </div>
 
-                    <!-- Forgot Password Link -->
+                    <!-- Custom Styled Forgot Password Link -->
                     <div id="forgotPasswordGroup" style="text-align: right; margin-top: -6px; margin-bottom: 14px;">
-                        <a href="javascript:void(0)" onclick="handleForgotPassword(event)" style="font-size: 12px; color: var(--portal-primary); text-decoration: none; font-weight: 500;">Forgot password?</a>
+                        <a href="javascript:void(0)" onclick="openForgotPasswordModal()" style="font-size: 12px; color: var(--portal-primary); text-decoration: none; font-weight: 500;">Forgot password?</a>
                     </div>
 
                     <button type="submit" class="btn-submit-auth" id="btnEmailSubmit">
@@ -989,6 +1012,10 @@
                     <button class="btn-dash-action btn-admin admin-only-btn" onclick="openAdminSuite()" style="display:none;">
                         <span class="material-icons" style="font-size: 16px;">admin_panel_settings</span>
                         Admin Suite
+                    </button>
+                    <button class="btn-dash-action btn-feedback-action" onclick="openFeedbackModal()">
+                        <span class="material-icons" style="font-size: 16px;">feedback</span>
+                        Feedback / Requests
                     </button>
                     <button class="btn-dash-action" id="btnCheckApprovalTop" onclick="checkApprovalStatus(this)">
                         <span class="material-icons" style="font-size: 16px;">refresh</span>
@@ -1042,17 +1069,17 @@
                     <div class="locked-card">
                         <div class="locked-badge"><span class="material-icons" style="font-size: 12px;">lock</span> Gated</div>
                         <h4 style="margin: 0 0 6px 0; font-size: 15px;">Google Sheets™ Add-on</h4>
-                        <p style="margin: 0; font-size: 13px; color: var(--text-secondary);">Marketplace installation will unlock as soon as your email is approved.</p>
+                        <p style="margin: 0; font-size: 13px; color: var(--text-secondary);">Marketplace installation unlocks once your email is approved.</p>
                     </div>
                     <div class="locked-card">
                         <div class="locked-badge"><span class="material-icons" style="font-size: 12px;">lock</span> Gated</div>
-                        <h4 style="margin: 0 0 6px 0; font-size: 15px;">Chrome™ / Edge Extension</h4>
-                        <p style="margin: 0; font-size: 13px; color: var(--text-secondary);">Automated HEWP portal data extractor and bill sync download link.</p>
+                        <h4 style="margin: 0 0 6px 0; font-size: 15px;">Chrome & Edge Extensions</h4>
+                        <p style="margin: 0; font-size: 13px; color: var(--text-secondary);">Automated HEWP portal data extractor and bill sync download links.</p>
                     </div>
                     <div class="locked-card">
                         <div class="locked-badge"><span class="material-icons" style="font-size: 12px;">lock</span> Gated</div>
                         <h4 style="margin: 0 0 6px 0; font-size: 15px;">Video Masterclasses</h4>
-                        <p style="margin: 0; font-size: 13px; color: var(--text-secondary);">Direct access to official HSR estimation guides and video walk-throughs.</p>
+                        <p style="margin: 0; font-size: 13px; color: var(--text-secondary);">Step-by-step video guides on rate analysis and bidding automation.</p>
                     </div>
                 </div>
             </div>
@@ -1078,6 +1105,10 @@
                         <span class="material-icons" style="font-size: 16px;">admin_panel_settings</span>
                         Admin Suite
                     </button>
+                    <button class="btn-dash-action btn-feedback-action" onclick="openFeedbackModal()">
+                        <span class="material-icons" style="font-size: 16px;">feedback</span>
+                        Submit Feedback / Request
+                    </button>
                     <button class="btn-dash-action" onclick="fetchStagedExports()">
                         <span class="material-icons" style="font-size: 16px;">sync</span>
                         Refresh Exports
@@ -1097,14 +1128,14 @@
             <div class="approved-banner">
                 <div>
                     <h2>Welcome to the CivilMate Suite!</h2>
-                    <p>Your Google account has been authorized. You can now install the Google Sheets Add-on, Chrome/Edge Extension, and review your staged estimate exports below.</p>
+                    <p>Your Google account has been authorized. You can now install the Google Sheets Add-on, Chrome/Edge Extensions, and review your staged estimate exports below.</p>
                 </div>
                 <div style="display: flex; gap: 8px;">
                     <span class="material-icons" style="font-size: 40px; opacity: 0.9;">verified</span>
                 </div>
             </div>
 
-            <!-- Ecosystem Cards -->
+            <!-- 4 Distinct Ecosystem Cards -->
             <div class="hub-grid">
                 <!-- Card 1: Add-on -->
                 <div class="hub-card">
@@ -1112,45 +1143,61 @@
                         <div class="hub-icon addon">
                             <span class="material-icons">table_chart</span>
                         </div>
-                        <span class="hub-badge">Google Workspace</span>
+                        <span class="hub-badge">Workspace</span>
                     </div>
                     <h3>Google Sheets™ Add-on</h3>
-                    <p>Execute formulas, extract HSR rates, calculate material abstracts, and create Details of Quantity directly within your Google Sheets™.</p>
+                    <p>Execute formulas, extract HSR rates, calculate material abstracts, and create Details of Quantity.</p>
                     <a href="https://workspace.google.com/marketplace/app/civilmate/716518784539" target="_blank" rel="noopener noreferrer" class="btn-hub-action primary">
-                        <span class="material-icons" style="font-size: 18px;">download</span>
+                        <span class="material-icons" style="font-size: 16px;">download</span>
                         Install Add-on
                     </a>
                 </div>
 
-                <!-- Card 2: Extension -->
+                <!-- Card 2: Chrome Extension -->
                 <div class="hub-card">
                     <div class="hub-icon-row">
-                        <div class="hub-icon extension">
+                        <div class="hub-icon chrome">
                             <span class="material-icons">extension</span>
                         </div>
-                        <span class="hub-badge">Chrome & Edge</span>
+                        <span class="hub-badge">Chrome Store</span>
                     </div>
-                    <h3>Chrome / Edge Extension</h3>
-                    <p>Automate bill submissions, parse online tender BoQs, and bridge data directly between the Haryana Engineering Works Portal (HEWP) and your Sheet.</p>
+                    <h3>Google Chrome™ Extension</h3>
+                    <p>Automate bill submissions, parse tender BoQs, and bridge data directly between HEWP and Google Sheets.</p>
                     <a href="https://chromewebstore.google.com/detail/paadmpfoldjolnnojnihfobplhplbobh?utm_source=item-share-cb" target="_blank" rel="noopener noreferrer" class="btn-hub-action primary">
-                        <span class="material-icons" style="font-size: 18px;">add_to_queue</span>
-                        Get Extension
+                        <span class="material-icons" style="font-size: 16px;">add_to_queue</span>
+                        Get Chrome Extension
                     </a>
                 </div>
 
-                <!-- Card 3: Video Tutorials (Replaces Google Chat) -->
+                <!-- Card 3: Edge Extension -->
                 <div class="hub-card">
                     <div class="hub-icon-row">
-                        <div class="hub-icon community" style="background:#fce8e6; color:#c5221f;">
+                        <div class="hub-icon edge">
+                            <span class="material-icons">public</span>
+                        </div>
+                        <span class="hub-badge">Edge Add-ons</span>
+                    </div>
+                    <h3>Microsoft Edge™ Extension</h3>
+                    <p>Full support for Microsoft Edge browser to extract online tenders and synchronize HEWP bill packages.</p>
+                    <a href="https://microsoftedge.microsoft.com/addons/detail/civilmate-extension/lgagpkhicfddhcihofkkbjgmfhangbel" target="_blank" rel="noopener noreferrer" class="btn-hub-action primary" style="background:#0288d1;">
+                        <span class="material-icons" style="font-size: 16px;">add_to_queue</span>
+                        Get Edge Extension
+                    </a>
+                </div>
+
+                <!-- Card 4: Video Tutorials -->
+                <div class="hub-card">
+                    <div class="hub-icon-row">
+                        <div class="hub-icon youtube">
                             <span class="material-icons">smart_display</span>
                         </div>
                         <span class="hub-badge">YouTube</span>
                     </div>
-                    <h3>Official Video Guides</h3>
-                    <p>Watch step-by-step masterclasses on rate analysis, BOQ extraction, and HEWP bidding automation directly on our YouTube channel.</p>
+                    <h3>Video Masterclasses</h3>
+                    <p>Watch step-by-step masterclasses on rate analysis, BOQ extraction, and HEWP bidding automation.</p>
                     <a href="https://www.youtube.com/@civilmateindia" target="_blank" rel="noopener noreferrer" class="btn-hub-action secondary">
-                        <span class="material-icons" style="font-size: 18px;">play_circle</span>
-                        Watch Tutorials
+                        <span class="material-icons" style="font-size: 16px;">play_circle</span>
+                        Watch Guides
                     </a>
                 </div>
             </div>
@@ -1174,20 +1221,28 @@
                     <table class="exports-table" id="exportsTable">
                         <thead>
                             <tr>
-                                <th style="width: 50px;">#</th>
+                                <th style="width: 40px;">#</th>
                                 <th>Work / Estimate Name</th>
                                 <th>Exported At (IST)</th>
-                                <th style="text-align: right;">Status</th>
+                                <th>Status</th>
+                                <th style="text-align: right;">Action</th>
                             </tr>
                         </thead>
                         <tbody id="exportsTableBody">
                             <tr>
-                                <td colspan="4" style="text-align: center; padding: 24px; color: var(--text-secondary);">
+                                <td colspan="5" style="text-align: center; padding: 24px; color: var(--text-secondary);">
                                     Connecting to Supabase staged_exports...
                                 </td>
                             </tr>
                         </tbody>
                     </table>
+                </div>
+
+                <div class="auto-delete-notice">
+                    <span class="material-icons" style="font-size: 18px; color: #1967d2;">info</span>
+                    <div>
+                        <strong>Automatic 30-Day Cleanup:</strong> Staged export records are automatically purged after 30 days of export to protect storage and maintain current rate revisions. You can also manually delete records once successfully uploaded to HEWP.
+                    </div>
                 </div>
             </div>
         </div>
@@ -1297,14 +1352,6 @@
                 </div>
             </div>
 
-            <!-- Inactivity Rules Info Banner -->
-            <div style="background:#fff; border:1px solid #dadce0; border-radius:8px; padding:12px 18px; margin-bottom:20px; font-size:12px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
-                <span style="font-weight:600; color:var(--text-primary);">Inactivity Policies:</span>
-                <span style="display:inline-flex; align-items:center; gap:4px; color:#b06000;"><span class="material-icons" style="font-size:14px;">warning</span> 15 Days: Soft Warning</span>
-                <span style="display:inline-flex; align-items:center; gap:4px; color:#c5221f;"><span class="material-icons" style="font-size:14px;">report</span> 29 Days: Hard Final Notice</span>
-                <span style="display:inline-flex; align-items:center; gap:4px; color:#5f6368;"><span class="material-icons" style="font-size:14px;">timer_off</span> 30th Day: Auto Opt-Out / Seat Revocation</span>
-            </div>
-
             <!-- Registered Estimators Directory Table -->
             <div class="admin-card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
@@ -1336,10 +1383,10 @@
                 </div>
             </div>
 
-            <!-- Feedback & Feature Requests Table -->
+            <!-- Feedback & Feature Requests Table with Live Status Controls -->
             <div class="admin-card">
                 <h4 style="margin: 0 0 16px 0; font-size: 16px; font-family: 'Google Sans', sans-serif;">
-                    Feedback & Feature Tracker
+                    Feedback & Feature Tracker (User Submissions)
                 </h4>
                 <div class="exports-table-wrapper">
                     <table class="admin-table" id="adminFeedbackTable">
@@ -1349,7 +1396,7 @@
                                 <th>Estimator Email</th>
                                 <th>Description / Issue Details</th>
                                 <th>Submitted (IST)</th>
-                                <th style="text-align: right;">Status</th>
+                                <th style="text-align: right;">Status Management</th>
                             </tr>
                         </thead>
                         <tbody id="adminFeedbackTableBody">
@@ -1376,7 +1423,67 @@
         </div>
     </footer>
 
-    <!-- Dedicated Inactivity Warning Mailer Modal -->
+    <!-- ================= CUSTOM MODALS (Zero Ugly Browser Popups) ================= -->
+
+    <!-- Modal 1: Forgot Password Modal -->
+    <div id="forgotPasswordModal" class="portal-modal-backdrop">
+        <div class="portal-modal-content">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h3 style="margin:0; font-size:18px; font-family:'Google Sans', sans-serif; display:flex; align-items:center; gap:8px;">
+                    <span class="material-icons" style="color:var(--portal-primary);">lock_reset</span>
+                    Reset Password
+                </h3>
+                <button onclick="closeForgotPasswordModal()" style="background:none; border:none; font-size:22px; cursor:pointer; color:#5f6368;">&times;</button>
+            </div>
+            <p style="font-size:13px; color:var(--text-secondary); margin-bottom:18px; line-height:1.4;">
+                Enter your registered Google Workspace email address. We'll send you a secure link to create a new password.
+            </p>
+            <div id="forgotModalAlert" class="alert-box"></div>
+            <div class="auth-form-group">
+                <label for="forgotModalEmail">Registered Email</label>
+                <input type="email" id="forgotModalEmail" class="auth-input" placeholder="name@gmail.com" required>
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+                <button class="btn-dash-action" onclick="closeForgotPasswordModal()">Cancel</button>
+                <button class="btn-submit-auth" id="btnSendResetLink" onclick="submitForgotPasswordModal()" style="width:auto; padding:8px 18px; margin-top:0;">
+                    Send Reset Link
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: New Password Entry Modal (Replaces ugly browser prompt) -->
+    <div id="newPasswordModal" class="portal-modal-backdrop">
+        <div class="portal-modal-content">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h3 style="margin:0; font-size:18px; font-family:'Google Sans', sans-serif; display:flex; align-items:center; gap:8px;">
+                    <span class="material-icons" style="color:#137333;">key</span>
+                    Create New Password
+                </h3>
+                <button onclick="closeNewPasswordModal()" style="background:none; border:none; font-size:22px; cursor:pointer; color:#5f6368;">&times;</button>
+            </div>
+            <p style="font-size:13px; color:var(--text-secondary); margin-bottom:18px; line-height:1.4;">
+                Please set a new secure password for your CivilMate account (minimum 6 characters).
+            </p>
+            <div id="newPwdModalAlert" class="alert-box"></div>
+            <div class="auth-form-group">
+                <label for="newModalPassword">New Password</label>
+                <input type="password" id="newModalPassword" class="auth-input" placeholder="••••••••" minlength="6" required>
+            </div>
+            <div class="auth-form-group">
+                <label for="confirmModalPassword">Confirm Password</label>
+                <input type="password" id="confirmModalPassword" class="auth-input" placeholder="••••••••" minlength="6" required>
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+                <button class="btn-dash-action" onclick="closeNewPasswordModal()">Cancel</button>
+                <button class="btn-submit-auth" id="btnSaveNewPassword" onclick="submitNewPasswordModal()" style="width:auto; padding:8px 18px; margin-top:0;">
+                    Update Password
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: Inactivity Notice Generator Modal (Direct to Gmail Compose) -->
     <div id="warnEmailModal" class="portal-modal-backdrop">
         <div class="portal-modal-content">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
@@ -1403,7 +1510,7 @@
 
             <div style="margin-bottom:18px;">
                 <label style="font-size:11px; font-weight:600; text-transform:uppercase; color:#5f6368; display:block; margin-bottom:4px;">Draft Body</label>
-                <textarea id="warnModalBody" class="whitelist-export-box" rows="7" readonly style="font-size:12px; line-height:1.4;"></textarea>
+                <textarea id="warnModalBody" class="whitelist-export-box" rows="7" readonly style="font-size:12px; line-height:1.45;"></textarea>
             </div>
 
             <div style="display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap;">
@@ -1413,13 +1520,56 @@
                 </button>
                 <button class="btn-dash-action" onclick="copyWarnDraft()">
                     <span class="material-icons" style="font-size:16px;">content_copy</span>
-                    Copy Email Draft
+                    Copy Draft
                 </button>
-                <button class="btn-dash-action" style="background:var(--portal-primary); color:#fff; border-color:var(--portal-primary);" onclick="launchMailClient()">
-                    <span class="material-icons" style="font-size:16px;">open_in_new</span>
-                    Launch Mail App
+                <button class="btn-dash-action" style="background:#d93025; color:#fff; border-color:#d93025;" onclick="launchGmailCompose()">
+                    <span class="material-icons" style="font-size:16px;">email</span>
+                    Open in Gmail
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- Modal 4: User Feedback & Feature Request Submission Modal -->
+    <div id="userFeedbackModal" class="portal-modal-backdrop">
+        <div class="portal-modal-content">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h3 style="margin:0; font-size:18px; font-family:'Google Sans', sans-serif; display:flex; align-items:center; gap:8px;">
+                    <span class="material-icons" style="color:#137333;">rate_review</span>
+                    Submit Feedback & Feature Request
+                </h3>
+                <button onclick="closeFeedbackModal()" style="background:none; border:none; font-size:22px; cursor:pointer; color:#5f6368;">&times;</button>
+            </div>
+            <p style="font-size:13px; color:var(--text-secondary); margin-bottom:18px; line-height:1.4;">
+                Have a feature request, calculation correction, or bug report? Your feedback goes directly to our engineering team.
+            </p>
+            <div id="userFbModalAlert" class="alert-box"></div>
+            <form id="userFeedbackForm" onsubmit="submitUserFeedback(event)">
+                <div class="auth-form-group">
+                    <label for="userFbType">Classification</label>
+                    <select id="userFbType" class="auth-input" required>
+                        <option value="Feature Request">Feature Request</option>
+                        <option value="Bug / Calculation Error">Bug / Calculation Error</option>
+                        <option value="Rate Data Correction">Rate Data Correction (HSR)</option>
+                        <option value="UI/UX Improvement">UI/UX Improvement</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="auth-form-group">
+                    <label for="userFbDesc">Description & Details</label>
+                    <textarea id="userFbDesc" class="whitelist-export-box" rows="4" required placeholder="Describe the request, calculation discrepancy, or bug in detail..."></textarea>
+                </div>
+                <div class="auth-form-group">
+                    <label for="userFbSteps">Steps to Reproduce (Optional)</label>
+                    <textarea id="userFbSteps" class="whitelist-export-box" rows="2" placeholder="If reporting a bug, what were you doing when it occurred?"></textarea>
+                </div>
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+                    <button type="button" class="btn-dash-action" onclick="closeFeedbackModal()">Cancel</button>
+                    <button type="submit" class="btn-submit-auth" id="btnSubmitUserFb" style="width:auto; padding:8px 20px; margin-top:0;">
+                        Submit Request
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -1579,31 +1729,111 @@
             }
         }
 
-        // Forgot Password Flow
-        async function handleForgotPassword(event) {
-            if (event) event.preventDefault();
+        // ================= FORGOT PASSWORD MODAL FLOW =================
+        function openForgotPasswordModal() {
             const emailInput = document.getElementById('inputEmail');
-            let email = emailInput ? emailInput.value.trim() : '';
+            const modalEmail = document.getElementById('forgotModalEmail');
+            if (emailInput && modalEmail && emailInput.value) {
+                modalEmail.value = emailInput.value.trim();
+            }
+            document.getElementById('forgotModalAlert').style.display = 'none';
+            document.getElementById('forgotPasswordModal').classList.add('active');
+        }
+
+        function closeForgotPasswordModal() {
+            document.getElementById('forgotPasswordModal').classList.remove('active');
+        }
+
+        async function submitForgotPasswordModal() {
+            const email = document.getElementById('forgotModalEmail').value.trim();
+            const alertEl = document.getElementById('forgotModalAlert');
+            const btn = document.getElementById('btnSendResetLink');
 
             if (!email) {
-                email = prompt("Please enter your registered email address to receive a password reset link:");
-                if (!email) return;
-                if (emailInput) emailInput.value = email;
+                alertEl.textContent = "Please enter your email address.";
+                alertEl.className = "alert-box alert-error";
+                alertEl.style.display = "block";
+                return;
             }
+
+            btn.disabled = true;
+            btn.textContent = "Sending...";
 
             try {
                 const client = getSbClient();
-                if (!client) throw new Error("Database service not ready.");
-                showToast("Sending password reset email...", "info");
+                if (!client) throw new Error("Database client not available.");
                 const { error } = await client.auth.resetPasswordForEmail(email, {
                     redirectTo: window.location.href.split('#')[0]
                 });
                 if (error) throw error;
-                showAlert("Password reset email sent! Check your inbox to set a new password.", "success");
+
+                alertEl.textContent = "Reset link sent! Please check your inbox and click the link to choose a new password.";
+                alertEl.className = "alert-box alert-success";
+                alertEl.style.display = "block";
                 showToast("Password reset link sent to " + email, "success");
+                setTimeout(closeForgotPasswordModal, 3500);
             } catch (err) {
-                showAlert(err.message || "Could not send reset email.", "error");
-                showToast(err.message || "Reset failed", "error");
+                alertEl.textContent = err.message || "Failed to send reset email.";
+                alertEl.className = "alert-box alert-error";
+                alertEl.style.display = "block";
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Send Reset Link";
+            }
+        }
+
+        // ================= NEW PASSWORD MODAL FLOW (Zero Ugly Prompts) =================
+        function openNewPasswordModal() {
+            document.getElementById('newModalPassword').value = '';
+            document.getElementById('confirmModalPassword').value = '';
+            document.getElementById('newPwdModalAlert').style.display = 'none';
+            document.getElementById('newPasswordModal').classList.add('active');
+        }
+
+        function closeNewPasswordModal() {
+            document.getElementById('newPasswordModal').classList.remove('active');
+        }
+
+        async function submitNewPasswordModal() {
+            const pwd = document.getElementById('newModalPassword').value;
+            const confirmPwd = document.getElementById('confirmModalPassword').value;
+            const alertEl = document.getElementById('newPwdModalAlert');
+            const btn = document.getElementById('btnSaveNewPassword');
+
+            if (pwd.length < 6) {
+                alertEl.textContent = "Password must be at least 6 characters long.";
+                alertEl.className = "alert-box alert-error";
+                alertEl.style.display = "block";
+                return;
+            }
+            if (pwd !== confirmPwd) {
+                alertEl.textContent = "Passwords do not match. Please re-enter.";
+                alertEl.className = "alert-box alert-error";
+                alertEl.style.display = "block";
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = "Updating...";
+
+            try {
+                const client = getSbClient();
+                if (!client) throw new Error("Database client not ready.");
+                const { error } = await client.auth.updateUser({ password: pwd });
+                if (error) throw error;
+
+                alertEl.textContent = "Password updated successfully! You can now access your workspace.";
+                alertEl.className = "alert-box alert-success";
+                alertEl.style.display = "block";
+                showToast("Password updated successfully!", "success");
+                setTimeout(closeNewPasswordModal, 2000);
+            } catch (err) {
+                alertEl.textContent = err.message || "Could not update password.";
+                alertEl.className = "alert-box alert-error";
+                alertEl.style.display = "block";
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Update Password";
             }
         }
 
@@ -1677,15 +1907,13 @@
             }
 
             try {
-                // Check by ID or Email
-                const { data, error } = await client
+                const { data } = await client
                     .from('user_profiles')
                     .select('*')
                     .or(`id.eq.${user.id},email.eq.${user.email}`)
                     .maybeSingle();
 
                 if (data) {
-                    // Update user ID if email matches but id was unlinked
                     if (data.id !== user.id) {
                         await client.from('user_profiles').update({ id: user.id }).eq('email', user.email);
                     }
@@ -1794,12 +2022,6 @@
             } catch (err) {
                 console.error("Status check error:", err);
                 showToast("Verification note: " + (err.message || "Database busy"), "error");
-                if (feedbackEl) {
-                    feedbackEl.style.display = 'block';
-                    feedbackEl.style.background = '#fce8e6';
-                    feedbackEl.style.color = '#c5221f';
-                    feedbackEl.innerHTML = 'Unable to fetch status. Please verify your connection.';
-                }
             } finally {
                 if (buttonEl) {
                     buttonEl.disabled = false;
@@ -1841,6 +2063,56 @@
             } catch (e) {
                 console.error("Rejoin error:", e);
                 showToast("Could not rejoin waitlist.", "error");
+            }
+        }
+
+        // ================= FEEDBACK & FEATURE REQUESTS (User Side) =================
+        function openFeedbackModal() {
+            document.getElementById('userFbDesc').value = '';
+            document.getElementById('userFbSteps').value = '';
+            document.getElementById('userFbModalAlert').style.display = 'none';
+            document.getElementById('userFeedbackModal').classList.add('active');
+        }
+
+        function closeFeedbackModal() {
+            document.getElementById('userFeedbackModal').classList.remove('active');
+        }
+
+        async function submitUserFeedback(event) {
+            if (event) event.preventDefault();
+            const client = getSbClient();
+            if (!client || !currentUser) return;
+
+            const type = document.getElementById('userFbType').value;
+            const desc = document.getElementById('userFbDesc').value.trim();
+            const steps = document.getElementById('userFbSteps').value.trim();
+            const btn = document.getElementById('btnSubmitUserFb');
+            const alertEl = document.getElementById('userFbModalAlert');
+
+            btn.disabled = true;
+            btn.textContent = "Submitting...";
+
+            try {
+                const { error } = await client.from('beta_feedback').insert([
+                    {
+                        user_email: currentUser.email,
+                        feedback_type: type,
+                        description: desc,
+                        steps_to_reproduce: steps,
+                        status: 'new'
+                    }
+                ]);
+
+                if (error) throw error;
+                showToast("Thank you! Your feedback/request has been submitted.", "success");
+                closeFeedbackModal();
+            } catch (err) {
+                alertEl.textContent = err.message || "Failed to submit feedback.";
+                alertEl.className = "alert-box alert-error";
+                alertEl.style.display = "block";
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Submit Request";
             }
         }
 
@@ -1927,6 +2199,7 @@
             });
         }
 
+        // FIXED: Only update status - no updated_at column dependency
         async function setAdminUserStatus(userId, newStatus) {
             const client = getSbClient();
             if (!client) return;
@@ -1934,7 +2207,7 @@
             try {
                 const { error } = await client
                     .from('user_profiles')
-                    .update({ status: newStatus, updated_at: new Date().toISOString() })
+                    .update({ status: newStatus })
                     .eq('id', userId);
 
                 if (error) throw error;
@@ -1971,7 +2244,7 @@
             try {
                 const ids = toPrune.map(u => u.id);
                 for (const id of ids) {
-                    await client.from('user_profiles').update({ status: 'opted_out', updated_at: new Date().toISOString() }).eq('id', id);
+                    await client.from('user_profiles').update({ status: 'opted_out' }).eq('id', id);
                 }
                 showToast(`Successfully revoked ${toPrune.length} inactive seat(s).`, "success");
                 await loadAdminData();
@@ -1981,7 +2254,7 @@
             }
         }
 
-        // Render Admin Table with Inactivity Rules
+        // Render Admin Table
         function renderAdminUsersTable(users) {
             const tbody = document.getElementById('adminUsersTableBody');
             if (!tbody) return;
@@ -1999,7 +2272,6 @@
                 const st = u.status || 'waitlisted';
                 const createdStr = formatKolkataTimestamp(u.created_at);
                 
-                // Calculate Inactivity
                 const lastActiveDate = u.last_active_at ? new Date(u.last_active_at) : (u.created_at ? new Date(u.created_at) : null);
                 const daysInactive = lastActiveDate ? Math.floor((now - lastActiveDate.getTime()) / (1000 * 60 * 60 * 24)) : 0;
                 const lastActiveStr = lastActiveDate ? formatKolkataTimestamp(lastActiveDate) : 'Never';
@@ -2060,7 +2332,7 @@
             renderAdminUsersTable(filtered);
         }
 
-        // ================= INACTIVITY WARNING MODAL =================
+        // ================= INACTIVITY WARNING MODAL (Direct to Gmail Compose) =================
         function openWarnModal(userId) {
             const user = allAdminUsers.find(u => u.id === userId);
             if (!user) return;
@@ -2081,17 +2353,17 @@
             if (days >= 30) {
                 statusBadge = `<strong style="color:#c5221f;">Expired (${days} days inactive)</strong> &bull; Last Active: ${dateStr}. This seat has reached the 30-day revocation limit.`;
                 subject = "Notice: CivilMate Whitelist Access Revocation";
-                body = `Hi ${userName},\n\nYour CivilMate access has been revoked due to 30 days of inactivity.\n\nBecause whitelist seats are strictly allocated, inactive seats are reallocated to engineers in the queue. You can log into the portal anytime to re-join the waitlist.\n\nRegards,\nCivilMate Engineering Team`;
+                body = `Hi ${userName},\n\nYour CivilMate access has been revoked due to 30 days of inactivity.\n\nBecause whitelist seats are strictly allocated, inactive seats are reallocated to engineers in the queue. You can log into the portal anytime to re-join the waitlist.\n\nWarm regards,\nCivilMate Engineering Team`;
                 if (autoRevokeBtn) autoRevokeBtn.style.display = 'inline-flex';
             } else if (days >= 29) {
                 statusBadge = `<strong style="color:#c5221f;">Hard Final Notice (${days} days inactive)</strong> &bull; Last Active: ${dateStr}. Automatic revocation occurs in 24 hours.`;
                 subject = "URGENT: Final Notice - CivilMate Whitelist Access Revocation in 24 Hours";
-                body = `Hi ${userName},\n\nThis is a final notice that your CivilMate whitelist access will be revoked in 24 hours due to 29 days of inactivity.\n\nTo preserve your active seat, please open CivilMate in Google Sheets today and perform an estimate.\n\nRegards,\nCivilMate Engineering Team`;
+                body = `Hi ${userName},\n\nThis is a final notice that your CivilMate whitelist access will be revoked in 24 hours due to 29 days of inactivity.\n\nTo preserve your active seat, please open CivilMate in Google Sheets today and perform an estimate.\n\nWarm regards,\nCivilMate Engineering Team`;
                 if (autoRevokeBtn) autoRevokeBtn.style.display = 'none';
             } else {
                 statusBadge = `<strong style="color:#b06000;">Soft Warning (${days} days inactive)</strong> &bull; Last Active: ${dateStr}.`;
                 subject = "Action Recommended: CivilMate Activity Check";
-                body = `Hi ${userName},\n\nWe noticed you haven't used the CivilMate Add-On or Chrome Extension in over 15 days.\n\nWhitelist seats are limited. Please log into Google Sheets and run an estimate within the next 14 days to keep your access active.\n\nRegards,\nCivilMate Engineering Team`;
+                body = `Hi ${userName},\n\nWe noticed you haven't used the CivilMate Add-On or Chrome/Edge Extension in over 15 days.\n\nWhitelist seats are limited. Please log into Google Sheets and run an estimate within the next 14 days to keep your access active.\n\nWarm regards,\nCivilMate Engineering Team`;
                 if (autoRevokeBtn) autoRevokeBtn.style.display = 'none';
             }
 
@@ -2121,12 +2393,14 @@
             });
         }
 
-        function launchMailClient() {
-            const recipient = encodeURIComponent(document.getElementById('warnModalRecipient').value);
-            const subject = encodeURIComponent(document.getElementById('warnModalSubject').value);
-            const body = encodeURIComponent(document.getElementById('warnModalBody').value);
-            const url = `mailto:${recipient}?subject=${subject}&body=${body}`;
-            window.location.href = url;
+        // Opens Gmail Web Compose directly prefilled
+        function launchGmailCompose() {
+            const recipient = document.getElementById('warnModalRecipient').value;
+            const subject = document.getElementById('warnModalSubject').value;
+            const body = document.getElementById('warnModalBody').value;
+
+            const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(recipient)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.open(gmailUrl, '_blank');
         }
 
         async function handleModalRevoke() {
@@ -2135,7 +2409,7 @@
             closeWarnModal();
         }
 
-        // Feedback Admin Query
+        // ================= ADMIN FEEDBACK TRACKER & STATUS MANAGEMENT =================
         async function fetchAdminFeedback() {
             const client = getSbClient();
             if (!client) return;
@@ -2158,6 +2432,7 @@
                 data.forEach(f => {
                     const tr = document.createElement('tr');
                     const dateStr = formatKolkataTimestamp(f.created_at);
+                    const currentStatus = f.status || 'new';
 
                     tr.innerHTML = `
                         <td><strong>${escapeHtml(f.feedback_type || 'General')}</strong></td>
@@ -2167,8 +2442,13 @@
                             ${f.steps_to_reproduce ? `<div style="font-size:11px; color:#5f6368; margin-top:2px;"><em>Steps:</em> ${escapeHtml(f.steps_to_reproduce)}</div>` : ''}
                         </td>
                         <td style="color:var(--text-secondary); font-size:12px;">${dateStr}</td>
-                        <td style="text-align:right;">
-                            <span class="status-pill ${f.status === 'resolved' ? 'approved' : 'waitlisted'}">${escapeHtml(f.status || 'new')}</span>
+                        <td style="text-align:right; white-space:nowrap;">
+                            <select onchange="updateFeedbackStatus('${f.id}', this.value)" style="padding:4px 8px; font-size:12px; border-radius:4px; border:1px solid var(--portal-card-border); background:#fff; font-weight:500;">
+                                <option value="new" ${currentStatus === 'new' ? 'selected' : ''}>New</option>
+                                <option value="in_progress" ${currentStatus === 'in_progress' ? 'selected' : ''}>In Progress</option>
+                                <option value="resolved" ${currentStatus === 'resolved' ? 'selected' : ''}>Resolved</option>
+                                <option value="declined" ${currentStatus === 'declined' ? 'selected' : ''}>Declined</option>
+                            </select>
                         </td>
                     `;
                     tbody.appendChild(tr);
@@ -2179,11 +2459,26 @@
             }
         }
 
+        async function updateFeedbackStatus(feedbackId, newStatus) {
+            const client = getSbClient();
+            if (!client) return;
+            try {
+                const { error } = await client
+                    .from('beta_feedback')
+                    .update({ status: newStatus })
+                    .eq('id', feedbackId);
+                if (error) throw error;
+                showToast(`Feedback status updated to ${newStatus.toUpperCase()}`, "success");
+            } catch (e) {
+                console.error("Feedback status error:", e);
+                showToast("Could not update feedback status: " + e.message, "error");
+            }
+        }
+
         // ================= DASHBOARD RENDERING & GATING =================
         function renderDashboardForProfile(profile) {
             const initial = (profile.full_name || profile.email || 'U').charAt(0).toUpperCase();
 
-            // Admin button visibility
             const isUserAdmin = isAdminUser(currentUser);
             document.querySelectorAll('.admin-only-btn').forEach(btn => {
                 btn.style.display = isUserAdmin ? 'inline-flex' : 'none';
@@ -2209,19 +2504,18 @@
             }
         }
 
-        // ================= STAGED EXPORTS (HEWP Upload Data Only) =================
+        // ================= STAGED EXPORTS (Delete option & Auto-Cleanup) =================
         async function fetchStagedExports() {
             const tbody = document.getElementById('exportsTableBody');
-            tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: var(--text-secondary);">Loading exports from Supabase...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--text-secondary);">Loading exports from Supabase...</td></tr>';
 
             const client = getSbClient();
             if (!client || !currentUser) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: var(--text-secondary);">Please sign in to view staged exports.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--text-secondary);">Please sign in to view staged exports.</td></tr>';
                 return;
             }
 
             try {
-                // Query staged_exports with latest on top
                 let { data, error } = await client
                     .from('staged_exports')
                     .select('*')
@@ -2248,7 +2542,7 @@
                 console.warn("staged_exports query note:", err);
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="4">
+                        <td colspan="5">
                             <div style="text-align:center; padding:32px; color:var(--text-secondary);">
                                 <span class="material-icons" style="font-size:36px; color:#bdc1c6; display:block; margin-bottom:6px;">cloud_done</span>
                                 <div style="font-weight: 500;">No HEWP Exports Synced Yet</div>
@@ -2268,7 +2562,7 @@
             if (items.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="4">
+                        <td colspan="5">
                             <div style="text-align:center; padding:32px; color:var(--text-secondary);">
                                 <span class="material-icons" style="font-size:36px; color:#bdc1c6; display:block; margin-bottom:6px;">cloud_done</span>
                                 <div style="font-weight: 500;">No Exports Recorded Yet</div>
@@ -2290,10 +2584,38 @@
                     <td style="color: var(--text-secondary);">${index + 1}</td>
                     <td><strong style="color: var(--text-primary);">${escapeHtml(workName)}</strong></td>
                     <td style="color: #5f6368;"><span class="material-icons" style="font-size: 14px; vertical-align: middle; margin-right: 4px;">schedule</span>${dateStr}</td>
-                    <td style="text-align: right;"><span class="export-type-tag" style="background:#e6f4ea; color:#137333;">${escapeHtml(status)}</span></td>
+                    <td><span class="export-type-tag" style="background:#e6f4ea; color:#137333;">${escapeHtml(status)}</span></td>
+                    <td style="text-align: right;">
+                        <button class="btn-action-small btn-danger" onclick="deleteStagedExport('${item.id}')" title="Delete staged export record">
+                            <span class="material-icons" style="font-size: 12px;">delete</span> Delete
+                        </button>
+                    </td>
                 `;
                 tbody.appendChild(tr);
             });
+        }
+
+        async function deleteStagedExport(exportId) {
+            const confirmed = confirm("Are you sure you want to delete this staged export record?");
+            if (!confirmed) return;
+
+            const client = getSbClient();
+            if (!client) return;
+
+            try {
+                const { error } = await client
+                    .from('staged_exports')
+                    .delete()
+                    .eq('id', exportId);
+
+                if (error) throw error;
+                showToast("Staged export deleted successfully.", "success");
+                allStagedExports = allStagedExports.filter(e => e.id !== exportId);
+                renderExportsTable(allStagedExports);
+            } catch (e) {
+                console.error("Delete error:", e);
+                showToast("Could not delete record: " + e.message, "error");
+            }
         }
 
         function filterExportsTable() {
@@ -2357,14 +2679,9 @@
                     handleSession(session);
 
                     client.auth.onAuthStateChange((event, session) => {
+                        // Custom styled modal instead of browser prompt
                         if (event === 'PASSWORD_RECOVERY') {
-                            const newPwd = prompt("Please enter your new password (minimum 6 characters):");
-                            if (newPwd && newPwd.length >= 6) {
-                                client.auth.updateUser({ password: newPwd }).then(({ error }) => {
-                                    if (error) showToast("Password update error: " + error.message, "error");
-                                    else showToast("Password updated successfully! You can now sign in.", "success");
-                                });
-                            }
+                            openNewPasswordModal();
                         }
                         handleSession(session);
                     });

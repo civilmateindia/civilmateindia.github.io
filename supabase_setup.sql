@@ -1,5 +1,5 @@
 -- =========================================================================
--- CIVILMATE SUPABASE SCHEMA, RLS & AUTOMATED INACTIVITY PRUNING SETUP
+-- CIVILMATE SUPABASE COMPLETE SCHEMA, RLS & AUTO-CLEANUP SETUP
 -- Copy and run this in your Supabase SQL Editor:
 -- Dashboard -> SQL Editor -> New Query -> Run
 -- =========================================================================
@@ -17,19 +17,21 @@ CREATE TABLE IF NOT EXISTS public.user_profiles (
   updated_at timestamptz DEFAULT now()
 );
 
+-- Ensure all columns exist (including updated_at)
 ALTER TABLE IF EXISTS public.user_profiles 
   ADD COLUMN IF NOT EXISTS role text DEFAULT 'user',
   ADD COLUMN IF NOT EXISTS last_active_at timestamptz DEFAULT now(),
+  ADD COLUMN IF NOT EXISTS updated_at timestamptz DEFAULT now(),
   ALTER COLUMN id SET DEFAULT gen_random_uuid();
 
 -- 2. Create beta_feedback table for feedback, requests, and bug reports
 CREATE TABLE IF NOT EXISTS public.beta_feedback (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   user_email text NOT NULL,
-  feedback_type text NOT NULL, -- 'Feature Suggestion', 'Bug/Calculation Error', 'Rate Data Correction', etc.
+  feedback_type text NOT NULL, -- 'Feature Request', 'Bug / Calculation Error', 'Rate Data Correction', etc.
   description text NOT NULL,
   steps_to_reproduce text,
-  status text DEFAULT 'new',   -- 'new', 'in_progress', 'resolved'
+  status text DEFAULT 'new',   -- 'new', 'in_progress', 'resolved', 'declined'
   created_at timestamptz DEFAULT now()
 );
 
@@ -91,16 +93,19 @@ WITH CHECK (
 
 -- 7. RLS Policies for beta_feedback
 DROP POLICY IF EXISTS "Anyone can insert feedback" ON public.beta_feedback;
-DROP POLICY IF EXISTS "Admin can view feedback" ON public.beta_feedback;
+DROP POLICY IF EXISTS "Admin and users can view feedback" ON public.beta_feedback;
 DROP POLICY IF EXISTS "Admin can update feedback" ON public.beta_feedback;
 
 CREATE POLICY "Anyone can insert feedback"
 ON public.beta_feedback FOR INSERT TO anon, authenticated
 WITH CHECK (true);
 
-CREATE POLICY "Admin can view feedback"
+CREATE POLICY "Admin and users can view feedback"
 ON public.beta_feedback FOR SELECT TO authenticated, anon
-USING (lower(coalesce(auth.jwt() ->> 'email', '')) = 'civilmateindia@gmail.com');
+USING (
+  lower(coalesce(auth.jwt() ->> 'email', '')) = 'civilmateindia@gmail.com'
+  OR lower(user_email) = lower(coalesce(auth.jwt() ->> 'email', ''))
+);
 
 CREATE POLICY "Admin can update feedback"
 ON public.beta_feedback FOR UPDATE TO authenticated
@@ -118,9 +123,10 @@ CREATE POLICY "Admin can view activity"
 ON public.user_activity FOR SELECT TO authenticated
 USING (lower(coalesce(auth.jwt() ->> 'email', '')) = 'civilmateindia@gmail.com');
 
--- 9. RLS Policies for staged_exports
+-- 9. RLS Policies for staged_exports (Select, Insert, Delete)
 DROP POLICY IF EXISTS "Users can read own staged exports" ON public.staged_exports;
 DROP POLICY IF EXISTS "Users can insert staged exports" ON public.staged_exports;
+DROP POLICY IF EXISTS "Users can delete own staged exports" ON public.staged_exports;
 
 CREATE POLICY "Users can read own staged exports"
 ON public.staged_exports FOR SELECT TO authenticated, anon
@@ -132,6 +138,13 @@ USING (
 CREATE POLICY "Users can insert staged exports"
 ON public.staged_exports FOR INSERT TO authenticated, anon
 WITH CHECK (true);
+
+CREATE POLICY "Users can delete own staged exports"
+ON public.staged_exports FOR DELETE TO authenticated
+USING (
+  lower(coalesce(auth.jwt() ->> 'email', '')) = 'civilmateindia@gmail.com'
+  OR lower(user_email) = lower(coalesce(auth.jwt() ->> 'email', ''))
+);
 
 -- 10. RPC: Fast Public Program Statistics Function (Zero personal data exposed)
 CREATE OR REPLACE FUNCTION get_beta_program_stats()
@@ -174,22 +187,7 @@ END;
 $$;
 GRANT EXECUTE ON FUNCTION get_beta_program_stats() TO anon, authenticated;
 
--- 11. RPC: Public Opt-Out Function
-CREATE OR REPLACE FUNCTION request_opt_out(p_email text)
-RETURNS boolean
-LANGUAGE plpgsql
-SECURITY DEFINER
-AS $$
-BEGIN
-  UPDATE public.user_profiles
-  SET status = 'opted_out', updated_at = now()
-  WHERE lower(email) = lower(p_email);
-  RETURN FOUND;
-END;
-$$;
-GRANT EXECUTE ON FUNCTION request_opt_out(text) TO anon, authenticated;
-
--- 12. RPC: Add-on Activity Heartbeat Ping
+-- 11. RPC: Add-on Activity Heartbeat Ping
 CREATE OR REPLACE FUNCTION ping_user_activity(p_email text)
 RETURNS void
 LANGUAGE plpgsql
@@ -203,7 +201,7 @@ END;
 $$;
 GRANT EXECUTE ON FUNCTION ping_user_activity(text) TO anon, authenticated;
 
--- 13. RPC: Automatic 30-Day Inactive User Pruning
+-- 12. RPC: Automatic 30-Day Inactive User Pruning
 CREATE OR REPLACE FUNCTION check_and_prune_inactive_users()
 RETURNS int
 LANGUAGE plpgsql
@@ -213,7 +211,7 @@ DECLARE
   v_count int;
 BEGIN
   UPDATE public.user_profiles
-  SET status = 'opted_out', updated_at = now()
+  SET status = 'opted_out'
   WHERE status = 'approved'
     AND last_active_at < (now() - interval '30 days');
   GET DIAGNOSTICS v_count = ROW_COUNT;
@@ -221,3 +219,20 @@ BEGIN
 END;
 $$;
 GRANT EXECUTE ON FUNCTION check_and_prune_inactive_users() TO anon, authenticated;
+
+-- 13. RPC: Automatic 30-Day Staged Exports Purge
+CREATE OR REPLACE FUNCTION purge_old_staged_exports()
+RETURNS int
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  v_count int;
+BEGIN
+  DELETE FROM public.staged_exports
+  WHERE created_at < (now() - interval '30 days');
+  GET DIAGNOSTICS v_count = ROW_COUNT;
+  RETURN v_count;
+END;
+$$;
+GRANT EXECUTE ON FUNCTION purge_old_staged_exports() TO anon, authenticated;
