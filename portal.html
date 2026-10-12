@@ -1046,7 +1046,7 @@
             anonKey: "sb_publishable_rWs1g0hoacGIjeorJCfNqw__B_ztAUG"           // Replace with your Supabase anon public key
         };
 
-        let supabase = null;
+        let sbClient = null;
         let currentUser = null;
         let currentProfile = null;
         let authMode = 'login'; // 'login' or 'signup'
@@ -1060,30 +1060,38 @@
             document.getElementById('configNotice').style.display = 'flex';
         }
 
-        // Initialize Supabase Client
-        try {
-            if (window.supabase) {
-                supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey, {
-                    auth: {
-                        persistSession: true,
-                        autoRefreshToken: true,
-                        detectSessionInUrl: true
-                    }
-                });
+        // Initialize Supabase Client Helper
+        function getSbClient() {
+            if (sbClient) return sbClient;
+            if (window.supabase && typeof window.supabase.createClient === 'function') {
+                try {
+                    sbClient = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey, {
+                        auth: {
+                            persistSession: true,
+                            autoRefreshToken: true,
+                            detectSessionInUrl: true
+                        }
+                    });
+                } catch (e) {
+                    console.error("Supabase client init error:", e);
+                }
             }
-        } catch (e) {
-            console.error("Supabase client init error:", e);
+            return sbClient;
         }
+
+        // Trigger client creation
+        getSbClient();
 
         // ================= AUTH FUNCTIONS =================
         async function signInWithGoogle() {
-            if (!isConfigured || !supabase) {
-                showAlert("Please configure your Supabase Project URL and Anon Key in portal.html first.", "error");
+            const client = getSbClient();
+            if (!isConfigured || !client) {
+                showAlert("Supabase client is not ready. Please verify your connection or refresh the page.", "error");
                 return;
             }
             try {
                 showAlert("Redirecting to Google Sign-In...", "info");
-                const { error } = await supabase.auth.signInWithOAuth({
+                const { error } = await client.auth.signInWithOAuth({
                     provider: 'google',
                     options: {
                         redirectTo: window.location.href.split('#')[0]
@@ -1096,9 +1104,10 @@
         }
 
         async function handleEmailAuth(event) {
-            event.preventDefault();
-            if (!isConfigured || !supabase) {
-                showAlert("Please configure your Supabase Project URL and Anon Key in portal.html first.", "error");
+            if (event) event.preventDefault();
+            const client = getSbClient();
+            if (!isConfigured || !client) {
+                showAlert("Supabase client is not ready. Please verify your connection or refresh the page.", "error");
                 return;
             }
 
@@ -1112,14 +1121,14 @@
 
             try {
                 if (authMode === 'login') {
-                    const { data, error } = await supabase.auth.signInWithPassword({
+                    const { data, error } = await client.auth.signInWithPassword({
                         email: email,
                         password: password
                     });
                     if (error) throw error;
                     handleSession(data.session);
                 } else {
-                    const { data, error } = await supabase.auth.signUp({
+                    const { data, error } = await client.auth.signUp({
                         email: email,
                         password: password,
                         options: {
@@ -1129,8 +1138,10 @@
                     if (error) throw error;
                     if (data.session) {
                         handleSession(data.session);
+                    } else if (data.user) {
+                        showAlert("Verification link sent! Please check your email inbox to confirm your registration.", "info");
                     } else {
-                        showAlert("Verification link sent! Please check your email to confirm registration.", "info");
+                        showAlert("Account registered! You can now sign in.", "info");
                     }
                 }
             } catch (err) {
@@ -1187,8 +1198,9 @@
         window.toggleAuthMode = toggleAuthMode;
 
         async function signOut() {
-            if (supabase) {
-                await supabase.auth.signOut();
+            const client = getSbClient();
+            if (client) {
+                await client.auth.signOut();
             }
             currentUser = null;
             currentProfile = null;
@@ -1198,7 +1210,8 @@
 
         // ================= USER PROFILE (user_profiles TABLE) =================
         async function getOrCreateUserProfile(user) {
-            if (!supabase || !isConfigured) {
+            const client = getSbClient();
+            if (!client || !isConfigured) {
                 // Fallback demo state if keys not filled yet
                 return {
                     id: user.id,
@@ -1211,7 +1224,7 @@
 
             try {
                 // Check if profile exists
-                const { data, error } = await supabase
+                const { data, error } = await client
                     .from('user_profiles')
                     .select('*')
                     .eq('id', user.id)
@@ -1225,7 +1238,7 @@
                     return data;
                 }
 
-                // If not found, insert default entry with status = 'waitlisted'
+                // If not found, upsert or retrieve profile
                 const displayName = user.user_metadata?.full_name || 
                                     user.user_metadata?.name || 
                                     user.email.split('@')[0];
@@ -1238,18 +1251,20 @@
                     subscription_tier: 'free'
                 };
 
-                const { data: inserted, error: insertErr } = await supabase
+                const { data: upserted, error: upsertErr } = await client
                     .from('user_profiles')
-                    .insert([newProfile])
+                    .upsert([newProfile], { onConflict: 'id' })
                     .select()
-                    .single();
+                    .maybeSingle();
 
-                if (insertErr) {
-                    console.warn("Could not insert profile (RLS or table check needed):", insertErr);
+                if (upsertErr) {
+                    console.warn("Could not upsert profile (using fallback/existing):", upsertErr);
+                    const retry = await client.from('user_profiles').select('*').eq('id', user.id).maybeSingle();
+                    if (retry.data) return retry.data;
                     return newProfile;
                 }
 
-                return inserted || newProfile;
+                return upserted || newProfile;
             } catch (e) {
                 console.error("Profile resolution exception:", e);
                 return {
@@ -1298,7 +1313,8 @@
             const tbody = document.getElementById('exportsTableBody');
             tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: var(--text-secondary);">Loading staged exports...</td></tr>';
 
-            if (!supabase || !isConfigured || !currentUser) {
+            const client = getSbClient();
+            if (!client || !isConfigured || !currentUser) {
                 tbody.innerHTML = `
                     <tr>
                         <td colspan="6">
@@ -1315,7 +1331,7 @@
 
             try {
                 // Query staged_exports by user_email
-                let { data, error } = await supabase
+                let { data, error } = await client
                     .from('staged_exports')
                     .select('*')
                     .eq('user_email', currentUser.email)
@@ -1323,7 +1339,7 @@
 
                 // If user_email fails or user_id exists instead, try user_id fallback
                 if (error && (error.code === '42703' || error.code === 'PGRST204')) {
-                    const fallback = await supabase
+                    const fallback = await client
                         .from('staged_exports')
                         .select('*')
                         .eq('user_id', currentUser.id)
@@ -1450,15 +1466,21 @@
             if (tabSignupEl) tabSignupEl.addEventListener('click', () => setAuthMode('signup'));
             if (authToggleBtnEl) authToggleBtnEl.addEventListener('click', () => toggleAuthMode());
 
-            if (supabase) {
-                // Check existing session
-                const { data: { session } } = await supabase.auth.getSession();
-                handleSession(session);
-
-                // Listen to auth state changes (login, logout, oauth callbacks)
-                supabase.auth.onAuthStateChange((_event, session) => {
+            const client = getSbClient();
+            if (client) {
+                try {
+                    // Check existing session
+                    const { data: { session } } = await client.auth.getSession();
                     handleSession(session);
-                });
+
+                    // Listen to auth state changes (login, logout, oauth callbacks)
+                    client.auth.onAuthStateChange((_event, session) => {
+                        handleSession(session);
+                    });
+                } catch (e) {
+                    console.warn("Session check error:", e);
+                    showView('viewAuth');
+                }
             } else {
                 showView('viewAuth');
             }
