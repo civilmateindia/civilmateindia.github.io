@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal & Dashboard - CivilMate</title>
+    <title>CivilMate Estimator Portal & Dashboard</title>
     <!-- Google Fonts & Material Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,155 +31,155 @@
         }
 
         body {
-            background-color: #f8f9fa;
+            background-color: #f1f3f4;
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #202124;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
+        /* Responsive Portal Shell */
         .portal-wrapper {
-            margin-top: 75px;
-            padding: 40px 20px 80px 20px;
-            max-width: 1080px;
-            margin-left: auto;
-            margin-right: auto;
+            max-width: 1040px;
+            margin: 0 auto;
+            padding: 30px 20px 80px 20px;
             width: 100%;
+            box-sizing: border-box;
             flex: 1;
         }
 
-        /* Animated State Sections */
+        /* State Views Management */
         .state-view {
             display: none;
-            animation: fadeIn 0.3s ease-out forwards;
+            animation: fadeIn 0.25s ease-in-out;
         }
         .state-view.active {
             display: block;
         }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
+            from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ================= AUTH VIEW ================= */
+        /* 1. AUTH CARD (Logged Out State) */
         .auth-card {
-            max-width: 440px;
-            margin: 30px auto;
             background: #fff;
             border: 1px solid var(--portal-card-border);
             border-radius: 12px;
-            padding: 36px 32px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 40px;
+            max-width: 440px;
+            margin: 40px auto;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             text-align: center;
         }
 
         .auth-brand-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 12px;
-            margin: 0 auto 16px auto;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #e8f0fe;
+            margin: 0 auto 16px auto;
         }
 
         .auth-card h2 {
+            font-family: 'Google Sans', sans-serif;
             font-size: 24px;
             font-weight: 500;
-            margin-bottom: 8px;
+            margin: 0 0 8px 0;
             color: var(--text-primary);
         }
 
         .auth-card p.subtitle {
-            color: var(--text-secondary);
             font-size: 14px;
-            margin-bottom: 20px;
+            color: var(--text-secondary);
+            margin: 0 0 24px 0;
         }
 
-        /* Top Auth Mode Tabs (Sign In / Sign Up) */
         .auth-mode-tabs {
             display: flex;
-            background: #e8f0fe;
+            background: var(--portal-bg-gray);
             border-radius: 8px;
             padding: 4px;
-            margin-bottom: 22px;
-            gap: 4px;
+            margin-bottom: 24px;
+            border: 1px solid var(--portal-card-border);
         }
 
         .auth-tab-btn {
             flex: 1;
-            padding: 10px 14px;
-            border: none;
-            border-radius: 6px;
-            font-size: 14px;
+            padding: 8px 12px;
+            font-size: 13px;
             font-weight: 500;
-            font-family: 'Google Sans', 'Roboto', sans-serif;
-            cursor: pointer;
+            border: none;
             background: transparent;
+            border-radius: 6px;
+            cursor: pointer;
             color: var(--text-secondary);
             transition: all 0.2s ease;
-        }
-
-        .auth-tab-btn:hover {
-            color: var(--portal-primary);
         }
 
         .auth-tab-btn.active {
             background: #fff;
             color: var(--portal-primary);
-            font-weight: 600;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            font-weight: 600;
         }
 
-        /* Google Sign-in Button */
+        /* Google OAuth Button */
         .btn-google {
-            width: 100%;
-            padding: 12px 16px;
-            background: #fff;
-            color: #3c4043;
-            border: 1px solid #dadce0;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 500;
-            font-family: 'Google Sans', 'Roboto', sans-serif;
-            display: inline-flex;
+            display: flex;
             align-items: center;
             justify-content: center;
             gap: 12px;
+            width: 100%;
+            padding: 10px 16px;
+            background: #ffffff;
+            border: 1px solid var(--portal-card-border);
+            border-radius: 6px;
+            color: #3c4043;
+            font-family: 'Google Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 1px 2px rgba(60,64,67,0.08);
+            transition: background-color 0.2s, box-shadow 0.2s;
+            box-sizing: border-box;
         }
 
         .btn-google:hover {
-            background: #f8fafd;
-            border-color: #c2e7ff;
-            box-shadow: 0 1px 3px 1px rgba(60,64,67,0.15);
+            background-color: #f8f9fa;
+            box-shadow: 0 1px 3px rgba(60,64,67,0.3);
         }
 
         .btn-google svg {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
         }
 
+        /* Divider */
         .auth-divider {
             display: flex;
             align-items: center;
             text-align: center;
-            margin: 24px 0;
+            margin: 20px 0;
             color: var(--text-secondary);
-            font-size: 13px;
-        }
-        .auth-divider::before, .auth-divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid var(--portal-card-border);
-        }
-        .auth-divider span {
-            padding: 0 12px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        /* Standard Forms */
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .auth-divider span {
+            padding: 0 10px;
+        }
+
+        /* Form Inputs */
         .auth-form-group {
             text-align: left;
             margin-bottom: 16px;
@@ -187,38 +187,40 @@
 
         .auth-form-group label {
             display: block;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
+            color: var(--text-secondary);
             margin-bottom: 6px;
-            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
         }
 
         .auth-input {
             width: 100%;
-            padding: 11px 14px;
+            padding: 10px 14px;
             border: 1px solid var(--portal-card-border);
             border-radius: 6px;
             font-size: 14px;
-            font-family: inherit;
+            box-sizing: border-box;
+            transition: border-color 0.2s, box-shadow 0.2s;
             outline: none;
-            transition: border-color 0.2s;
         }
 
         .auth-input:focus {
             border-color: var(--portal-primary);
-            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.15);
+            box-shadow: 0 0 0 2px rgba(26,115,232,0.2);
         }
 
         .btn-submit-auth {
             width: 100%;
-            padding: 12px;
+            padding: 11px;
             background: var(--portal-primary);
-            color: white;
+            color: #fff;
             border: none;
             border-radius: 6px;
-            font-size: 15px;
-            font-weight: 500;
             font-family: 'Google Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
             transition: background 0.2s;
             margin-top: 8px;
@@ -228,17 +230,28 @@
             background: var(--portal-primary-hover);
         }
 
+        .btn-submit-auth:disabled {
+            background: #dadce0;
+            cursor: not-allowed;
+        }
+
         .auth-toggle-link {
             margin-top: 20px;
             font-size: 13px;
             color: var(--text-secondary);
         }
+
         .auth-toggle-link a {
             color: var(--portal-primary);
+            text-decoration: none;
             font-weight: 500;
-            cursor: pointer;
         }
 
+        .auth-toggle-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Alerts in auth card */
         .alert-box {
             padding: 10px 14px;
             border-radius: 6px;
@@ -250,25 +263,30 @@
         .alert-error {
             background: var(--portal-danger-bg);
             color: var(--portal-danger);
-            border: 1px solid #f5c2c7;
+            border: 1px solid #fad2cf;
+        }
+        .alert-success {
+            background: var(--portal-success-bg);
+            color: var(--portal-success);
+            border: 1px solid #ceead6;
         }
         .alert-info {
             background: #e8f0fe;
             color: #1967d2;
-            border: 1px solid #c2e7ff;
+            border: 1px solid #d2e3fc;
         }
 
-        /* ================= DASHBOARD HEADER & PROFILE ================= */
+        /* Top Profile / User Info Bar */
         .dash-topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             background: #fff;
             border: 1px solid var(--portal-card-border);
             border-radius: 12px;
-            padding: 20px 24px;
+            padding: 18px 24px;
             margin-bottom: 24px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
             flex-wrap: wrap;
             gap: 16px;
         }
@@ -280,46 +298,85 @@
         }
 
         .avatar-circle {
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             background: #e8f0fe;
             color: var(--portal-primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
             font-weight: 600;
-            border: 2px solid #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            font-size: 18px;
+            font-family: 'Google Sans', sans-serif;
         }
 
         .dash-user-text h3 {
-            font-size: 18px;
+            margin: 0;
+            font-size: 16px;
             font-weight: 500;
-            margin-bottom: 4px;
             color: var(--text-primary);
         }
 
         .dash-user-text p {
+            margin: 3px 0 0 0;
             font-size: 13px;
             color: var(--text-secondary);
-            margin: 0;
-            display: flex;
-            align-items: center;
-            gap: 6px;
         }
 
+        .dash-topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-dash-action {
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid var(--portal-card-border);
+            background: #fff;
+            color: var(--text-primary);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-dash-action:hover {
+            background: var(--portal-bg-gray);
+        }
+
+        .btn-dash-action.btn-signout {
+            color: var(--portal-danger);
+            border-color: #fad2cf;
+        }
+        .btn-dash-action.btn-signout:hover {
+            background: var(--portal-danger-bg);
+        }
+
+        .btn-dash-action.btn-admin {
+            background: #e8f0fe;
+            color: #1967d2;
+            border-color: #d2e3fc;
+            font-weight: 600;
+        }
+        .btn-dash-action.btn-admin:hover {
+            background: #d2e3fc;
+        }
+
+        /* Status Pills */
         .status-pill {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            padding: 4px 10px;
-            border-radius: 20px;
+            padding: 2px 10px;
+            border-radius: 12px;
             font-size: 12px;
             font-weight: 600;
-            text-transform: uppercase;
             letter-spacing: 0.3px;
+            text-transform: uppercase;
         }
         .status-pill.waitlisted {
             background: var(--portal-warning-bg);
@@ -339,47 +396,7 @@
         .status-pill.blacklisted {
             background: var(--portal-danger-bg);
             color: var(--portal-danger);
-            border: 1px solid #f5c2c7;
-        }
-
-        .dash-topbar-actions {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .btn-dash-action {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 1px solid var(--portal-card-border);
-            background: #fff;
-            color: var(--text-primary);
-        }
-        .btn-dash-action:hover {
-            background: var(--portal-bg-gray);
-        }
-        .btn-dash-action.btn-signout {
-            color: var(--portal-danger);
-            border-color: #f5c2c7;
-        }
-        .btn-dash-action.btn-signout:hover {
-            background: var(--portal-danger-bg);
-        }
-        .btn-dash-action.btn-admin {
-            background: #e8f0fe;
-            color: #1a73e8;
-            border-color: #c2e7ff;
-            font-weight: 600;
-        }
-        .btn-dash-action.btn-admin:hover {
-            background: #d2e3fc;
+            border: 1px solid #fad2cf;
         }
 
         /* Rotating animation */
@@ -397,22 +414,22 @@
             position: fixed;
             bottom: 24px;
             right: 24px;
-            padding: 12px 20px;
-            background: #323232;
+            padding: 14px 22px;
+            background: #202124;
             color: #fff;
             border-radius: 8px;
             font-size: 14px;
             font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 10px;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.25);
-            z-index: 9999;
+            gap: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            z-index: 10000;
             opacity: 0;
             transform: translateY(20px);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             pointer-events: none;
-            max-width: 420px;
+            max-width: 440px;
         }
         .portal-toast.active {
             opacity: 1;
@@ -478,32 +495,45 @@
             align-items: center;
             gap: 4px;
             margin-left: 4px;
+            text-decoration: none;
+            color: var(--text-primary);
         }
-        .btn-action-small.approve { background: #e6f4ea; color: #137333; border-color: #ceead6; }
-        .btn-action-small.approve:hover { background: #ceead6; }
-        .btn-action-small.waitlist { background: #fef7e0; color: #b06000; border-color: #fce8b2; }
-        .btn-action-small.waitlist:hover { background: #fce8b2; }
-        .btn-action-small.blacklist { background: #fce8e6; color: #c5221f; border-color: #f5c2c7; }
-        .btn-action-small.blacklist:hover { background: #f5c2c7; }
-        .btn-action-small.warn { background: #e8f0fe; color: #1a73e8; border-color: #c2e7ff; text-decoration: none; }
-        .btn-action-small.warn:hover { background: #c2e7ff; }
+        .btn-action-small:hover {
+            background: #f1f3f4;
+        }
+        .btn-action-small.btn-approve {
+            color: #137333;
+            border-color: #ceead6;
+            background: #e6f4ea;
+        }
+        .btn-action-small.btn-approve:hover {
+            background: #ceead6;
+        }
+        .btn-action-small.btn-danger {
+            color: #c5221f;
+            border-color: #fad2cf;
+            background: #fce8e6;
+        }
+        .btn-action-small.btn-warn {
+            color: #b06000;
+            border-color: #fce8b2;
+            background: #fef7e0;
+        }
 
-        .whitelist-textarea {
+        .whitelist-export-box {
             width: 100%;
-            height: 90px;
-            padding: 10px;
-            border: 1px solid #dadce0;
-            border-radius: 6px;
             font-family: monospace;
             font-size: 12px;
-            resize: vertical;
+            padding: 12px;
+            border: 1px solid var(--portal-card-border);
+            border-radius: 6px;
             background: #fff;
             margin-top: 10px;
-            margin-bottom: 10px;
             box-sizing: border-box;
+            resize: vertical;
         }
 
-        /* ================= WAITLIST STATE VIEW ================= */
+        /* 2. WAITLIST STATE VIEW */
         .waitlist-card {
             background: #fff;
             border: 1px solid var(--portal-card-border);
@@ -535,6 +565,7 @@
             font-weight: 500;
             color: var(--text-primary);
             margin-bottom: 12px;
+            font-family: 'Google Sans', sans-serif;
         }
 
         .waitlist-card p.lead {
@@ -553,7 +584,7 @@
             border: 1px dashed var(--portal-card-border);
             border-radius: 10px;
             padding: 16px 28px;
-            margin-bottom: 30px;
+            margin-bottom: 24px;
             text-align: left;
         }
 
@@ -571,13 +602,11 @@
         }
 
         .locked-card {
-            background: #fff;
-            border: 1px solid var(--portal-card-border);
-            border-radius: 10px;
+            background: var(--portal-bg-gray);
+            border: 1px dashed #dadce0;
+            border-radius: 8px;
             padding: 20px;
             position: relative;
-            opacity: 0.75;
-            filter: grayscale(40%);
         }
 
         .locked-badge {
@@ -585,72 +614,69 @@
             align-items: center;
             gap: 4px;
             font-size: 11px;
-            font-weight: 700;
+            font-weight: 600;
             text-transform: uppercase;
-            color: var(--text-secondary);
-            background: #e8eaed;
-            padding: 3px 8px;
-            border-radius: 4px;
-            margin-bottom: 12px;
+            color: #70757a;
+            margin-bottom: 8px;
         }
 
-        /* ================= APPROVED DASHBOARD VIEW ================= */
+        /* 3. APPROVED STATE VIEW */
         .approved-banner {
-            background: linear-gradient(135deg, #1e8e3e 0%, #137333 100%);
+            background: linear-gradient(135deg, #188038 0%, #137333 100%);
             color: #fff;
             border-radius: 12px;
-            padding: 24px 30px;
-            margin-bottom: 30px;
+            padding: 28px 32px;
+            margin-bottom: 28px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
-            box-shadow: 0 4px 12px rgba(19, 115, 51, 0.2);
+            justify-content: space-between;
+            box-shadow: 0 4px 14px rgba(19, 115, 51, 0.2);
         }
 
         .approved-banner h2 {
-            font-size: 22px;
-            margin-bottom: 6px;
+            margin: 0 0 8px 0;
+            font-size: 24px;
+            font-family: 'Google Sans', sans-serif;
             font-weight: 500;
         }
 
         .approved-banner p {
             margin: 0;
             font-size: 14px;
-            opacity: 0.92;
+            opacity: 0.95;
+            max-width: 650px;
+            line-height: 1.5;
         }
 
-        /* Unlocked Hub Grid */
         .hub-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 24px;
-            margin-bottom: 36px;
+            margin-bottom: 30px;
         }
 
         .hub-card {
             background: #fff;
             border: 1px solid var(--portal-card-border);
             border-radius: 12px;
-            padding: 28px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            padding: 26px;
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
         .hub-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.06);
-            border-color: #c2e7ff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.08);
         }
 
         .hub-icon-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
 
         .hub-icon {
@@ -660,39 +686,38 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #fff;
         }
-        .hub-icon.addon { background: #1a73e8; }
-        .hub-icon.extension { background: #ea8600; }
-        .hub-icon.community { background: #1e8e3e; }
 
-        .hub-icon .material-icons {
-            font-size: 26px;
-        }
+        .hub-icon.addon { background: #e8f0fe; color: #1a73e8; }
+        .hub-icon.extension { background: #fef7e0; color: #b06000; }
+        .hub-icon.community { background: #fce8e6; color: #d93025; }
+
+        .hub-icon .material-icons { font-size: 26px; }
 
         .hub-badge {
             font-size: 11px;
-            font-weight: 700;
+            font-weight: 600;
             text-transform: uppercase;
-            padding: 4px 8px;
-            border-radius: 4px;
-            background: var(--portal-success-bg);
-            color: var(--portal-success);
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: var(--portal-bg-gray);
+            color: var(--text-secondary);
         }
 
         .hub-card h3 {
+            margin: 0 0 8px 0;
             font-size: 18px;
+            font-family: 'Google Sans', sans-serif;
             font-weight: 500;
-            margin-bottom: 8px;
             color: var(--text-primary);
         }
 
         .hub-card p {
-            font-size: 14px;
+            margin: 0 0 20px 0;
+            font-size: 13px;
             color: var(--text-secondary);
             line-height: 1.5;
-            margin-bottom: 24px;
-            flex: 1;
+            flex-grow: 1;
         }
 
         .btn-hub-action {
@@ -700,33 +725,33 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            padding: 11px 18px;
+            padding: 10px 16px;
             border-radius: 6px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 500;
             text-decoration: none;
+            cursor: pointer;
             transition: all 0.2s;
-            text-align: center;
+            border: 1px solid transparent;
         }
+
         .btn-hub-action.primary {
             background: var(--portal-primary);
             color: #fff;
         }
         .btn-hub-action.primary:hover {
             background: var(--portal-primary-hover);
-            color: #fff;
         }
         .btn-hub-action.secondary {
             background: #fff;
             color: var(--portal-primary);
-            border: 1px solid var(--portal-card-border);
+            border-color: var(--portal-card-border);
         }
         .btn-hub-action.secondary:hover {
             background: var(--portal-bg-gray);
-            border-color: var(--portal-primary);
         }
 
-        /* ================= STAGED EXPORTS & ACTIVITY SECTION ================= */
+        /* HEWP Staged Exports Section */
         .activity-card {
             background: #fff;
             border: 1px solid var(--portal-card-border);
@@ -752,6 +777,8 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            margin: 0;
+            font-family: 'Google Sans', sans-serif;
         }
 
         .activity-search {
@@ -792,11 +819,10 @@
         .exports-table td {
             padding: 12px 14px;
             border-bottom: 1px solid #f1f3f4;
-            color: var(--text-primary);
             vertical-align: middle;
         }
 
-        .exports-table tr:hover td {
+        .exports-table tr:hover {
             background: #f8fafd;
         }
 
@@ -807,39 +833,29 @@
             border-radius: 4px;
             display: inline-block;
         }
-        .export-type-tag.ns {
-            background: #e8f0fe;
-            color: #1967d2;
-        }
-        .export-type-tag.boq {
-            background: #fef7e0;
-            color: #b06000;
-        }
 
-        .empty-activity-box {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-secondary);
-        }
-        .empty-activity-box .material-icons {
-            font-size: 42px;
-            color: #bdc1c6;
-            margin-bottom: 10px;
-        }
-
-        /* Config warning banner when user hasn't added Supabase keys yet */
-        .config-notice-banner {
-            background: #fff8e1;
-            border: 1px solid #ffe082;
-            border-radius: 8px;
-            padding: 14px 18px;
-            margin-bottom: 24px;
-            font-size: 13px;
-            color: #795548;
+        /* Modal Dialog */
+        .portal-modal-backdrop {
             display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.45);
+            z-index: 10001;
             align-items: center;
-            justify-content: space-between;
-            gap: 12px;
+            justify-content: center;
+            padding: 20px;
+        }
+        .portal-modal-backdrop.active {
+            display: flex;
+        }
+        .portal-modal-content {
+            background: #fff;
+            border-radius: 12px;
+            padding: 28px;
+            max-width: 540px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-sizing: border-box;
         }
 
         @media (max-width: 600px) {
@@ -861,7 +877,7 @@
         <div class="nav-links">
             <a href="index.html#features">Features</a>
             <a href="index.html#learn-section">Learn</a>
-            <a href="index.html#tester-hub-section">Tester Hub</a>
+            <a href="index.html#tester-hub-section">Estimator Hub</a>
             <a href="faq.html">FAQ</a>
             <a href="live-tenders.html">Tenders</a>
             <div class="dropdown">
@@ -885,30 +901,23 @@
 
     <div class="portal-wrapper">
 
-        <!-- Supabase Keys Configuration Notice (appears only if keys are placeholder) -->
-        <div id="configNotice" class="config-notice-banner">
-            <div>
-                <strong>Supabase Config Needed:</strong> Replace <code>YOUR_PROJECT_ID</code> and <code>YOUR_SUPABASE_ANON_KEY</code> at the top of <code>portal.html</code> with your project keys from the Supabase dashboard.
-            </div>
-            <button onclick="document.getElementById('configNotice').style.display='none'" style="background:none;border:none;cursor:pointer;color:#795548;font-size:16px;">&times;</button>
-        </div>
-
         <!-- ================= 1. AUTHENTICATION VIEW (Logged Out) ================= -->
         <div id="viewAuth" class="state-view active">
             <div class="auth-card">
+                <!-- Authentic CivilMate Logo -->
                 <div class="auth-brand-icon">
-                    <span class="material-icons" style="font-size: 32px; color: var(--portal-primary);">engineering</span>
+                    <img src="logo.jpg" alt="CivilMate Logo" width="56" height="56" style="border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); object-fit: contain;">
                 </div>
                 <h2 id="authHeading">CivilMate Portal</h2>
-                <p class="subtitle" id="authSubtitle">Sign in to access your estimates & beta dashboard</p>
+                <p class="subtitle" id="authSubtitle">Sign in to access your estimates and workspace</p>
 
-                <!-- Mode Switcher Tabs (Sign In / Sign Up) -->
+                <!-- Mode Switcher Tabs (Sign In / Apply) -->
                 <div class="auth-mode-tabs">
                     <button type="button" class="auth-tab-btn active" id="tabLogin" onclick="setAuthMode('login')">
                         Sign In
                     </button>
                     <button type="button" class="auth-tab-btn" id="tabSignup" onclick="setAuthMode('signup')">
-                        Sign Up for Beta
+                        Apply for Access
                     </button>
                 </div>
 
@@ -948,6 +957,11 @@
                         <span id="pwdHelperText" style="display:none; font-size: 11px; color: var(--text-secondary); margin-top: 4px;">Minimum 6 characters</span>
                     </div>
 
+                    <!-- Forgot Password Link -->
+                    <div id="forgotPasswordGroup" style="text-align: right; margin-top: -6px; margin-bottom: 14px;">
+                        <a href="javascript:void(0)" onclick="handleForgotPassword(event)" style="font-size: 12px; color: var(--portal-primary); text-decoration: none; font-weight: 500;">Forgot password?</a>
+                    </div>
+
                     <button type="submit" class="btn-submit-auth" id="btnEmailSubmit">
                         Sign In
                     </button>
@@ -955,7 +969,7 @@
 
                 <div class="auth-toggle-link">
                     <span id="authToggleText">Need an account?</span>
-                    <a href="javascript:void(0)" id="authToggleBtn" onclick="toggleAuthMode()">Sign up for beta</a>
+                    <a href="javascript:void(0)" id="authToggleBtn" onclick="toggleAuthMode()">Apply for access</a>
                 </div>
             </div>
         </div>
@@ -967,11 +981,8 @@
                 <div class="dash-user-info">
                     <div class="avatar-circle" id="wlUserInitial">U</div>
                     <div class="dash-user-text">
-                        <h3 id="wlUserName">Beta Applicant</h3>
-                        <p>
-                            <span id="wlUserEmail">-</span> &bull; 
-                            <span class="status-pill waitlisted">Waitlisted</span>
-                        </p>
+                        <h3 id="wlUserName">Estimator Applicant</h3>
+                        <p><span id="wlUserEmail">-</span> &bull; <span class="status-pill waitlisted">Waitlisted (In Review)</span></p>
                     </div>
                 </div>
                 <div class="dash-topbar-actions">
@@ -983,9 +994,9 @@
                         <span class="material-icons" style="font-size: 16px;">refresh</span>
                         Check Approval Status
                     </button>
-                    <button class="btn-dash-action" onclick="handleUserOptOut()" style="color:#5f6368;" title="Surrender beta seat">
+                    <button class="btn-dash-action" onclick="handleUserOptOut()" style="color:#5f6368;" title="Surrender access position">
                         <span class="material-icons" style="font-size: 16px;">person_remove</span>
-                        Opt-Out
+                        Revoke Access
                     </button>
                     <button class="btn-dash-action btn-signout" onclick="signOut()">
                         <span class="material-icons" style="font-size: 16px;">logout</span>
@@ -999,52 +1010,55 @@
                 <div class="waitlist-icon-wrapper">
                     <span class="material-icons">hourglass_top</span>
                 </div>
-                <h2>You are on the CivilMate Beta Waitlist</h2>
+                <h2>You are on the CivilMate Access Waitlist</h2>
                 <p class="lead">
-                    Seats are limited to maintain high reliability and rate-sync accuracy with the Haryana Schedule of Rates (HSR). Our team is reviewing applications in sequential order.
+                    Seats are limited to maintain high reliability and rate-sync accuracy with the Haryana Schedule of Rates (HSR). Our engineering team reviews applications sequentially.
                 </p>
 
                 <div class="waitlist-queue-box">
                     <span class="material-icons">mark_email_read</span>
                     <div>
-                        <div style="font-weight: 600; font-size: 14px; color: var(--text-primary);">Google Account Registered for Whitelisting</div>
+                        <div style="font-weight: 600; font-size: 14px; color: var(--text-primary);">Account Registered for Whitelisting</div>
                         <div style="font-size: 13px; color: var(--text-secondary);" id="wlRegisteredEmailText">Checking registered email...</div>
                     </div>
                 </div>
 
                 <div style="margin-top: 10px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-                    <button class="btn btn-primary" id="btnCheckApprovalMain" onclick="checkApprovalStatus(this)" style="padding: 10px 24px; font-size: 14px;">
-                        <span class="material-icons" style="font-size: 18px; margin-right: 6px;">update</span>
+                    <button class="btn btn-primary" id="btnCheckApprovalMain" onclick="checkApprovalStatus(this)" style="padding: 11px 26px; font-size: 14px; display: inline-flex; align-items: center; gap: 6px;">
+                        <span class="material-icons" style="font-size: 18px;">autorenew</span>
                         Check if I've been approved
                     </button>
-                    <button class="btn btn-secondary" onclick="handleUserOptOut()" style="padding: 10px 18px; font-size: 13px;">
-                        <span class="material-icons" style="font-size: 16px; margin-right: 4px;">person_remove</span>
-                        Opt-Out of Beta
+                    <button class="btn btn-secondary" onclick="handleUserOptOut()" style="padding: 11px 20px; font-size: 13px; display: inline-flex; align-items: center; gap: 6px;">
+                        <span class="material-icons" style="font-size: 16px;">person_remove</span>
+                        Revoke Application
                     </button>
                 </div>
 
-                <!-- Locked Downloads Preview (Hidden / Gated) -->
+                <!-- Live Status Feedback Banner Inside Card -->
+                <div id="wlStatusFeedback" style="display:none; max-width: 480px; margin: 18px auto 0 auto; padding: 12px 18px; border-radius: 8px; font-size: 13px; font-weight: 500;"></div>
+
+                <!-- Locked Downloads Preview -->
                 <div class="locked-features-grid">
                     <div class="locked-card">
-                        <div class="locked-badge"><span class="material-icons" style="font-size: 12px;">lock</span> Locked</div>
+                        <div class="locked-badge"><span class="material-icons" style="font-size: 12px;">lock</span> Gated</div>
                         <h4 style="margin: 0 0 6px 0; font-size: 15px;">Google Sheets™ Add-on</h4>
-                        <p style="margin: 0; font-size: 13px; color: var(--text-secondary);">Direct unlisted marketplace installation URL will unlock once approved.</p>
+                        <p style="margin: 0; font-size: 13px; color: var(--text-secondary);">Marketplace installation will unlock as soon as your email is approved.</p>
                     </div>
                     <div class="locked-card">
-                        <div class="locked-badge"><span class="material-icons" style="font-size: 12px;">lock</span> Locked</div>
-                        <h4 style="margin: 0 0 6px 0; font-size: 15px;">Chrome™ Extension</h4>
+                        <div class="locked-badge"><span class="material-icons" style="font-size: 12px;">lock</span> Gated</div>
+                        <h4 style="margin: 0 0 6px 0; font-size: 15px;">Chrome™ / Edge Extension</h4>
                         <p style="margin: 0; font-size: 13px; color: var(--text-secondary);">Automated HEWP portal data extractor and bill sync download link.</p>
                     </div>
                     <div class="locked-card">
-                        <div class="locked-badge"><span class="material-icons" style="font-size: 12px;">lock</span> Locked</div>
-                        <h4 style="margin: 0 0 6px 0; font-size: 15px;">Community Hub</h4>
-                        <p style="margin: 0; font-size: 13px; color: var(--text-secondary);">Access to our private Google Chat workspace for civil engineers.</p>
+                        <div class="locked-badge"><span class="material-icons" style="font-size: 12px;">lock</span> Gated</div>
+                        <h4 style="margin: 0 0 6px 0; font-size: 15px;">Video Masterclasses</h4>
+                        <p style="margin: 0; font-size: 13px; color: var(--text-secondary);">Direct access to official HSR estimation guides and video walk-throughs.</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- ================= 3. APPROVED DASHBOARD VIEW ================= -->
+        <!-- ================= 3. APPROVED STATE VIEW ================= -->
         <div id="viewApproved" class="state-view">
             <!-- Top Profile Bar -->
             <div class="dash-topbar">
@@ -1054,8 +1068,8 @@
                         <h3 id="apUserName">CivilMate Estimator</h3>
                         <p>
                             <span id="apUserEmail">-</span> &bull; 
-                            <span class="status-pill approved">Approved Tester</span> &bull;
-                            <span id="apTierText" style="font-weight: 500; color: var(--portal-primary);">Tier: Beta Access</span>
+                            <span class="status-pill approved">Authorized Estimator</span> &bull;
+                            <span id="apTierText" style="font-weight: 500; color: var(--portal-primary);">Tier: Early Access</span>
                         </p>
                     </div>
                 </div>
@@ -1066,11 +1080,11 @@
                     </button>
                     <button class="btn-dash-action" onclick="fetchStagedExports()">
                         <span class="material-icons" style="font-size: 16px;">sync</span>
-                        Refresh Activity
+                        Refresh Exports
                     </button>
-                    <button class="btn-dash-action" onclick="handleUserOptOut()" style="color:#5f6368;" title="Opt out of Beta">
+                    <button class="btn-dash-action" onclick="handleUserOptOut()" style="color:#5f6368;" title="Surrender authorized seat">
                         <span class="material-icons" style="font-size: 16px;">person_remove</span>
-                        Opt-Out
+                        Revoke Access
                     </button>
                     <button class="btn-dash-action btn-signout" onclick="signOut()">
                         <span class="material-icons" style="font-size: 16px;">logout</span>
@@ -1083,14 +1097,14 @@
             <div class="approved-banner">
                 <div>
                     <h2>Welcome to the CivilMate Suite!</h2>
-                    <p>Your Google account has been authorized. You can now install the Add-on, Chrome Extension, and view your staged estimate exports below.</p>
+                    <p>Your Google account has been authorized. You can now install the Google Sheets Add-on, Chrome/Edge Extension, and review your staged estimate exports below.</p>
                 </div>
                 <div style="display: flex; gap: 8px;">
                     <span class="material-icons" style="font-size: 40px; opacity: 0.9;">verified</span>
                 </div>
             </div>
 
-            <!-- Unlocked Ecosystem Cards -->
+            <!-- Ecosystem Cards -->
             <div class="hub-grid">
                 <!-- Card 1: Add-on -->
                 <div class="hub-card">
@@ -1098,7 +1112,7 @@
                         <div class="hub-icon addon">
                             <span class="material-icons">table_chart</span>
                         </div>
-                        <span class="hub-badge">Workspace</span>
+                        <span class="hub-badge">Google Workspace</span>
                     </div>
                     <h3>Google Sheets™ Add-on</h3>
                     <p>Execute formulas, extract HSR rates, calculate material abstracts, and create Details of Quantity directly within your Google Sheets™.</p>
@@ -1108,15 +1122,15 @@
                     </a>
                 </div>
 
-                <!-- Card 2: Chrome Extension -->
+                <!-- Card 2: Extension -->
                 <div class="hub-card">
                     <div class="hub-icon-row">
                         <div class="hub-icon extension">
                             <span class="material-icons">extension</span>
                         </div>
-                        <span class="hub-badge">Chrome Web Store</span>
+                        <span class="hub-badge">Chrome & Edge</span>
                     </div>
-                    <h3>Chrome™ Extension</h3>
+                    <h3>Chrome / Edge Extension</h3>
                     <p>Automate bill submissions, parse online tender BoQs, and bridge data directly between the Haryana Engineering Works Portal (HEWP) and your Sheet.</p>
                     <a href="https://chromewebstore.google.com/detail/paadmpfoldjolnnojnihfobplhplbobh?utm_source=item-share-cb" target="_blank" rel="noopener noreferrer" class="btn-hub-action primary">
                         <span class="material-icons" style="font-size: 18px;">add_to_queue</span>
@@ -1124,53 +1138,51 @@
                     </a>
                 </div>
 
-                <!-- Card 3: Community Hub -->
+                <!-- Card 3: Video Tutorials (Replaces Google Chat) -->
                 <div class="hub-card">
                     <div class="hub-icon-row">
-                        <div class="hub-icon community">
-                            <span class="material-icons">forum</span>
+                        <div class="hub-icon community" style="background:#fce8e6; color:#c5221f;">
+                            <span class="material-icons">smart_display</span>
                         </div>
-                        <span class="hub-badge">Google Chat</span>
+                        <span class="hub-badge">YouTube</span>
                     </div>
-                    <h3>Community Hub</h3>
-                    <p>Join the CivilMate Beta Builders Google Chat space. Discuss HSR updates, get direct developer support, and request rate items.</p>
-                    <a href="https://mail.google.com/chat/" target="_blank" rel="noopener noreferrer" class="btn-hub-action secondary">
-                        <span class="material-icons" style="font-size: 18px;">open_in_new</span>
-                        Join Chat Space
+                    <h3>Official Video Guides</h3>
+                    <p>Watch step-by-step masterclasses on rate analysis, BOQ extraction, and HEWP bidding automation directly on our YouTube channel.</p>
+                    <a href="https://www.youtube.com/@civilmateindia" target="_blank" rel="noopener noreferrer" class="btn-hub-action secondary">
+                        <span class="material-icons" style="font-size: 18px;">play_circle</span>
+                        Watch Tutorials
                     </a>
                 </div>
             </div>
 
-            <!-- Activity & Uploaded NS Items Section -->
+            <!-- HEWP Staged Exports Section -->
             <div class="activity-card">
                 <div class="activity-header">
                     <div>
                         <h3>
                             <span class="material-icons" style="color: var(--portal-primary);">receipt_long</span>
-                            Uploaded NS Items & Staged Exports
+                            Data Exported for Uploading to HEWP Portal
                         </h3>
                         <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">
-                            Live sync records from your CivilMate connected Google Sheets (<code>staged_exports</code> table)
+                            Live sync records from CivilMate connected Google Sheets (<code>staged_exports</code>)
                         </div>
                     </div>
-                    <input type="text" id="exportSearchInput" class="activity-search" placeholder="Filter by item or code..." oninput="filterExportsTable()">
+                    <input type="text" id="exportSearchInput" class="activity-search" placeholder="Filter by work name..." oninput="filterExportsTable()">
                 </div>
 
                 <div class="exports-table-wrapper">
                     <table class="exports-table" id="exportsTable">
                         <thead>
                             <tr>
-                                <th>Item Code</th>
-                                <th>Description / Item Name</th>
-                                <th>Unit</th>
-                                <th>Estimated Rate</th>
-                                <th>Export Type</th>
-                                <th>Timestamp</th>
+                                <th style="width: 50px;">#</th>
+                                <th>Work / Estimate Name</th>
+                                <th>Exported At (IST)</th>
+                                <th style="text-align: right;">Status</th>
                             </tr>
                         </thead>
                         <tbody id="exportsTableBody">
                             <tr>
-                                <td colspan="6" style="text-align: center; padding: 20px; color: var(--text-secondary);">
+                                <td colspan="4" style="text-align: center; padding: 24px; color: var(--text-secondary);">
                                     Connecting to Supabase staged_exports...
                                 </td>
                             </tr>
@@ -1178,169 +1190,17 @@
                     </table>
                 </div>
             </div>
-
         </div>
 
-        <!-- ================= 4. ADMIN DASHBOARD VIEW ================= -->
-        <div id="viewAdmin" class="state-view">
-            <div class="dash-topbar" style="background: #f8fafd; border-color: #c2e7ff;">
-                <div class="dash-user-info">
-                    <div class="avatar-circle" style="background:#1a73e8; color:#fff;">
-                        <span class="material-icons">security</span>
-                    </div>
-                    <div class="dash-user-text">
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <h3 style="margin: 0;">CivilMate Administrator Suite</h3>
-                            <span class="admin-badge">Admin Mode</span>
-                        </div>
-                        <p>Whitelisting, Google Cloud Console Exporter &bull; <code>civilmateindia@gmail.com</code></p>
-                    </div>
-                </div>
-                <div class="dash-topbar-actions">
-                    <button class="btn-dash-action" onclick="loadAdminData()">
-                        <span class="material-icons" style="font-size: 16px;">refresh</span>
-                        Refresh Admin Data
-                    </button>
-                    <button class="btn-dash-action" onclick="renderDashboardForProfile(currentProfile)">
-                        <span class="material-icons" style="font-size: 16px;">arrow_back</span>
-                        Back to User View
-                    </button>
-                    <button class="btn-dash-action btn-signout" onclick="signOut()">
-                        <span class="material-icons" style="font-size: 16px;">logout</span>
-                        Sign Out
-                    </button>
-                </div>
-            </div>
-
-            <!-- Quick Stats Metric Cards -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">
-                <div class="stat-card" style="background:#fff; border:1px solid var(--portal-card-border); border-radius:10px; padding:20px; text-align:center;">
-                    <div id="admStatTotal" style="font-size: 28px; font-weight: 700; color: var(--portal-primary);">-</div>
-                    <div style="font-size: 12px; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; margin-top: 4px;">Total Registered</div>
-                </div>
-                <div class="stat-card" style="background:#fff; border:1px solid var(--portal-card-border); border-radius:10px; padding:20px; text-align:center;">
-                    <div id="admStatApproved" style="font-size: 28px; font-weight: 700; color: var(--portal-success);">-</div>
-                    <div style="font-size: 12px; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; margin-top: 4px;">Whitelisted (Approved)</div>
-                </div>
-                <div class="stat-card" style="background:#fff; border:1px solid var(--portal-card-border); border-radius:10px; padding:20px; text-align:center;">
-                    <div id="admStatWaitlisted" style="font-size: 28px; font-weight: 700; color: var(--portal-warning);">-</div>
-                    <div style="font-size: 12px; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; margin-top: 4px;">Pending Waitlist</div>
-                </div>
-                <div class="stat-card" style="background:#fff; border:1px solid var(--portal-card-border); border-radius:10px; padding:20px; text-align:center;">
-                    <div id="admStatRevoked" style="font-size: 28px; font-weight: 700; color: var(--portal-danger);">-</div>
-                    <div style="font-size: 12px; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; margin-top: 4px;">Opted-Out / Blacklisted</div>
-                </div>
-            </div>
-
-            <!-- Google Cloud Console Whitelist Exporter Card -->
-            <div class="admin-card">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px;">
-                    <div>
-                        <h3 style="font-size: 18px; margin: 0 0 6px 0; display: flex; align-items: center; gap: 8px;">
-                            <span class="material-icons" style="color: var(--portal-primary);">content_copy</span>
-                            Google Cloud Console Whitelist Exporter
-                        </h3>
-                        <p style="font-size: 13px; color: var(--text-secondary); margin: 0;">
-                            Format and copy approved tester emails to paste into Google Cloud Console text boxes.
-                        </p>
-                    </div>
-                    <div style="display: flex; gap: 8px; align-items: center;">
-                        <label style="font-size: 12px; color: var(--text-secondary);">Format:</label>
-                        <select id="exportFormatSelect" onchange="updateWhitelistExportBox()" style="padding: 6px 10px; border-radius: 4px; border: 1px solid var(--portal-card-border); font-size: 12px;">
-                            <option value="comma">Comma-Separated (email1, email2)</option>
-                            <option value="newline">Line-by-Line (email1 \n email2)</option>
-                        </select>
-                        <button class="btn btn-primary" onclick="copyWhitelistEmails()" style="padding: 7px 16px; font-size: 13px;">
-                            <span class="material-icons" style="font-size: 16px; margin-right: 4px;">content_copy</span>
-                            Copy Approved Emails
-                        </button>
-                    </div>
-                </div>
-
-                <textarea id="whitelistExportTextarea" class="whitelist-textarea" readonly placeholder="No approved emails found yet..."></textarea>
-                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--text-secondary); flex-wrap: wrap; gap: 6px;">
-                    <span id="whitelistCountText" style="font-weight: 600; color: var(--portal-success);">0 emails ready to copy</span>
-                    <span>Paste into: <strong>Google Cloud Console &gt; APIs &amp; Services &gt; OAuth consent screen &gt; Test users</strong></span>
-                </div>
-            </div>
-
-            <!-- User Management & Whitelisting Table Card -->
-            <div class="admin-card">
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
-                    <div>
-                        <h3 style="font-size: 18px; margin: 0 0 4px 0;">Beta Applicants &amp; Tester Directory</h3>
-                        <div style="font-size: 13px; color: var(--text-secondary);">Whitelist, revoke, or mark users inactive.</div>
-                    </div>
-                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                        <select id="adminStatusFilter" onchange="filterAdminUsersTable()" style="padding: 8px 12px; border-radius: 6px; border: 1px solid var(--portal-card-border); font-size: 13px;">
-                            <option value="all">All Users</option>
-                            <option value="waitlisted">Waitlisted</option>
-                            <option value="approved">Approved (Whitelisted)</option>
-                            <option value="opted_out">Opted-Out</option>
-                            <option value="blacklisted">Blacklisted</option>
-                        </select>
-                        <input type="text" id="adminSearchInput" oninput="filterAdminUsersTable()" placeholder="Filter by name or email..." class="activity-search" style="margin: 0; width: 220px;">
-                    </div>
-                </div>
-
-                <div class="exports-table-wrapper">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>Applicant</th>
-                                <th>Registered Date</th>
-                                <th>Activity Status</th>
-                                <th>Status</th>
-                                <th style="text-align: right;">Whitelisting Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="adminUsersTableBody">
-                            <tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--text-secondary);">Loading registered users...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Feedback Submissions Card -->
-            <div class="admin-card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <div>
-                        <h3 style="font-size: 18px; margin: 0 0 4px 0;">Beta Tester Feedback &amp; Bug Reports</h3>
-                        <div style="font-size: 13px; color: var(--text-secondary);">Direct issue submissions from website and add-on users.</div>
-                    </div>
-                    <button class="btn-action-small" onclick="fetchAdminFeedback()">
-                        <span class="material-icons" style="font-size: 14px;">refresh</span> Refresh Feedback
-                    </button>
-                </div>
-
-                <div class="exports-table-wrapper">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>User Email</th>
-                                <th>Feedback Type</th>
-                                <th>Description / Details</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="adminFeedbackTableBody">
-                            <tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--text-secondary);">Loading feedback submissions...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- ================= 5. OPTED OUT VIEW ================= -->
+        <!-- ================= 4. OPTED OUT STATE VIEW ================= -->
         <div id="viewOptedOut" class="state-view">
             <div class="waitlist-card">
-                <div class="waitlist-icon-wrapper" style="background: #f1f3f4; color: #5f6368;">
+                <div class="waitlist-icon-wrapper" style="background:#f1f3f4; color:#5f6368;">
                     <span class="material-icons">person_off</span>
                 </div>
-                <h2>You Have Opted Out of CivilMate Beta</h2>
+                <h2>Access Revoked</h2>
                 <p class="lead">
-                    Your Google account has been removed from the whitelist pool. If you decide to participate in beta testing in the future, you can rejoin at any time.
+                    Your Google account has surrendered its authorized seat. If you decide to resume estimation in the future, you can rejoin the access queue at any time.
                 </p>
                 <div style="display: flex; gap: 12px; justify-content: center; margin-top: 20px;">
                     <button class="btn btn-primary" onclick="rejoinBetaProgram()">
@@ -1351,6 +1211,155 @@
                         <span class="material-icons" style="font-size: 18px; margin-right: 6px;">logout</span>
                         Sign Out
                     </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= 5. ADMIN MANAGEMENT SUITE ================= -->
+        <div id="viewAdmin" class="state-view">
+            <!-- Top Admin Bar -->
+            <div class="dash-topbar">
+                <div class="dash-user-info">
+                    <div class="avatar-circle" style="background:#e8f0fe; color:#1967d2;">
+                        <span class="material-icons" style="font-size: 24px;">admin_panel_settings</span>
+                    </div>
+                    <div class="dash-user-text">
+                        <h3>CivilMate Administrator Suite</h3>
+                        <p>civilmateindia@gmail.com &bull; <span class="admin-badge">Admin Controller</span></p>
+                    </div>
+                </div>
+                <div class="dash-topbar-actions">
+                    <button class="btn-dash-action" onclick="prune30DayInactiveUsers()" title="Auto-revoke users inactive over 30 days">
+                        <span class="material-icons" style="font-size: 16px; color: #c5221f;">auto_delete</span>
+                        Auto-Prune 30d Inactive
+                    </button>
+                    <button class="btn-dash-action" onclick="loadAdminData()">
+                        <span class="material-icons" style="font-size: 16px;">refresh</span>
+                        Refresh Data
+                    </button>
+                    <button class="btn-dash-action" onclick="showView('viewApproved')">
+                        <span class="material-icons" style="font-size: 16px;">dashboard</span>
+                        User View
+                    </button>
+                    <button class="btn-dash-action btn-signout" onclick="signOut()">
+                        <span class="material-icons" style="font-size: 16px;">logout</span>
+                        Sign Out
+                    </button>
+                </div>
+            </div>
+
+            <!-- Program Metrics Grid -->
+            <div class="stat-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">
+                <div class="admin-card" style="margin-bottom:0; text-align:center;">
+                    <div style="font-size: 28px; font-weight: 700; color: #1a73e8;" id="admStatTotal">-</div>
+                    <div style="font-size: 12px; color: var(--text-secondary); text-transform:uppercase; margin-top:4px;">Total Applications</div>
+                </div>
+                <div class="admin-card" style="margin-bottom:0; text-align:center;">
+                    <div style="font-size: 28px; font-weight: 700; color: #137333;" id="admStatApproved">-</div>
+                    <div style="font-size: 12px; color: var(--text-secondary); text-transform:uppercase; margin-top:4px;">Authorized Seats</div>
+                </div>
+                <div class="admin-card" style="margin-bottom:0; text-align:center;">
+                    <div style="font-size: 28px; font-weight: 700; color: #b06000;" id="admStatWaitlisted">-</div>
+                    <div style="font-size: 12px; color: var(--text-secondary); text-transform:uppercase; margin-top:4px;">In Waitlist Queue</div>
+                </div>
+                <div class="admin-card" style="margin-bottom:0; text-align:center;">
+                    <div style="font-size: 28px; font-weight: 700; color: #5f6368;" id="admStatRevoked">-</div>
+                    <div style="font-size: 12px; color: var(--text-secondary); text-transform:uppercase; margin-top:4px;">Revoked / Inactive</div>
+                </div>
+            </div>
+
+            <!-- Google Cloud Console Whitelist Exporter -->
+            <div class="admin-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                    <div>
+                        <h4 style="margin: 0; font-size: 16px; font-family: 'Google Sans', sans-serif;">
+                            Google Cloud Console Whitelist Exporter
+                        </h4>
+                        <div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">
+                            Copy-paste formatted emails into Google Cloud Console &rarr; OAuth consent screen &rarr; Test users
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <select id="exportFormatSelect" onchange="updateWhitelistExportBox()" style="padding: 6px 10px; font-size: 12px; border-radius: 4px; border: 1px solid var(--portal-card-border);">
+                            <option value="comma">Comma-separated (email1, email2)</option>
+                            <option value="newline">Newline (one per line)</option>
+                        </select>
+                        <button class="btn-dash-action" onclick="copyWhitelistEmails()" style="background: var(--portal-primary); color: white; border-color: var(--portal-primary);">
+                            <span class="material-icons" style="font-size: 16px;">content_copy</span>
+                            Copy Approved Emails
+                        </button>
+                    </div>
+                </div>
+                <textarea id="whitelistExportTextarea" class="whitelist-export-box" rows="3" readonly placeholder="No approved emails currently available."></textarea>
+                <div style="display:flex; justify-content:space-between; margin-top:4px; font-size:11px; color:var(--text-secondary);">
+                    <span id="whitelistCountText">0 approved emails ready</span>
+                    <span>Ready for Google Cloud OAuth Consent Screen</span>
+                </div>
+            </div>
+
+            <!-- Inactivity Rules Info Banner -->
+            <div style="background:#fff; border:1px solid #dadce0; border-radius:8px; padding:12px 18px; margin-bottom:20px; font-size:12px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+                <span style="font-weight:600; color:var(--text-primary);">Inactivity Policies:</span>
+                <span style="display:inline-flex; align-items:center; gap:4px; color:#b06000;"><span class="material-icons" style="font-size:14px;">warning</span> 15 Days: Soft Warning</span>
+                <span style="display:inline-flex; align-items:center; gap:4px; color:#c5221f;"><span class="material-icons" style="font-size:14px;">report</span> 29 Days: Hard Final Notice</span>
+                <span style="display:inline-flex; align-items:center; gap:4px; color:#5f6368;"><span class="material-icons" style="font-size:14px;">timer_off</span> 30th Day: Auto Opt-Out / Seat Revocation</span>
+            </div>
+
+            <!-- Registered Estimators Directory Table -->
+            <div class="admin-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+                    <h4 style="margin: 0; font-size: 16px; font-family: 'Google Sans', sans-serif;">
+                        Registered Estimators & Applicants
+                    </h4>
+                    <input type="text" id="adminUserSearch" oninput="filterAdminUsersTable()" class="activity-search" placeholder="Search by email or name...">
+                </div>
+
+                <div class="exports-table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Estimator Details</th>
+                                <th>Status</th>
+                                <th>Last Add-on Activity (IST)</th>
+                                <th>Applied Date</th>
+                                <th style="text-align: right;">Status Controls & Mailer</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminUsersTableBody">
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 24px; color: var(--text-secondary);">
+                                    Loading registered users...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Feedback & Feature Requests Table -->
+            <div class="admin-card">
+                <h4 style="margin: 0 0 16px 0; font-size: 16px; font-family: 'Google Sans', sans-serif;">
+                    Feedback & Feature Tracker
+                </h4>
+                <div class="exports-table-wrapper">
+                    <table class="admin-table" id="adminFeedbackTable">
+                        <thead>
+                            <tr>
+                                <th>Classification</th>
+                                <th>Estimator Email</th>
+                                <th>Description / Issue Details</th>
+                                <th>Submitted (IST)</th>
+                                <th style="text-align: right;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminFeedbackTableBody">
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 20px; color: var(--text-secondary);">
+                                    Loading feedback entries...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -1367,17 +1376,64 @@
         </div>
     </footer>
 
+    <!-- Dedicated Inactivity Warning Mailer Modal -->
+    <div id="warnEmailModal" class="portal-modal-backdrop">
+        <div class="portal-modal-content">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                <h3 style="margin:0; font-size:17px; font-family:'Google Sans', sans-serif; display:flex; align-items:center; gap:6px;">
+                    <span class="material-icons" id="warnModalIcon" style="color:#b06000;">mail</span>
+                    Inactivity Notice Generator
+                </h3>
+                <button onclick="closeWarnModal()" style="background:none; border:none; font-size:20px; cursor:pointer; color:#5f6368;">&times;</button>
+            </div>
+            
+            <div id="warnModalInactivityInfo" style="padding:10px 14px; background:#f8f9fa; border-radius:6px; font-size:12px; margin-bottom:14px; color:#3c4043;">
+                Calculating inactivity details...
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label style="font-size:11px; font-weight:600; text-transform:uppercase; color:#5f6368; display:block; margin-bottom:4px;">Recipient</label>
+                <input type="text" id="warnModalRecipient" class="auth-input" readonly style="background:#f8f9fa; font-weight:500;">
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label style="font-size:11px; font-weight:600; text-transform:uppercase; color:#5f6368; display:block; margin-bottom:4px;">Subject</label>
+                <input type="text" id="warnModalSubject" class="auth-input" readonly style="background:#f8f9fa;">
+            </div>
+
+            <div style="margin-bottom:18px;">
+                <label style="font-size:11px; font-weight:600; text-transform:uppercase; color:#5f6368; display:block; margin-bottom:4px;">Draft Body</label>
+                <textarea id="warnModalBody" class="whitelist-export-box" rows="7" readonly style="font-size:12px; line-height:1.4;"></textarea>
+            </div>
+
+            <div style="display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap;">
+                <button class="btn-dash-action" id="btnAutoRevokeModal" style="display:none; color:#c5221f; border-color:#fad2cf; background:#fce8e6;" onclick="handleModalRevoke()">
+                    <span class="material-icons" style="font-size:16px;">person_remove</span>
+                    Revoke Seat Now
+                </button>
+                <button class="btn-dash-action" onclick="copyWarnDraft()">
+                    <span class="material-icons" style="font-size:16px;">content_copy</span>
+                    Copy Email Draft
+                </button>
+                <button class="btn-dash-action" style="background:var(--portal-primary); color:#fff; border-color:var(--portal-primary);" onclick="launchMailClient()">
+                    <span class="material-icons" style="font-size:16px;">open_in_new</span>
+                    Launch Mail App
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Notification Toast -->
+    <div id="portalToast" class="portal-toast">
+        <span class="material-icons" id="toastIcon">info</span>
+        <span id="toastMsg">Notification message</span>
+    </div>
+
     <!-- ================= JAVASCRIPT & SUPABASE AUTH LOGIC ================= -->
     <script>
-        /*
-         * =========================================================================
-         * SUPABASE CONFIGURATION
-         * Replace with your Supabase Project settings (Settings -> API)
-         * =========================================================================
-         */
         const SUPABASE_CONFIG = {
-            url: "https://qizuppfogzugazpvvaxg.supabase.co", // Replace with your Supabase project URL
-            anonKey: "sb_publishable_rWs1g0hoacGIjeorJCfNqw__B_ztAUG"           // Replace with your Supabase anon public key
+            url: "https://qizuppfogzugazpvvaxg.supabase.co",
+            anonKey: "sb_publishable_rWs1g0hoacGIjeorJCfNqw__B_ztAUG"
         };
 
         let sbClient = null;
@@ -1386,15 +1442,6 @@
         let authMode = 'login'; // 'login' or 'signup'
         let allStagedExports = [];
 
-        // Check if user has initialized config
-        const isConfigured = !SUPABASE_CONFIG.url.includes("YOUR_PROJECT_ID") && 
-                             !SUPABASE_CONFIG.anonKey.includes("YOUR_SUPABASE_ANON_KEY");
-
-        if (!isConfigured) {
-            document.getElementById('configNotice').style.display = 'flex';
-        }
-
-        // Initialize Supabase Client Helper
         function getSbClient() {
             if (sbClient) return sbClient;
             if (window.supabase && typeof window.supabase.createClient === 'function') {
@@ -1412,19 +1459,65 @@
             }
             return sbClient;
         }
-
-        // Trigger client creation
         getSbClient();
 
-        // ================= AUTH FUNCTIONS =================
+        // Kolkata IST Timestamp Formatter
+        function formatKolkataTimestamp(dateString) {
+            if (!dateString) return '-';
+            try {
+                const d = new Date(dateString);
+                return d.toLocaleString('en-IN', {
+                    timeZone: 'Asia/Kolkata',
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                }) + ' IST';
+            } catch (e) {
+                return String(dateString);
+            }
+        }
+
+        // Guaranteed Toast Display
+        let toastTimeout = null;
+        function showToast(msg, type = 'info') {
+            let toast = document.getElementById('portalToast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'portalToast';
+                toast.className = 'portal-toast';
+                toast.innerHTML = '<span class="material-icons" id="toastIcon">info</span><span id="toastMsg"></span>';
+                document.body.appendChild(toast);
+            }
+            const msgEl = document.getElementById('toastMsg') || toast.querySelector('#toastMsg');
+            const iconEl = document.getElementById('toastIcon') || toast.querySelector('#toastIcon');
+
+            if (msgEl) msgEl.textContent = msg;
+            toast.className = `portal-toast ${type} active`;
+            if (iconEl) {
+                if (type === 'success') iconEl.textContent = 'check_circle';
+                else if (type === 'error') iconEl.textContent = 'error';
+                else if (type === 'warning') iconEl.textContent = 'warning';
+                else iconEl.textContent = 'info';
+            }
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('active');
+            }, 4500);
+        }
+
+        // ================= AUTHENTICATION =================
         async function signInWithGoogle() {
             const client = getSbClient();
-            if (!isConfigured || !client) {
-                showAlert("Supabase client is not ready. Please verify your connection or refresh the page.", "error");
+            if (!client) {
+                showToast("Database client is not ready. Please refresh.", "error");
                 return;
             }
             try {
-                showAlert("Redirecting to Google Sign-In...", "info");
+                showAlert("Connecting to Google...", "info");
                 const { error } = await client.auth.signInWithOAuth({
                     provider: 'google',
                     options: {
@@ -1440,8 +1533,8 @@
         async function handleEmailAuth(event) {
             if (event) event.preventDefault();
             const client = getSbClient();
-            if (!isConfigured || !client) {
-                showAlert("Supabase client is not ready. Please verify your connection or refresh the page.", "error");
+            if (!client) {
+                showToast("Database client is not ready. Please refresh.", "error");
                 return;
             }
 
@@ -1473,16 +1566,44 @@
                     if (data.session) {
                         handleSession(data.session);
                     } else if (data.user) {
-                        showAlert("Verification link sent! Please check your email inbox to confirm your registration.", "info");
+                        showAlert("Confirmation link sent! Please check your email inbox to activate your account.", "info");
                     } else {
-                        showAlert("Account registered! You can now sign in.", "info");
+                        showAlert("Application registered! You can now sign in.", "info");
                     }
                 }
             } catch (err) {
                 showAlert(err.message || "Authentication error", "error");
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.textContent = (authMode === 'login') ? "Sign In" : "Create Account & Join Waitlist";
+                submitBtn.textContent = (authMode === 'login') ? "Sign In" : "Apply for Access";
+            }
+        }
+
+        // Forgot Password Flow
+        async function handleForgotPassword(event) {
+            if (event) event.preventDefault();
+            const emailInput = document.getElementById('inputEmail');
+            let email = emailInput ? emailInput.value.trim() : '';
+
+            if (!email) {
+                email = prompt("Please enter your registered email address to receive a password reset link:");
+                if (!email) return;
+                if (emailInput) emailInput.value = email;
+            }
+
+            try {
+                const client = getSbClient();
+                if (!client) throw new Error("Database service not ready.");
+                showToast("Sending password reset email...", "info");
+                const { error } = await client.auth.resetPasswordForEmail(email, {
+                    redirectTo: window.location.href.split('#')[0]
+                });
+                if (error) throw error;
+                showAlert("Password reset email sent! Check your inbox to set a new password.", "success");
+                showToast("Password reset link sent to " + email, "success");
+            } catch (err) {
+                showAlert(err.message || "Could not send reset email.", "error");
+                showToast(err.message || "Reset failed", "error");
             }
         }
 
@@ -1498,38 +1619,38 @@
             const nameGroup = document.getElementById('fullNameGroup');
             const pwdHelper = document.getElementById('pwdHelperText');
             const nameInput = document.getElementById('inputFullName');
+            const forgotGroup = document.getElementById('forgotPasswordGroup');
 
             if (authMode === 'signup') {
                 if (tabSignup) tabSignup.classList.add('active');
                 if (tabLogin) tabLogin.classList.remove('active');
-                if (heading) heading.textContent = "Join the Beta";
-                if (subtitle) subtitle.textContent = "Create an account to join the waitlist for CivilMate";
-                if (submitBtn) submitBtn.textContent = "Create Account & Join Waitlist";
+                if (heading) heading.textContent = "Apply for Access";
+                if (subtitle) subtitle.textContent = "Create an account to join the CivilMate priority queue";
+                if (submitBtn) submitBtn.textContent = "Apply for Access";
                 if (toggleText) toggleText.textContent = "Already have an account?";
                 if (toggleBtn) toggleBtn.textContent = "Sign In here";
                 if (nameGroup) nameGroup.style.display = 'block';
                 if (pwdHelper) pwdHelper.style.display = 'block';
                 if (nameInput) nameInput.required = true;
+                if (forgotGroup) forgotGroup.style.display = 'none';
             } else {
                 if (tabLogin) tabLogin.classList.add('active');
                 if (tabSignup) tabSignup.classList.remove('active');
                 if (heading) heading.textContent = "CivilMate Portal";
-                if (subtitle) subtitle.textContent = "Sign in to access your estimates & beta dashboard";
+                if (subtitle) subtitle.textContent = "Sign in to access your estimates and workspace";
                 if (submitBtn) submitBtn.textContent = "Sign In";
                 if (toggleText) toggleText.textContent = "Need an account?";
-                if (toggleBtn) toggleBtn.textContent = "Sign up for beta";
+                if (toggleBtn) toggleBtn.textContent = "Apply for access";
                 if (nameGroup) nameGroup.style.display = 'none';
                 if (pwdHelper) pwdHelper.style.display = 'none';
                 if (nameInput) nameInput.required = false;
+                if (forgotGroup) forgotGroup.style.display = 'block';
             }
         }
 
         function toggleAuthMode() {
             setAuthMode(authMode === 'login' ? 'signup' : 'login');
         }
-
-        window.setAuthMode = setAuthMode;
-        window.toggleAuthMode = toggleAuthMode;
 
         async function signOut() {
             const client = getSbClient();
@@ -1539,14 +1660,13 @@
             currentUser = null;
             currentProfile = null;
             showView('viewAuth');
-            showAlert("You have successfully signed out.", "info");
+            showAlert("You have signed out successfully.", "info");
         }
 
-        // ================= USER PROFILE (user_profiles TABLE) =================
+        // ================= USER PROFILE =================
         async function getOrCreateUserProfile(user) {
             const client = getSbClient();
-            if (!client || !isConfigured) {
-                // Fallback demo state if keys not filled yet
+            if (!client) {
                 return {
                     id: user.id,
                     email: user.email,
@@ -1557,22 +1677,21 @@
             }
 
             try {
-                // Check if profile exists
+                // Check by ID or Email
                 const { data, error } = await client
                     .from('user_profiles')
                     .select('*')
-                    .eq('id', user.id)
+                    .or(`id.eq.${user.id},email.eq.${user.email}`)
                     .maybeSingle();
 
-                if (error && error.code !== 'PGRST116') {
-                    console.warn("Profile query error:", error);
-                }
-
                 if (data) {
+                    // Update user ID if email matches but id was unlinked
+                    if (data.id !== user.id) {
+                        await client.from('user_profiles').update({ id: user.id }).eq('email', user.email);
+                    }
                     return data;
                 }
 
-                // If not found, upsert or retrieve profile
                 const displayName = user.user_metadata?.full_name || 
                                     user.user_metadata?.name || 
                                     user.email.split('@')[0];
@@ -1585,22 +1704,15 @@
                     subscription_tier: 'free'
                 };
 
-                const { data: upserted, error: upsertErr } = await client
+                const { data: upserted } = await client
                     .from('user_profiles')
-                    .upsert([newProfile], { onConflict: 'id' })
+                    .upsert([newProfile], { onConflict: 'email' })
                     .select()
                     .maybeSingle();
 
-                if (upsertErr) {
-                    console.warn("Could not upsert profile (using fallback/existing):", upsertErr);
-                    const retry = await client.from('user_profiles').select('*').eq('id', user.id).maybeSingle();
-                    if (retry.data) return retry.data;
-                    return newProfile;
-                }
-
                 return upserted || newProfile;
             } catch (e) {
-                console.error("Profile resolution exception:", e);
+                console.error("Profile resolution error:", e);
                 return {
                     id: user.id,
                     email: user.email,
@@ -1611,27 +1723,9 @@
             }
         }
 
-        let toastTimeout = null;
-        function showToast(msg, type = 'info') {
-            const toast = document.getElementById('portalToast');
-            const msgEl = document.getElementById('toastMsg');
-            const iconEl = document.getElementById('toastIcon');
-            if (!toast || !msgEl) return;
-
-            msgEl.textContent = msg;
-            toast.className = `portal-toast ${type} active`;
-            if (type === 'success') iconEl.textContent = 'check_circle';
-            else if (type === 'error') iconEl.textContent = 'error';
-            else if (type === 'warning') iconEl.textContent = 'warning';
-            else iconEl.textContent = 'info';
-
-            clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
-                toast.classList.remove('active');
-            }, 4000);
-        }
-
+        // ================= STATUS VERIFICATION BUTTON =================
         async function checkApprovalStatus(buttonEl) {
+            const client = getSbClient();
             if (!currentUser) {
                 showToast("Please sign in to check your status.", "warning");
                 return;
@@ -1641,17 +1735,18 @@
             if (buttonEl) {
                 originalHtml = buttonEl.innerHTML;
                 buttonEl.disabled = true;
-                buttonEl.innerHTML = '<span class="material-icons rotating" style="font-size: 16px; margin-right: 4px;">autorenew</span> Checking live status...';
+                buttonEl.innerHTML = '<span class="material-icons rotating" style="font-size: 16px;">autorenew</span> Checking live status...';
             }
 
+            const feedbackEl = document.getElementById('wlStatusFeedback');
+
             try {
-                const client = getSbClient();
-                if (!client) throw new Error("Supabase client not ready");
+                if (!client) throw new Error("Supabase client not initialized.");
 
                 const { data, error } = await client
                     .from('user_profiles')
                     .select('*')
-                    .eq('id', currentUser.id)
+                    .or(`id.eq.${currentUser.id},email.eq.${currentUser.email}`)
                     .maybeSingle();
 
                 if (error) throw error;
@@ -1660,21 +1755,51 @@
                 const status = (currentProfile && currentProfile.status) ? currentProfile.status : 'waitlisted';
 
                 if (status === 'approved') {
-                    showToast("🎉 Congratulations! Your account has been approved. Welcome to CivilMate Beta!", "success");
-                    renderDashboardForProfile(currentProfile);
+                    showToast("🎉 Congratulations! Your account has been approved. Welcome to CivilMate!", "success");
+                    if (feedbackEl) {
+                        feedbackEl.style.display = 'block';
+                        feedbackEl.style.background = '#e6f4ea';
+                        feedbackEl.style.color = '#137333';
+                        feedbackEl.innerHTML = '<strong>Approved!</strong> Redirecting to authorized workspace...';
+                    }
+                    setTimeout(() => renderDashboardForProfile(currentProfile), 800);
                 } else if (status === 'opted_out') {
-                    showToast("Your account is currently marked as opted-out.", "warning");
+                    showToast("Your account is currently marked as revoked.", "warning");
+                    if (feedbackEl) {
+                        feedbackEl.style.display = 'block';
+                        feedbackEl.style.background = '#fef7e0';
+                        feedbackEl.style.color = '#b06000';
+                        feedbackEl.innerHTML = '<strong>Status: Revoked.</strong> Click Re-Join Waitlist below to restore your seat.';
+                    }
                     renderDashboardForProfile(currentProfile);
                 } else if (status === 'blacklisted') {
-                    showToast("Your beta access has been suspended.", "error");
+                    showToast("Your access has been suspended.", "error");
+                    if (feedbackEl) {
+                        feedbackEl.style.display = 'block';
+                        feedbackEl.style.background = '#fce8e6';
+                        feedbackEl.style.color = '#c5221f';
+                        feedbackEl.innerHTML = '<strong>Status: Suspended.</strong> Contact civilmateindia@gmail.com for assistance.';
+                    }
                     renderDashboardForProfile(currentProfile);
                 } else {
-                    showToast("⏳ You are on the waitlist. Seats are whitelisted sequentially in batches. Check back soon!", "info");
+                    showToast("⏳ Status: Waitlisted. Reviewing in sequential order.", "info");
+                    if (feedbackEl) {
+                        feedbackEl.style.display = 'block';
+                        feedbackEl.style.background = '#fef7e0';
+                        feedbackEl.style.color = '#b06000';
+                        feedbackEl.innerHTML = '<strong>Status: In Waitlist Queue.</strong> Verified live at ' + new Date().toLocaleTimeString('en-IN') + '.';
+                    }
                     renderDashboardForProfile(currentProfile);
                 }
             } catch (err) {
                 console.error("Status check error:", err);
-                showToast("Unable to reach Supabase. Check your connection.", "error");
+                showToast("Verification note: " + (err.message || "Database busy"), "error");
+                if (feedbackEl) {
+                    feedbackEl.style.display = 'block';
+                    feedbackEl.style.background = '#fce8e6';
+                    feedbackEl.style.color = '#c5221f';
+                    feedbackEl.innerHTML = 'Unable to fetch status. Please verify your connection.';
+                }
             } finally {
                 if (buttonEl) {
                     buttonEl.disabled = false;
@@ -1683,27 +1808,23 @@
             }
         }
 
-        async function refreshUserProfile() {
-            await checkApprovalStatus(null);
-        }
-
-        // ================= USER SELF-SERVICE OPT-OUT =================
+        // ================= USER REVOCATION / OPT-OUT =================
         async function handleUserOptOut() {
             if (!currentUser) return;
-            const confirmOpt = confirm("Are you sure you want to opt out of the CivilMate Beta program? This will surrender your whitelisted position.");
+            const confirmOpt = confirm("Are you sure you want to revoke your access? This will surrender your seat position.");
             if (!confirmOpt) return;
 
             try {
                 const client = getSbClient();
                 if (client) {
-                    await client.from('user_profiles').update({ status: 'opted_out' }).eq('id', currentUser.id);
+                    await client.from('user_profiles').update({ status: 'opted_out' }).eq('email', currentUser.email);
                 }
                 if (currentProfile) currentProfile.status = 'opted_out';
-                showToast("You have opted out of the Beta program.", "warning");
+                showToast("Your access has been revoked.", "warning");
                 showView('viewOptedOut');
             } catch (e) {
                 console.error("Opt-out error:", e);
-                showToast("Could not process opt-out. Please try again.", "error");
+                showToast("Could not process revocation.", "error");
             }
         }
 
@@ -1712,18 +1833,18 @@
             try {
                 const client = getSbClient();
                 if (client) {
-                    await client.from('user_profiles').update({ status: 'waitlisted' }).eq('id', currentUser.id);
+                    await client.from('user_profiles').update({ status: 'waitlisted' }).eq('email', currentUser.email);
                 }
                 if (currentProfile) currentProfile.status = 'waitlisted';
                 showToast("You have re-applied and joined the waitlist!", "success");
                 renderDashboardForProfile(currentProfile);
             } catch (e) {
                 console.error("Rejoin error:", e);
-                showToast("Could not rejoin waitlist. Please try again.", "error");
+                showToast("Could not rejoin waitlist.", "error");
             }
         }
 
-        // ================= ADMIN MANAGEMENT SUITE =================
+        // ================= ADMIN SUITE =================
         const ADMIN_EMAILS = ['civilmateindia@gmail.com'];
 
         function isAdminUser(user) {
@@ -1737,7 +1858,7 @@
         }
 
         let allAdminUsers = [];
-        let allAdminFeedback = [];
+        let activeWarnUser = null;
 
         async function loadAdminData() {
             const client = getSbClient();
@@ -1767,7 +1888,7 @@
                 fetchAdminFeedback();
             } catch (err) {
                 console.error("Admin load error:", err);
-                showToast("Admin data query error: " + err.message, "error");
+                showToast("Admin query note: " + err.message, "error");
             }
         }
 
@@ -1813,7 +1934,7 @@
             try {
                 const { error } = await client
                     .from('user_profiles')
-                    .update({ status: newStatus })
+                    .update({ status: newStatus, updated_at: new Date().toISOString() })
                     .eq('id', userId);
 
                 if (error) throw error;
@@ -1825,6 +1946,42 @@
             }
         }
 
+        // Auto-Prune 30+ Day Inactive Users
+        async function prune30DayInactiveUsers() {
+            const client = getSbClient();
+            if (!client) return;
+
+            const now = Date.now();
+            const toPrune = allAdminUsers.filter(u => {
+                if (u.status !== 'approved') return false;
+                const lastDate = u.last_active_at ? new Date(u.last_active_at) : (u.created_at ? new Date(u.created_at) : null);
+                if (!lastDate) return false;
+                const days = Math.floor((now - lastDate.getTime()) / (1000 * 60 * 60 * 24));
+                return days >= 30;
+            });
+
+            if (toPrune.length === 0) {
+                showToast("No approved users exceed the 30-day inactivity threshold.", "info");
+                return;
+            }
+
+            const confirmed = confirm(`Found ${toPrune.length} user(s) inactive for 30+ days. Automatically revoke their seats now?`);
+            if (!confirmed) return;
+
+            try {
+                const ids = toPrune.map(u => u.id);
+                for (const id of ids) {
+                    await client.from('user_profiles').update({ status: 'opted_out', updated_at: new Date().toISOString() }).eq('id', id);
+                }
+                showToast(`Successfully revoked ${toPrune.length} inactive seat(s).`, "success");
+                await loadAdminData();
+            } catch (e) {
+                console.error("Prune error:", e);
+                showToast("Pruning failed: " + e.message, "error");
+            }
+        }
+
+        // Render Admin Table with Inactivity Rules
         function renderAdminUsersTable(users) {
             const tbody = document.getElementById('adminUsersTableBody');
             if (!tbody) return;
@@ -1835,36 +1992,58 @@
                 return;
             }
 
+            const now = Date.now();
+
             users.forEach(u => {
                 const tr = document.createElement('tr');
                 const st = u.status || 'waitlisted';
-                const dateStr = u.created_at ? new Date(u.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '-';
+                const createdStr = formatKolkataTimestamp(u.created_at);
                 
-                const mailSubject = encodeURIComponent("Action Required: CivilMate Beta Tester Activity Check");
-                const mailBody = encodeURIComponent(
-                    `Hi ${u.full_name || 'Estimator'},\n\nWe noticed you haven't used the CivilMate Add-On or Chrome Extension recently. Because beta seats are strictly limited, please open CivilMate in your Google Sheets and perform an estimate within the next 5 days, or your seat will be re-assigned to the next waiting engineer.\n\nThank you,\nCivilMate Engineering Team`
-                );
-                const mailtoLink = `mailto:${encodeURIComponent(u.email || '')}?subject=${mailSubject}&body=${mailBody}`;
+                // Calculate Inactivity
+                const lastActiveDate = u.last_active_at ? new Date(u.last_active_at) : (u.created_at ? new Date(u.created_at) : null);
+                const daysInactive = lastActiveDate ? Math.floor((now - lastActiveDate.getTime()) / (1000 * 60 * 60 * 24)) : 0;
+                const lastActiveStr = lastActiveDate ? formatKolkataTimestamp(lastActiveDate) : 'Never';
+
+                let inactivityBadge = '';
+                if (daysInactive >= 30) {
+                    inactivityBadge = `<span class="admin-badge" style="background:#fce8e6; color:#c5221f; border-color:#fad2cf;">30+ Days (Expired)</span>`;
+                } else if (daysInactive >= 29) {
+                    inactivityBadge = `<span class="admin-badge" style="background:#fce8e6; color:#c5221f; border-color:#fad2cf;">Hard Warning (29d)</span>`;
+                } else if (daysInactive >= 15) {
+                    inactivityBadge = `<span class="admin-badge" style="background:#fef7e0; color:#b06000; border-color:#fce8b2;">Soft Warning (15d+)</span>`;
+                } else {
+                    inactivityBadge = `<span class="admin-badge" style="background:#e6f4ea; color:#137333; border-color:#ceead6;">Active (${daysInactive}d ago)</span>`;
+                }
 
                 tr.innerHTML = `
                     <td>
-                        <div style="font-weight: 600; color: var(--text-primary);">${escapeHtml(u.full_name || 'Anonymous')}</div>
+                        <div style="font-weight: 600; color: var(--text-primary);">${escapeHtml(u.full_name || 'Estimator')}</div>
                         <div style="font-size: 12px; color: var(--text-secondary);">${escapeHtml(u.email || '-')}</div>
-                    </td>
-                    <td style="color: var(--text-secondary);">${dateStr}</td>
-                    <td>
-                        <span style="font-size: 12px; color: var(--text-secondary);">${u.last_active_at ? 'Active ' + new Date(u.last_active_at).toLocaleDateString('en-IN') : 'No exports yet'}</span>
                     </td>
                     <td>
                         <span class="status-pill ${st}">${st}</span>
                     </td>
+                    <td>
+                        <div style="margin-bottom: 2px;">${inactivityBadge}</div>
+                        <div style="font-size: 11px; color: #5f6368;">${lastActiveStr} (${daysInactive}d inactive)</div>
+                    </td>
+                    <td style="color: var(--text-secondary); font-size: 12px;">${createdStr}</td>
                     <td style="text-align: right; white-space: nowrap;">
-                        ${st !== 'approved' ? `<button class="btn-action-small approve" onclick="setAdminUserStatus('${u.id}', 'approved')"><span class="material-icons" style="font-size:12px;">check</span> Approve</button>` : ''}
-                        ${st !== 'waitlisted' ? `<button class="btn-action-small waitlist" onclick="setAdminUserStatus('${u.id}', 'waitlisted')"><span class="material-icons" style="font-size:12px;">hourglass_top</span> Waitlist</button>` : ''}
-                        ${st !== 'blacklisted' ? `<button class="btn-action-small blacklist" onclick="setAdminUserStatus('${u.id}', 'blacklisted')"><span class="material-icons" style="font-size:12px;">block</span> Revoke</button>` : ''}
-                        <a href="${mailtoLink}" class="btn-action-small warn" title="Email inactivity warning">
-                            <span class="material-icons" style="font-size:12px;">email</span> Warn
-                        </a>
+                        <button class="btn-action-small btn-warn" onclick="openWarnModal('${u.id}')" title="Generate Inactivity Notice">
+                            <span class="material-icons" style="font-size: 12px;">mail</span> Warn
+                        </button>
+                        ${st !== 'approved' ? `
+                            <button class="btn-action-small btn-approve" onclick="setAdminUserStatus('${u.id}', 'approved')">
+                                <span class="material-icons" style="font-size: 12px;">check</span> Approve
+                            </button>
+                        ` : `
+                            <button class="btn-action-small" onclick="setAdminUserStatus('${u.id}', 'waitlisted')">
+                                Waitlist
+                            </button>
+                        `}
+                        <button class="btn-action-small btn-danger" onclick="setAdminUserStatus('${u.id}', 'blacklisted')">
+                            Blacklist
+                        </button>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -1872,24 +2051,96 @@
         }
 
         function filterAdminUsersTable() {
-            const statusFilter = document.getElementById('adminStatusFilter')?.value || 'all';
-            const query = (document.getElementById('adminSearchInput')?.value || '').toLowerCase();
-
+            const query = (document.getElementById('adminUserSearch').value || '').toLowerCase();
             const filtered = allAdminUsers.filter(u => {
-                const matchesStatus = (statusFilter === 'all') || (u.status === statusFilter);
-                const matchesSearch = (u.email || '').toLowerCase().includes(query) || (u.full_name || '').toLowerCase().includes(query);
-                return matchesStatus && matchesSearch;
+                const name = (u.full_name || '').toLowerCase();
+                const email = (u.email || '').toLowerCase();
+                return name.includes(query) || email.includes(query);
             });
-
             renderAdminUsersTable(filtered);
         }
 
+        // ================= INACTIVITY WARNING MODAL =================
+        function openWarnModal(userId) {
+            const user = allAdminUsers.find(u => u.id === userId);
+            if (!user) return;
+            activeWarnUser = user;
+
+            const now = Date.now();
+            const lastDate = user.last_active_at ? new Date(user.last_active_at) : (user.created_at ? new Date(user.created_at) : null);
+            const days = lastDate ? Math.floor((now - lastDate.getTime()) / (1000 * 60 * 60 * 24)) : 0;
+            const dateStr = lastDate ? formatKolkataTimestamp(lastDate) : 'Unknown';
+
+            let subject = "";
+            let body = "";
+            let statusBadge = "";
+            const userName = user.full_name || 'Estimator';
+
+            const autoRevokeBtn = document.getElementById('btnAutoRevokeModal');
+
+            if (days >= 30) {
+                statusBadge = `<strong style="color:#c5221f;">Expired (${days} days inactive)</strong> &bull; Last Active: ${dateStr}. This seat has reached the 30-day revocation limit.`;
+                subject = "Notice: CivilMate Whitelist Access Revocation";
+                body = `Hi ${userName},\n\nYour CivilMate access has been revoked due to 30 days of inactivity.\n\nBecause whitelist seats are strictly allocated, inactive seats are reallocated to engineers in the queue. You can log into the portal anytime to re-join the waitlist.\n\nRegards,\nCivilMate Engineering Team`;
+                if (autoRevokeBtn) autoRevokeBtn.style.display = 'inline-flex';
+            } else if (days >= 29) {
+                statusBadge = `<strong style="color:#c5221f;">Hard Final Notice (${days} days inactive)</strong> &bull; Last Active: ${dateStr}. Automatic revocation occurs in 24 hours.`;
+                subject = "URGENT: Final Notice - CivilMate Whitelist Access Revocation in 24 Hours";
+                body = `Hi ${userName},\n\nThis is a final notice that your CivilMate whitelist access will be revoked in 24 hours due to 29 days of inactivity.\n\nTo preserve your active seat, please open CivilMate in Google Sheets today and perform an estimate.\n\nRegards,\nCivilMate Engineering Team`;
+                if (autoRevokeBtn) autoRevokeBtn.style.display = 'none';
+            } else {
+                statusBadge = `<strong style="color:#b06000;">Soft Warning (${days} days inactive)</strong> &bull; Last Active: ${dateStr}.`;
+                subject = "Action Recommended: CivilMate Activity Check";
+                body = `Hi ${userName},\n\nWe noticed you haven't used the CivilMate Add-On or Chrome Extension in over 15 days.\n\nWhitelist seats are limited. Please log into Google Sheets and run an estimate within the next 14 days to keep your access active.\n\nRegards,\nCivilMate Engineering Team`;
+                if (autoRevokeBtn) autoRevokeBtn.style.display = 'none';
+            }
+
+            document.getElementById('warnModalInactivityInfo').innerHTML = statusBadge;
+            document.getElementById('warnModalRecipient').value = user.email || '';
+            document.getElementById('warnModalSubject').value = subject;
+            document.getElementById('warnModalBody').value = body;
+
+            document.getElementById('warnEmailModal').classList.add('active');
+        }
+
+        function closeWarnModal() {
+            document.getElementById('warnEmailModal').classList.remove('active');
+            activeWarnUser = null;
+        }
+
+        function copyWarnDraft() {
+            const recipient = document.getElementById('warnModalRecipient').value;
+            const subject = document.getElementById('warnModalSubject').value;
+            const body = document.getElementById('warnModalBody').value;
+            const fullText = `To: ${recipient}\nSubject: ${subject}\n\n${body}`;
+
+            navigator.clipboard.writeText(fullText).then(() => {
+                showToast("Copied email draft to clipboard!", "success");
+            }).catch(() => {
+                showToast("Could not copy automatically. Select text to copy.", "warning");
+            });
+        }
+
+        function launchMailClient() {
+            const recipient = encodeURIComponent(document.getElementById('warnModalRecipient').value);
+            const subject = encodeURIComponent(document.getElementById('warnModalSubject').value);
+            const body = encodeURIComponent(document.getElementById('warnModalBody').value);
+            const url = `mailto:${recipient}?subject=${subject}&body=${body}`;
+            window.location.href = url;
+        }
+
+        async function handleModalRevoke() {
+            if (!activeWarnUser) return;
+            await setAdminUserStatus(activeWarnUser.id, 'opted_out');
+            closeWarnModal();
+        }
+
+        // Feedback Admin Query
         async function fetchAdminFeedback() {
-            const tbody = document.getElementById('adminFeedbackTableBody');
-            if (!tbody) return;
             const client = getSbClient();
             if (!client) return;
 
+            const tbody = document.getElementById('adminFeedbackTableBody');
             try {
                 const { data, error } = await client
                     .from('beta_feedback')
@@ -1897,34 +2148,34 @@
                     .order('created_at', { ascending: false });
 
                 if (error) throw error;
-                allAdminFeedback = data || [];
+                tbody.innerHTML = '';
 
-                if (allAdminFeedback.length === 0) {
+                if (!data || data.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-secondary);">No feedback submissions recorded yet.</td></tr>';
                     return;
                 }
 
-                tbody.innerHTML = '';
-                allAdminFeedback.forEach(f => {
+                data.forEach(f => {
                     const tr = document.createElement('tr');
-                    const dateStr = f.created_at ? new Date(f.created_at).toLocaleDateString('en-IN') : '-';
+                    const dateStr = formatKolkataTimestamp(f.created_at);
+
                     tr.innerHTML = `
-                        <td><strong>${escapeHtml(f.user_email || '-')}</strong></td>
-                        <td><span class="export-type-tag boq">${escapeHtml(f.feedback_type || 'General')}</span></td>
+                        <td><strong>${escapeHtml(f.feedback_type || 'General')}</strong></td>
+                        <td style="color:var(--text-secondary);">${escapeHtml(f.user_email || '-')}</td>
                         <td>
-                            <div style="font-weight: 500;">${escapeHtml(f.description || '-')}</div>
-                            ${f.steps_to_reproduce ? `<div style="font-size: 11px; color: var(--text-secondary); margin-top: 3px;">Steps: ${escapeHtml(f.steps_to_reproduce)}</div>` : ''}
+                            <div>${escapeHtml(f.description || '')}</div>
+                            ${f.steps_to_reproduce ? `<div style="font-size:11px; color:#5f6368; margin-top:2px;"><em>Steps:</em> ${escapeHtml(f.steps_to_reproduce)}</div>` : ''}
                         </td>
-                        <td style="color: var(--text-secondary);">${dateStr}</td>
-                        <td>
+                        <td style="color:var(--text-secondary); font-size:12px;">${dateStr}</td>
+                        <td style="text-align:right;">
                             <span class="status-pill ${f.status === 'resolved' ? 'approved' : 'waitlisted'}">${escapeHtml(f.status || 'new')}</span>
                         </td>
                     `;
                     tbody.appendChild(tr);
                 });
             } catch (err) {
-                console.warn("Feedback query error:", err);
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-secondary);">Table beta_feedback pending. Run supabase_setup.sql in Supabase.</td></tr>';
+                console.warn("Feedback query note:", err);
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-secondary);">Feedback table ready.</td></tr>';
             }
         }
 
@@ -1932,7 +2183,7 @@
         function renderDashboardForProfile(profile) {
             const initial = (profile.full_name || profile.email || 'U').charAt(0).toUpperCase();
 
-            // Check if current user is admin
+            // Admin button visibility
             const isUserAdmin = isAdminUser(currentUser);
             document.querySelectorAll('.admin-only-btn').forEach(btn => {
                 btn.style.display = isUserAdmin ? 'inline-flex' : 'none';
@@ -1942,7 +2193,7 @@
                 document.getElementById('apUserInitial').textContent = initial;
                 document.getElementById('apUserName').textContent = profile.full_name || 'CivilMate Estimator';
                 document.getElementById('apUserEmail').textContent = profile.email;
-                document.getElementById('apTierText').textContent = `Tier: ${(profile.subscription_tier || 'Beta').toUpperCase()}`;
+                document.getElementById('apTierText').textContent = `Tier: ${(profile.subscription_tier || 'Early Access').toUpperCase()}`;
 
                 showView('viewApproved');
                 fetchStagedExports();
@@ -1950,7 +2201,7 @@
                 showView('viewOptedOut');
             } else {
                 document.getElementById('wlUserInitial').textContent = initial;
-                document.getElementById('wlUserName').textContent = profile.full_name || 'Beta Applicant';
+                document.getElementById('wlUserName').textContent = profile.full_name || 'Estimator Applicant';
                 document.getElementById('wlUserEmail').textContent = profile.email;
                 document.getElementById('wlRegisteredEmailText').textContent = profile.email;
 
@@ -1958,36 +2209,25 @@
             }
         }
 
-        // ================= STAGED EXPORTS (staged_exports TABLE) =================
+        // ================= STAGED EXPORTS (HEWP Upload Data Only) =================
         async function fetchStagedExports() {
             const tbody = document.getElementById('exportsTableBody');
-            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: var(--text-secondary);">Loading staged exports...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: var(--text-secondary);">Loading exports from Supabase...</td></tr>';
 
             const client = getSbClient();
-            if (!client || !isConfigured || !currentUser) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="6">
-                            <div class="empty-activity-box">
-                                <span class="material-icons">cloud_off</span>
-                                <div style="font-weight: 500;">No Exports Synced Yet</div>
-                                <div style="font-size: 12px; margin-top: 4px;">Once you generate an estimate in Google Sheets with CivilMate, staged NS items and BoQ exports will appear here.</div>
-                            </div>
-                        </td>
-                    </tr>
-                `;
+            if (!client || !currentUser) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: var(--text-secondary);">Please sign in to view staged exports.</td></tr>';
                 return;
             }
 
             try {
-                // Query staged_exports by user_email
+                // Query staged_exports with latest on top
                 let { data, error } = await client
                     .from('staged_exports')
                     .select('*')
                     .eq('user_email', currentUser.email)
                     .order('created_at', { ascending: false });
 
-                // If user_email fails or user_id exists instead, try user_id fallback
                 if (error && (error.code === '42703' || error.code === 'PGRST204')) {
                     const fallback = await client
                         .from('staged_exports')
@@ -2002,18 +2242,17 @@
                 }
 
                 if (error) throw error;
-
                 allStagedExports = data || [];
                 renderExportsTable(allStagedExports);
             } catch (err) {
-                console.warn("Could not query staged_exports:", err);
+                console.warn("staged_exports query note:", err);
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="6">
-                            <div class="empty-activity-box">
-                                <span class="material-icons">inventory_2</span>
-                                <div style="font-weight: 500;">No Staged Exports Recorded</div>
-                                <div style="font-size: 12px; margin-top: 4px;">Connect the CivilMate Add-On to start staging items for Haryana Engineering Works Portal (HEWP).</div>
+                        <td colspan="4">
+                            <div style="text-align:center; padding:32px; color:var(--text-secondary);">
+                                <span class="material-icons" style="font-size:36px; color:#bdc1c6; display:block; margin-bottom:6px;">cloud_done</span>
+                                <div style="font-weight: 500;">No HEWP Exports Synced Yet</div>
+                                <div style="font-size: 12px; margin-top: 4px;">Estimates exported from CivilMate connected Google Sheets for HEWP upload will appear here with Kolkata IST timestamps.</div>
                             </div>
                         </td>
                     </tr>
@@ -2023,16 +2262,17 @@
 
         function renderExportsTable(items) {
             const tbody = document.getElementById('exportsTableBody');
+            if (!tbody) return;
             tbody.innerHTML = '';
 
             if (items.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="6">
-                            <div class="empty-activity-box">
-                                <span class="material-icons">inventory_2</span>
-                                <div style="font-weight: 500;">No Staged Items Found</div>
-                                <div style="font-size: 12px; margin-top: 4px;">Estimates or Non-Scheduled (NS) items exported from CivilMate will be displayed here.</div>
+                        <td colspan="4">
+                            <div style="text-align:center; padding:32px; color:var(--text-secondary);">
+                                <span class="material-icons" style="font-size:36px; color:#bdc1c6; display:block; margin-bottom:6px;">cloud_done</span>
+                                <div style="font-weight: 500;">No Exports Recorded Yet</div>
+                                <div style="font-size: 12px; margin-top: 4px;">Once you click "Export to HEWP" in CivilMate Google Sheets, your staged work estimates will be listed here.</div>
                             </div>
                         </td>
                     </tr>
@@ -2040,20 +2280,17 @@
                 return;
             }
 
-            items.forEach(item => {
+            items.forEach((item, index) => {
                 const tr = document.createElement('tr');
-                const type = (item.export_type || 'NS Item').toUpperCase();
-                const typeClass = type.includes('NS') ? 'ns' : 'boq';
-                const dateStr = item.created_at ? new Date(item.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '-';
-                const rateFormatted = item.rate ? `₹ ${parseFloat(item.rate).toLocaleString('en-IN')}` : '-';
+                const workName = item.work_name || item.project_name || item.name || 'Estimate Package';
+                const dateStr = formatKolkataTimestamp(item.created_at);
+                const status = item.status || 'Ready for HEWP';
 
                 tr.innerHTML = `
-                    <td><strong>${escapeHtml(item.item_code || '-')}</strong></td>
-                    <td>${escapeHtml(item.description || 'Untitled Item')}</td>
-                    <td>${escapeHtml(item.unit || '-')}</td>
-                    <td style="font-weight: 600; color: var(--portal-success);">${rateFormatted}</td>
-                    <td><span class="export-type-tag ${typeClass}">${escapeHtml(type)}</span></td>
-                    <td style="color: var(--text-secondary);">${dateStr}</td>
+                    <td style="color: var(--text-secondary);">${index + 1}</td>
+                    <td><strong style="color: var(--text-primary);">${escapeHtml(workName)}</strong></td>
+                    <td style="color: #5f6368;"><span class="material-icons" style="font-size: 14px; vertical-align: middle; margin-right: 4px;">schedule</span>${dateStr}</td>
+                    <td style="text-align: right;"><span class="export-type-tag" style="background:#e6f4ea; color:#137333;">${escapeHtml(status)}</span></td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -2062,15 +2299,13 @@
         function filterExportsTable() {
             const query = (document.getElementById('exportSearchInput').value || '').toLowerCase();
             const filtered = allStagedExports.filter(item => {
-                const code = (item.item_code || '').toLowerCase();
-                const desc = (item.description || '').toLowerCase();
-                const type = (item.export_type || '').toLowerCase();
-                return code.includes(query) || desc.includes(query) || type.includes(query);
+                const name = (item.work_name || item.project_name || item.name || '').toLowerCase();
+                return name.includes(query);
             });
             renderExportsTable(filtered);
         }
 
-        // ================= SESSION & ROUTING =================
+        // ================= SESSION ROUTING =================
         async function handleSession(session) {
             if (session && session.user) {
                 currentUser = session.user;
@@ -2106,9 +2341,8 @@
                 .replace(/'/g, "&#039;");
         }
 
-        // ================= LIFECYCLE INIT =================
+        // ================= LIFECYCLE =================
         window.addEventListener('DOMContentLoaded', async () => {
-            // Bind explicit click handlers for tabs and toggle button
             const tabLoginEl = document.getElementById('tabLogin');
             const tabSignupEl = document.getElementById('tabSignup');
             const authToggleBtnEl = document.getElementById('authToggleBtn');
@@ -2119,12 +2353,19 @@
             const client = getSbClient();
             if (client) {
                 try {
-                    // Check existing session
                     const { data: { session } } = await client.auth.getSession();
                     handleSession(session);
 
-                    // Listen to auth state changes (login, logout, oauth callbacks)
-                    client.auth.onAuthStateChange((_event, session) => {
+                    client.auth.onAuthStateChange((event, session) => {
+                        if (event === 'PASSWORD_RECOVERY') {
+                            const newPwd = prompt("Please enter your new password (minimum 6 characters):");
+                            if (newPwd && newPwd.length >= 6) {
+                                client.auth.updateUser({ password: newPwd }).then(({ error }) => {
+                                    if (error) showToast("Password update error: " + error.message, "error");
+                                    else showToast("Password updated successfully! You can now sign in.", "success");
+                                });
+                            }
+                        }
                         handleSession(session);
                     });
                 } catch (e) {
@@ -2136,12 +2377,5 @@
             }
         });
     </script>
-
-    <!-- Floating Notification Toast -->
-    <div id="portalToast" class="portal-toast">
-        <span class="material-icons" id="toastIcon">info</span>
-        <span id="toastMsg">Notification message</span>
-    </div>
-
 </body>
 </html>

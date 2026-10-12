@@ -24,7 +24,7 @@
         <div class="nav-links">
             <a href="index.html#features">Features</a>
             <a href="index.html#learn-section">Learn</a>
-            <a href="index.html#tester-hub-section">Tester Hub</a>
+            <a href="index.html#tester-hub-section">Estimator Hub</a>
             <a href="faq.html">FAQ</a>
             <a href="live-tenders.html">Tenders</a>
             <div class="dropdown">
@@ -227,20 +227,20 @@
     
 
     <section id="tester-hub-section" style="background: var(--bg-gray); padding: 40px 0;">
-    <h2 style="text-align:center; font-size: 32px; margin-bottom: 24px;">Tester & Feedback Hub</h2>
+    <h2 style="text-align:center; font-size: 32px; margin-bottom: 24px;">Estimator & Feedback Hub</h2>
     
 
 
 
 <div class="tester-container">
     <div class="header">
-        <h2 id="headerTitle">Beta Tester Onboarding</h2>
-        <p id="headerDesc">Help us shape the future of the CivilMate add-on before it hits the Google Workspace Marketplace.</p>
+        <h2 id="headerTitle">Estimator Onboarding</h2>
+        <p id="headerDesc">Apply for early access to the CivilMate add-on and estimation workspace.</p>
         
         <div class="tab-nav">
-            <button class="tab-btn active" onclick="switchTab('join', this)">Become a Tester</button>
-            <button class="tab-btn" onclick="switchTab('feedback', this)">Feedback/Report Issue</button>
-            <button class="tab-btn" onclick="switchTab('optout', this)">Opt-Out</button>
+            <button class="tab-btn active" onclick="switchTab('join', this)">Apply for Access</button>
+            <button class="tab-btn" onclick="switchTab('feedback', this)">Feedback & Requests</button>
+            <button class="tab-btn" onclick="switchTab('optout', this)">Revoke Access</button>
         </div>
     </div>
 
@@ -288,7 +288,7 @@
                 <label>Google Workspace Email (Crucial)</label>
                 <input type="email" name="entry.1606526757" class="form-control" required placeholder="name@gmail.com" oninput="clearError(this)">
                 <div class="error-text">Please enter a valid @gmail.com address.</div>
-                <span class="helper-text">This exact email will be whitelisted to install the unpublished add-on.</span>
+                <span class="helper-text">This exact email will be authorized to install the CivilMate add-on.</span>
             </div>
             <div class="form-group">
                 <label>Profession / Role</label>
@@ -302,10 +302,10 @@
             </div>
             <div class="checkbox-group">
                 <input type="checkbox" name="entry.1068792119" value="I agree" id="join-terms" required>
-                <label for="join-terms">I understand this is pre-release software and may contain bugs. I agree to provide feedback.</label>
+                <label for="join-terms">I agree to the CivilMate Early Access program guidelines.</label>
             </div>
             <button type="submit" class="btn-submit" id="btn-join">
-                <span class="btn-text">Apply for Beta Access</span>
+                <span class="btn-text">Apply for Access</span>
                 <div class="spinner"></div>
             </button>
         </form>
@@ -316,7 +316,7 @@
         
         <form id="form-feedback" onsubmit="handleSupabaseSubmit(event, 'feedback')">
             <div class="form-group">
-                <label>Registered Tester Email</label>
+                <label>Registered Email Address</label>
                 <input type="email" name="entry.979849551" class="form-control" required placeholder="Your whitelisted @gmail.com address" oninput="clearError(this)">
                 <div class="error-text">Please enter a valid @gmail.com address.</div>
             </div>
@@ -324,8 +324,8 @@
                 <label>Feedback Type</label>
                 <select name="entry.1389584312" class="form-control" required>
                     <option value="" disabled selected>Select feedback type...</option>
-                    <option value="Bug/Error">Bug/Error</option>
-                    <option value="Feature Suggestions">Feature Suggestions</option>
+                    <option value="Bug / Calculation Error">Bug / Calculation Error</option>
+                    <option value="Feature Suggestion">Feature Suggestion</option>
                     <option value="UI/UX Improvement">UI/UX Improvement</option>
                     <option value="Calculation/Data Correction">Calculation/Data Correction</option>
                     <option value="Database Update">Database Update</option>
@@ -407,12 +407,12 @@
 
         <form id="form-optout" onsubmit="handleSupabaseSubmit(event, 'optout')">
             <div class="form-group">
-                <label>Registered Tester Email</label>
+                <label>Registered Email Address</label>
                 <input type="email" name="entry.2014970164" class="form-control" required placeholder="Your whitelisted @gmail.com address" oninput="clearError(this)">
                 <div class="error-text">Please enter a valid @gmail.com address.</div>
             </div>
             <button type="submit" class="btn-submit btn-danger" id="btn-optout">
-                <span class="btn-text">Revoke Access & Opt-Out</span>
+                <span class="btn-text">Revoke Access & Revoke Access</span>
                 <div class="spinner"></div>
             </button>
         </form>
@@ -473,8 +473,8 @@
     getSbClient();
 
     const headerContent = {
-        join: { title: "Beta Tester Onboarding", desc: "Help us shape the future of the CivilMate add-on before it hits the Google Workspace Marketplace." },
-        feedback: { title: "Feedback & Issue Tracking", desc: "Found a bug? Have a suggestion? Let us know so we can improve the add-on." },
+        join: { title: "Estimator Onboarding", desc: "Apply for early access to the CivilMate add-on and estimation workspace." },
+        feedback: { title: "Feedback & Feature Requests", desc: "Found an issue or have a feature suggestion? Let our engineering team know." },
         optout: { title: "Access Revocation", desc: "Fill out the form below to remove your email from the whitelist and revoke access." }
     };
 
@@ -541,7 +541,7 @@
             if (elFilled) elFilled.textContent = approvedSeats;
             if (elAvail) elAvail.textContent = availableSeats;
 
-            // 4. Populate Opt-Out Section
+            // 4. Populate Revoke Access Section
             const elOptTotal = document.getElementById('ui-optout-total');
             const elOptPending = document.getElementById('ui-optout-pending');
             const elOptRemoved = document.getElementById('ui-optout-removed');
@@ -552,8 +552,8 @@
 
             // 5. Populate Feedback Table
             const categories = [
-                "Bug/Error",
-                "Feature Suggestions",
+                "Bug / Calculation Error",
+                "Feature Suggestion",
                 "UI/UX Improvement",
                 "Calculation/Data Correction",
                 "Database Update",
@@ -767,14 +767,14 @@
                 await client.from('beta_feedback').insert([
                     {
                         user_email: email,
-                        feedback_type: 'Opt-Out Request',
+                        feedback_type: 'Revoke Access Request',
                         description: `User requested access revocation and whitelist removal for ${email}`,
                         status: 'new'
                     }
                 ]);
 
                 showSuccess(
-                    "Opt-Out Request Received",
+                    "Revoke Access Request Received",
                     `Your request to revoke beta access for <strong>${escapeHtml(email)}</strong> has been registered. You have been removed from the active whitelist.`
                 );
                 form.reset();
