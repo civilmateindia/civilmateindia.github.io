@@ -93,7 +93,42 @@
         .auth-card p.subtitle {
             color: var(--text-secondary);
             font-size: 14px;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
+        }
+
+        /* Top Auth Mode Tabs (Sign In / Sign Up) */
+        .auth-mode-tabs {
+            display: flex;
+            background: #e8f0fe;
+            border-radius: 8px;
+            padding: 4px;
+            margin-bottom: 22px;
+            gap: 4px;
+        }
+
+        .auth-tab-btn {
+            flex: 1;
+            padding: 10px 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            font-family: 'Google Sans', 'Roboto', sans-serif;
+            cursor: pointer;
+            background: transparent;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+        }
+
+        .auth-tab-btn:hover {
+            color: var(--portal-primary);
+        }
+
+        .auth-tab-btn.active {
+            background: #fff;
+            color: var(--portal-primary);
+            font-weight: 600;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
         /* Google Sign-in Button */
@@ -725,7 +760,17 @@
                     <span class="material-icons" style="font-size: 32px; color: var(--portal-primary);">engineering</span>
                 </div>
                 <h2 id="authHeading">CivilMate Portal</h2>
-                <p class="subtitle" id="authSubtitle">Sign in with your Google account to access your beta dashboard & estimates</p>
+                <p class="subtitle" id="authSubtitle">Sign in to access your estimates & beta dashboard</p>
+
+                <!-- Mode Switcher Tabs (Sign In / Sign Up) -->
+                <div class="auth-mode-tabs">
+                    <button type="button" class="auth-tab-btn active" id="tabLogin" onclick="setAuthMode('login')">
+                        Sign In
+                    </button>
+                    <button type="button" class="auth-tab-btn" id="tabSignup" onclick="setAuthMode('signup')">
+                        Sign Up for Beta
+                    </button>
+                </div>
 
                 <!-- Feedback alert -->
                 <div id="authAlert" class="alert-box"></div>
@@ -742,7 +787,7 @@
                 </button>
 
                 <div class="auth-divider">
-                    <span>or continue with email</span>
+                    <span id="dividerText">or continue with email</span>
                 </div>
 
                 <!-- Email & Password Form -->
@@ -759,7 +804,8 @@
 
                     <div class="auth-form-group">
                         <label for="inputPassword">Password</label>
-                        <input type="password" id="inputPassword" class="auth-input" required placeholder="••••••••">
+                        <input type="password" id="inputPassword" class="auth-input" required placeholder="••••••••" minlength="6">
+                        <span id="pwdHelperText" style="display:none; font-size: 11px; color: var(--text-secondary); margin-top: 4px;">Minimum 6 characters</span>
                     </div>
 
                     <button type="submit" class="btn-submit-auth" id="btnEmailSubmit">
@@ -769,7 +815,7 @@
 
                 <div class="auth-toggle-link">
                     <span id="authToggleText">Need an account?</span>
-                    <a id="authToggleBtn" onclick="toggleAuthMode()">Sign up for beta</a>
+                    <a href="javascript:void(0)" id="authToggleBtn" onclick="toggleAuthMode()">Sign up for beta</a>
                 </div>
             </div>
         </div>
@@ -1091,35 +1137,54 @@
                 showAlert(err.message || "Authentication error", "error");
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.textContent = authMode === 'login' ? "Sign In" : "Create Account";
+                submitBtn.textContent = (authMode === 'login') ? "Sign In" : "Create Account & Join Waitlist";
             }
         }
 
-        function toggleAuthMode() {
-            authMode = (authMode === 'login') ? 'signup' : 'login';
+        function setAuthMode(mode) {
+            authMode = mode;
+            const tabLogin = document.getElementById('tabLogin');
+            const tabSignup = document.getElementById('tabSignup');
             const heading = document.getElementById('authHeading');
             const subtitle = document.getElementById('authSubtitle');
             const submitBtn = document.getElementById('btnEmailSubmit');
             const toggleText = document.getElementById('authToggleText');
             const toggleBtn = document.getElementById('authToggleBtn');
             const nameGroup = document.getElementById('fullNameGroup');
+            const pwdHelper = document.getElementById('pwdHelperText');
+            const nameInput = document.getElementById('inputFullName');
 
             if (authMode === 'signup') {
-                heading.textContent = "Join the Beta";
-                subtitle.textContent = "Create an account to join the waitlist for CivilMate Google Sheets™ Add-on";
-                submitBtn.textContent = "Create Account";
-                toggleText.textContent = "Already have an account?";
-                toggleBtn.textContent = "Sign In";
-                nameGroup.style.display = 'block';
+                if (tabSignup) tabSignup.classList.add('active');
+                if (tabLogin) tabLogin.classList.remove('active');
+                if (heading) heading.textContent = "Join the Beta";
+                if (subtitle) subtitle.textContent = "Create an account to join the waitlist for CivilMate";
+                if (submitBtn) submitBtn.textContent = "Create Account & Join Waitlist";
+                if (toggleText) toggleText.textContent = "Already have an account?";
+                if (toggleBtn) toggleBtn.textContent = "Sign In here";
+                if (nameGroup) nameGroup.style.display = 'block';
+                if (pwdHelper) pwdHelper.style.display = 'block';
+                if (nameInput) nameInput.required = true;
             } else {
-                heading.textContent = "CivilMate Portal";
-                subtitle.textContent = "Sign in with your Google account to access your beta dashboard & estimates";
-                submitBtn.textContent = "Sign In";
-                toggleText.textContent = "Need an account?";
-                toggleBtn.textContent = "Sign up for beta";
-                nameGroup.style.display = 'none';
+                if (tabLogin) tabLogin.classList.add('active');
+                if (tabSignup) tabSignup.classList.remove('active');
+                if (heading) heading.textContent = "CivilMate Portal";
+                if (subtitle) subtitle.textContent = "Sign in to access your estimates & beta dashboard";
+                if (submitBtn) submitBtn.textContent = "Sign In";
+                if (toggleText) toggleText.textContent = "Need an account?";
+                if (toggleBtn) toggleBtn.textContent = "Sign up for beta";
+                if (nameGroup) nameGroup.style.display = 'none';
+                if (pwdHelper) pwdHelper.style.display = 'none';
+                if (nameInput) nameInput.required = false;
             }
         }
+
+        function toggleAuthMode() {
+            setAuthMode(authMode === 'login' ? 'signup' : 'login');
+        }
+
+        window.setAuthMode = setAuthMode;
+        window.toggleAuthMode = toggleAuthMode;
 
         async function signOut() {
             if (supabase) {
@@ -1377,6 +1442,14 @@
 
         // ================= LIFECYCLE INIT =================
         window.addEventListener('DOMContentLoaded', async () => {
+            // Bind explicit click handlers for tabs and toggle button
+            const tabLoginEl = document.getElementById('tabLogin');
+            const tabSignupEl = document.getElementById('tabSignup');
+            const authToggleBtnEl = document.getElementById('authToggleBtn');
+            if (tabLoginEl) tabLoginEl.addEventListener('click', () => setAuthMode('login'));
+            if (tabSignupEl) tabSignupEl.addEventListener('click', () => setAuthMode('signup'));
+            if (authToggleBtnEl) authToggleBtnEl.addEventListener('click', () => toggleAuthMode());
+
             if (supabase) {
                 // Check existing session
                 const { data: { session } } = await supabase.auth.getSession();
