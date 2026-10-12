@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css">
-    <!-- Supabase JS Client v2 from CDN -->
+    <!-- CivilMate Cloud Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -50,11 +50,10 @@
         <p>The essential ecosystem combining a powerful Google Workspace&trade; Add-on and a Chrome&trade; Extension. Streamline your estimating, upload bills to HEWP seamlessly, and extract BoQs effortlessly.</p>
         <div class="hero-actions" style="flex-direction: column; align-items: center; gap: 12px;">
             <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
-                <a href="https://workspace.google.com/marketplace/app/civilmate/716518784539" target="_blank" class="btn btn-primary">Install Google Sheets&trade; Add-on</a>
-                <a href="https://chromewebstore.google.com/detail/paadmpfoldjolnnojnihfobplhplbobh?utm_source=item-share-cb" target="_blank" class="btn btn-secondary">Get Google Chrome&trade; Extension</a>
-                <a href="https://microsoftedge.microsoft.com/addons/detail/civilmate-extension/lgagpkhicfddhcihofkkbjgmfhangbel" target="_blank" class="btn btn-secondary">Get Microsoft Edge Extension</a>
+                <a href="portal.html?mode=signup" class="btn btn-primary">Apply for Access</a>
+                <a href="portal.html" class="btn btn-secondary">Estimator Portal</a>
             </div>
-            <p style="font-size: 13px; color: var(--text-secondary); margin: 0;">* The Microsoft Edge extension supports Android devices.</p>
+            <p style="font-size: 13px; color: var(--text-secondary); margin: 0;">Installation links unlock inside the portal once authorized.</p>
         </div>
     </section>
 
@@ -189,33 +188,30 @@
 
             <div class="card card-new">
                 <div class="badge">Early Adopter Advantage</div>
-                <h3 class="card-title">CivilMate (Beta)</h3>
+                <h3 class="card-title">CivilMate Cloud</h3>
                 <div class="price-container">
-                    <div class="price">₹0<span>/Beta Phase</span></div>
+                    <div class="price">₹0<span>/Early Access</span></div>
                     <div class="footnote" style="margin-top: 5px;">No credit card or payment required</div>
                 </div>
                 <ul class="features">
-                    <li><span class="icon icon-check">✓</span> <span><strong>100% Free</strong> during Beta & stable rollout</span></li>
+                    <li><span class="icon icon-check">✓</span> <span><strong>100% Free</strong> during Early Access & rollout</span></li>
                     <li><span class="icon icon-check">✓</span> <span><strong>Zero</strong> paid trials or hidden setup fees</span></li>
                     <li><span class="icon icon-check">✓</span> <span>Cloud-synced across all your devices</span></li>
                     <li><span class="icon icon-check">✓</span> <span>Transparent, community-first future pricing</span></li>
                 </ul>
-                <a href="#tester-hub-section" class="btn btn-primary btn-full">Join the Free Beta</a>
+                <a href="portal.html?mode=signup" class="btn btn-primary btn-full">Apply for Access</a>
                 <p class="footnote">* Future subscriptions will be minimal and strictly to balance server expenditures.</p>
             </div>
         </div>
 
         <div class="install-links">
-            <h3>Get CivilMate Today</h3>
+            <h3>Get CivilMate Access</h3>
             <div class="install-buttons">
-                <a href="https://workspace.google.com/marketplace/app/civilmate/716518784539" target="_blank" class="btn btn-primary">
-                    <span class="material-icons" style="margin-right: 8px;">grid_on</span> Google Workspace&#8482; Add-on
+                <a href="portal.html?mode=signup" class="btn btn-primary">
+                    <span class="material-icons" style="margin-right: 8px;">how_to_reg</span> Apply for Access
                 </a>
-                <a href="https://chromewebstore.google.com/detail/paadmpfoldjolnnojnihfobplhplbobh?utm_source=item-share-cb" target="_blank" class="btn btn-secondary">
-                    <span class="material-icons" style="margin-right: 8px;">extension</span> Google Chrome&#8482; Extension
-                </a>
-                <a href="https://microsoftedge.microsoft.com/addons/detail/civilmate-extension/lgagpkhicfddhcihofkkbjgmfhangbel" target="_blank" class="btn btn-secondary">
-                    <span class="material-icons" style="margin-right: 8px;">public</span> Microsoft Edge Extension
+                <a href="portal.html" class="btn btn-secondary">
+                    <span class="material-icons" style="margin-right: 8px;">dashboard</span> Estimator Portal
                 </a>
             </div>
         </div>
@@ -229,12 +225,12 @@
     <section id="register-section" style="background: var(--bg-gray); padding: 50px 0;">
         <h2 style="text-align:center; font-size: 32px; margin-bottom: 8px; font-family: 'Google Sans', sans-serif;">Apply for CivilMate Access</h2>
         <p style="text-align:center; font-size: 15px; color: var(--text-secondary); max-width: 600px; margin: 0 auto 30px auto;">
-            Register your Google Workspace account to apply for access. Seats are authorized sequentially to ensure high rate-sync accuracy with the Haryana Schedule of Rates (HSR).
+            Seats are authorized sequentially to ensure high rate-sync accuracy with the Haryana Schedule of Rates (HSR). Track live capacity and apply through the estimator portal.
         </p>
 
         <div class="tester-container" style="max-width: 620px; margin: 0 auto; background: #fff; padding: 32px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
             <!-- Live Program Capacity Metrics (Only numbers shown) -->
-            <div class="dash-container" style="margin-bottom: 24px; border: 1px solid var(--border-color); border-radius: 8px; padding: 18px; background: var(--bg-gray);">
+            <div class="dash-container" style="margin-bottom: 0; border: 1px solid var(--border-color); border-radius: 8px; padding: 18px; background: var(--bg-gray);">
                 <div class="dash-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                     <h4 style="margin:0; font-size:14px; font-weight:600; text-transform:uppercase; color:var(--text-secondary); letter-spacing:0.5px;">Program Capacity</h4>
                     <div class="dash-actions" style="display:flex; align-items:center; gap:8px;">
@@ -265,52 +261,14 @@
                 </div>
             </div>
 
-            <!-- Single Dedicated Application Form -->
-            <form id="form-join" onsubmit="handleSupabaseSubmit(event, 'join')">
-                <div class="form-group" style="margin-bottom:16px;">
-                    <label style="display:block; font-size:13px; font-weight:500; margin-bottom:6px;">Full Name</label>
-                    <input type="text" id="join-name" class="form-control" required placeholder="e.g. Rahul Sharma" style="width:100%; padding:10px 14px; border:1px solid #dadce0; border-radius:6px; font-size:14px; box-sizing:border-box;">
-                </div>
-                <div class="form-group" style="margin-bottom:16px;">
-                    <label style="display:block; font-size:13px; font-weight:500; margin-bottom:6px;">Google Workspace Email (Crucial)</label>
-                    <input type="email" id="join-email" class="form-control" required placeholder="name@gmail.com" oninput="clearError(this)" style="width:100%; padding:10px 14px; border:1px solid #dadce0; border-radius:6px; font-size:14px; box-sizing:border-box;">
-                    <div class="error-text" style="color:#c5221f; font-size:12px; display:none; margin-top:4px;">Please enter a valid @gmail.com address.</div>
-                    <span class="helper-text" style="display:block; font-size:12px; color:var(--text-secondary); margin-top:4px;">This exact email will be authorized to install the CivilMate add-on.</span>
-                </div>
-                <div class="form-group" style="margin-bottom:16px;">
-                    <label style="display:block; font-size:13px; font-weight:500; margin-bottom:6px;">Profession / Role</label>
-                    <select id="join-role" class="form-control" required style="width:100%; padding:10px 14px; border:1px solid #dadce0; border-radius:6px; font-size:14px; box-sizing:border-box;">
-                        <option value="" disabled selected>Select your role...</option>
-                        <option value="Engineer">Engineer</option>
-                        <option value="Contractor">Contractor</option>
-                        <option value="Estimator/QS">Estimator/QS</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-                <div class="checkbox-group" style="display:flex; align-items:center; gap:8px; margin-bottom:20px;">
-                    <input type="checkbox" id="join-terms" required>
-                    <label for="join-terms" style="font-size:13px; color:var(--text-secondary); cursor:pointer;">I agree to the CivilMate Early Access program guidelines.</label>
-                </div>
-                <button type="submit" class="btn-submit" id="btn-join" style="width:100%; padding:12px; background:var(--google-blue); color:#fff; border:none; border-radius:6px; font-family:'Google Sans', sans-serif; font-size:15px; font-weight:500; cursor:pointer;">
-                    <span class="btn-text">Apply for Access</span>
-                    <div class="spinner"></div>
-                </button>
-            </form>
-
-            <!-- Success State -->
-            <div id="success-state" class="success-state" style="display:none; text-align:center; padding:30px 10px; flex-direction:column; align-items:center;">
-                <div class="success-icon" style="width:52px; height:52px; border-radius:50%; background:#e6f4ea; color:#137333; display:flex; align-items:center; justify-content:center; margin-bottom:16px;">
-                    <svg style="width:28px; height:28px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                </div>
-                <h3 id="success-title" style="margin:0 0 8px 0; font-size:22px; font-family:'Google Sans', sans-serif;">Application Received!</h3>
-                <p id="success-desc" style="margin:0 0 22px 0; font-size:14px; color:var(--text-secondary); max-width:480px; line-height:1.5;">Thank you. Your application has been logged. You can sign into the portal with your Google account to track your authorization status.</p>
-                <div style="display:flex; gap:12px;">
-                    <a href="portal.html" class="btn" style="background:var(--google-blue); color:#fff; padding:10px 22px; border-radius:6px; text-decoration:none; font-weight:500;">
-                        Open Estimator Portal
-                    </a>
-                    <button class="btn" onclick="resetRegisterForm()" style="background:#fff; border:1px solid #dadce0; color:var(--text-primary); padding:10px 18px; border-radius:6px; cursor:pointer;">
-                        Submit Another
-                    </button>
+            <!-- Single Call-to-Action to Portal (Zero form inputs outside) -->
+            <div style="text-align: center; margin-top: 28px;">
+                <a href="portal.html?mode=signup" class="btn" style="background: var(--google-blue); color: #fff; padding: 14px 34px; border-radius: 6px; font-size: 16px; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 6px rgba(26,115,232,0.3); transition: background 0.2s, box-shadow 0.2s;">
+                    Apply for Access
+                    <span class="material-icons" style="font-size: 20px;">arrow_forward</span>
+                </a>
+                <div style="margin-top: 14px; font-size: 13px; color: var(--text-secondary);">
+                    Already have an account? <a href="portal.html" style="color: var(--google-blue); font-weight: 500; text-decoration: none;">Sign in to Portal</a>
                 </div>
             </div>
         </div>
@@ -410,98 +368,6 @@
         setTimeout(() => {
             if (btnElement) btnElement.classList.remove('is-refreshing');
         }, 500);
-    }
-
-    function clearError(inputElement) {
-        inputElement.classList.remove('is-invalid');
-        const err = inputElement.parentElement.querySelector('.error-text');
-        if (err) err.style.display = 'none';
-    }
-
-    function escapeHtml(str) {
-        if (!str) return '';
-        return String(str)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#039;');
-    }
-
-    function resetRegisterForm() {
-        document.getElementById('success-state').style.display = 'none';
-        document.getElementById('form-join').style.display = 'block';
-        document.getElementById('form-join').reset();
-    }
-
-    // Application Form Submission
-    async function handleSupabaseSubmit(event, type) {
-        if (event) event.preventDefault();
-        const client = getSbClient();
-        if (!client) {
-            alert("Database service connecting. Please refresh and try again.");
-            return false;
-        }
-
-        const form = document.getElementById('form-join');
-        const emailInput = document.getElementById('join-email');
-        const nameInput = document.getElementById('join-name');
-        const roleSelect = document.getElementById('join-role');
-
-        const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
-        if (!email.endsWith('@gmail.com')) {
-            emailInput.classList.add('is-invalid');
-            const errorText = form.querySelector('.error-text');
-            if (errorText) errorText.style.display = 'block';
-            emailInput.focus();
-            return false;
-        }
-
-        const fullName = nameInput ? nameInput.value.trim() : 'Estimator';
-        const role = roleSelect ? roleSelect.value : 'Engineer';
-        const btn = document.getElementById('btn-join');
-
-        if (btn) btn.classList.add('is-loading');
-
-        try {
-            // Upsert user into user_profiles
-            await client.from('user_profiles').upsert([
-                {
-                    email: email,
-                    full_name: fullName,
-                    status: 'waitlisted',
-                    role: role
-                }
-            ], { onConflict: 'email' });
-
-            // Log submission
-            await client.from('beta_feedback').insert([
-                {
-                    user_email: email,
-                    feedback_type: 'Access Application',
-                    description: `New access application from ${fullName} (Profession: ${role})`,
-                    status: 'new'
-                }
-            ]);
-
-            form.style.display = 'none';
-            const successState = document.getElementById('success-state');
-            const descEl = document.getElementById('success-desc');
-            if (descEl) {
-                descEl.innerHTML = `Thank you, <strong>${escapeHtml(fullName)}</strong>! Your application for <strong>${escapeHtml(email)}</strong> has been recorded in the priority queue. You can sign into the <a href="portal.html" style="color:var(--google-blue); font-weight:600; text-decoration:underline;">Estimator Portal</a> anytime with your Google account to track authorization status.`;
-            }
-            if (successState) successState.style.display = 'flex';
-
-            fetchAndPopulateDashboards();
-
-        } catch (err) {
-            console.error("Submission failed:", err);
-            alert("Submission error: " + (err.message || "Please check network connection."));
-        } finally {
-            if (btn) btn.classList.remove('is-loading');
-        }
-
-        return false;
     }
 
     window.addEventListener('DOMContentLoaded', fetchAndPopulateDashboards);
