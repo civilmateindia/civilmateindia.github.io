@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -34,6 +34,10 @@
                     <a href="extension-privacy.html">Privacy Policy</a>
                 </div>
             </div>
+            <a href="portal.html" style="background: var(--google-blue); color: white; padding: 6px 14px; border-radius: 4px; font-weight: 500; font-size: 13px; display: inline-flex; align-items: center; gap: 4px;">
+                <span class="material-icons" style="font-size: 16px;">dashboard</span>
+                Portal
+            </a>
         </div>
     </header>
 
@@ -42,17 +46,18 @@
         
         <h2>1. Acceptance of Terms</h2>
         <p>By installing, accessing, or using the CivilMate Google Workspace&trade; Add-on ("the Add-on," "CivilMate," "we," "us," or "our"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to all of these Terms, do not install or use the Add-on.</p>
-        <p>If you are accepting these Terms on behalf of an employer or another corporate entity, you represent and warrant that you have the full Legal &#9662;</a>
+        <p>If you are accepting these Terms on behalf of an employer or another corporate entity, you represent and warrant that you have the full legal authority to bind that entity to these Terms.</p>
 
         <h2>2. Description of Service</h2>
-        <p>CivilMate is a Google Workspace&trade; Add-on designed to operate within Google Sheets&trade;. It provides estimating tools, database syncing, gap analysis, and automated report generation (such as Resource Abstracts and Details of Quantity). The Add-on functions by reading and writing data within the active Google Sheet where it is executed, utilizing Google Apps Script.</p>
+        <p>CivilMate is a Google Workspace&trade; Add-on designed to operate within Google Sheets&trade;. It provides estimating tools and automated report generation (such as Resource Abstracts and Details of Quantity). The Add-on functions by reading and writing data strictly within the active Google Sheet where it is executed, while fetching reference estimating data (such as HSR schedules and conversion rates) from our secure external backend (Supabase).</p>
 
         <h2>3. Google Workspace&trade; Integration and Permissions</h2>
         <p>To function, CivilMate requires specific permissions (OAuth scopes) connected to your Google account. By installing the Add-on, you grant CivilMate permission to:</p>
         <ul>
-            <li>View and manage the specific Google Sheets&trade; where the Add-on is launched.</li>
+            <li>View and manage the specific Google Sheets&trade; where the Add-on is launched, utilizing a strict "Only Current Document" security model.</li>
+            <li>Connect to an external service to securely fetch the latest reference construction rates and recipes.</li>
             <li>Display custom user interfaces (sidebars and dialog boxes) within Google Sheets&trade;.</li>
-            <li>Verify your user identity for administrative and security purposes.</li>
+            <li>Verify your user identity for administrative purposes, beta tester waitlist management, and database security.</li>
         </ul>
         <p>Your use of Google Sheets&trade; and the broader Google Workspace&trade; environment remains governed by Google’s own Terms of Service.</p>
 
@@ -64,7 +69,7 @@
         <ul>
             <li>Use the Add-on for any illegal, unauthorized, or unethical purpose.</li>
             <li>Attempt to reverse-engineer, decompile, hack, or extract the source code of the Add-on.</li>
-            <li>Interfere with or disrupt the operation of the Add-on, its connected master databases, or Google's servers.</li>
+            <li>Interfere with or disrupt the operation of the Add-on, its connected external master databases, or Google's servers.</li>
             <li>Sell, resell, rent, or lease the Add-on to third parties without explicit written consent from us.</li>
         </ul>
 

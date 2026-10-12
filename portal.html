@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal & Dashboard - CivilMate</title>
+    <!-- Google Fonts & Material Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Core Style -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Supabase JS Client v2 from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        :root {
+            --portal-primary: #1a73e8;
+            --portal-primary-hover: #1557b0;
+            --portal-success: #137333;
+            --portal-success-bg: #e6f4ea;
+            --portal-warning: #b06000;
+            --portal-warning-bg: #fef7e0;
+            --portal-danger: #c5221f;
+            --portal-danger-bg: #fce8e6;
+            --portal-card-border: #dadce0;
+            --portal-bg-gray: #f8f9fa;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .portal-wrapper {
+            margin-top: 75px;
+            padding: 40px 20px 80px 20px;
+            max-width: 1080px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+            flex: 1;
+        }
+
+        /* Animated State Sections */
+        .state-view {
+            display: none;
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+        .state-view.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ================= AUTH VIEW ================= */
+        .auth-card {
+            max-width: 440px;
+            margin: 30px auto;
+            background: #fff;
+            border: 1px solid var(--portal-card-border);
+            border-radius: 12px;
+            padding: 36px 32px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .auth-brand-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            margin: 0 auto 16px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e8f0fe;
+        }
+
+        .auth-card h2 {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .auth-card p.subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        /* Google Sign-in Button */
+        .btn-google {
+            width: 100%;
+            padding: 12px 16px;
+            background: #fff;
+            color: #3c4043;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            font-family: 'Google Sans', 'Roboto', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 2px rgba(60,64,67,0.08);
+        }
+
+        .btn-google:hover {
+            background: #f8fafd;
+            border-color: #c2e7ff;
+            box-shadow: 0 1px 3px 1px rgba(60,64,67,0.15);
+        }
+
+        .btn-google svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 24px 0;
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+        .auth-divider::before, .auth-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--portal-card-border);
+        }
+        .auth-divider span {
+            padding: 0 12px;
+        }
+
+        /* Standard Forms */
+        .auth-form-group {
+            text-align: left;
+            margin-bottom: 16px;
+        }
+
+        .auth-form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1px solid var(--portal-card-border);
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .auth-input:focus {
+            border-color: var(--portal-primary);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.15);
+        }
+
+        .btn-submit-auth {
+            width: 100%;
+            padding: 12px;
+            background: var(--portal-primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 500;
+            font-family: 'Google Sans', sans-serif;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 8px;
+        }
+
+        .btn-submit-auth:hover {
+            background: var(--portal-primary-hover);
+        }
+
+        .auth-toggle-link {
+            margin-top: 20px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        .auth-toggle-link a {
+            color: var(--portal-primary);
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .alert-box {
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-bottom: 16px;
+            text-align: left;
+            display: none;
+        }
+        .alert-error {
+            background: var(--portal-danger-bg);
+            color: var(--portal-danger);
+            border: 1px solid #f5c2c7;
+        }
+        .alert-info {
+            background: #e8f0fe;
+            color: #1967d2;
+            border: 1px solid #c2e7ff;
+        }
+
+        /* ================= DASHBOARD HEADER & PROFILE ================= */
+        .dash-topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            border: 1px solid var(--portal-card-border);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .dash-user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .avatar-circle {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #e8f0fe;
+            color: var(--portal-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 600;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+
+        .dash-user-text h3 {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+
+        .dash-user-text p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .status-pill.waitlisted {
+            background: var(--portal-warning-bg);
+            color: var(--portal-warning);
+            border: 1px solid #fce8b2;
+        }
+        .status-pill.approved {
+            background: var(--portal-success-bg);
+            color: var(--portal-success);
+            border: 1px solid #ceead6;
+        }
+
+        .dash-topbar-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn-dash-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid var(--portal-card-border);
+            background: #fff;
+            color: var(--text-primary);
+        }
+        .btn-dash-action:hover {
+            background: var(--portal-bg-gray);
+        }
+        .btn-dash-action.btn-signout {
+            color: var(--portal-danger);
+            border-color: #f5c2c7;
+        }
+        .btn-dash-action.btn-signout:hover {
+            background: var(--portal-danger-bg);
+        }
+
+        /* ================= WAITLIST STATE VIEW ================= */
+        .waitlist-card {
+            background: #fff;
+            border: 1px solid var(--portal-card-border);
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            margin-bottom: 24px;
+        }
+
+        .waitlist-icon-wrapper {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: var(--portal-warning-bg);
+            color: var(--portal-warning);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px auto;
+        }
+
+        .waitlist-icon-wrapper .material-icons {
+            font-size: 38px;
+        }
+
+        .waitlist-card h2 {
+            font-size: 26px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .waitlist-card p.lead {
+            font-size: 16px;
+            color: var(--text-secondary);
+            max-width: 620px;
+            margin: 0 auto 28px auto;
+            line-height: 1.6;
+        }
+
+        .waitlist-queue-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 16px;
+            background: var(--portal-bg-gray);
+            border: 1px dashed var(--portal-card-border);
+            border-radius: 10px;
+            padding: 16px 28px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .waitlist-queue-box .material-icons {
+            font-size: 32px;
+            color: var(--portal-primary);
+        }
+
+        .locked-features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .locked-card {
+            background: #fff;
+            border: 1px solid var(--portal-card-border);
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+            opacity: 0.75;
+            filter: grayscale(40%);
+        }
+
+        .locked-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            background: #e8eaed;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+        }
+
+        /* ================= APPROVED DASHBOARD VIEW ================= */
+        .approved-banner {
+            background: linear-gradient(135deg, #1e8e3e 0%, #137333 100%);
+            color: #fff;
+            border-radius: 12px;
+            padding: 24px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            box-shadow: 0 4px 12px rgba(19, 115, 51, 0.2);
+        }
+
+        .approved-banner h2 {
+            font-size: 22px;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .approved-banner p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.92;
+        }
+
+        /* Unlocked Hub Grid */
+        .hub-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 36px;
+        }
+
+        .hub-card {
+            background: #fff;
+            border: 1px solid var(--portal-card-border);
+            border-radius: 12px;
+            padding: 28px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .hub-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+            border-color: #c2e7ff;
+        }
+
+        .hub-icon-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .hub-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+        }
+        .hub-icon.addon { background: #1a73e8; }
+        .hub-icon.extension { background: #ea8600; }
+        .hub-icon.community { background: #1e8e3e; }
+
+        .hub-icon .material-icons {
+            font-size: 26px;
+        }
+
+        .hub-badge {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: var(--portal-success-bg);
+            color: var(--portal-success);
+        }
+
+        .hub-card h3 {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .hub-card p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 24px;
+            flex: 1;
+        }
+
+        .btn-hub-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 11px 18px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .btn-hub-action.primary {
+            background: var(--portal-primary);
+            color: #fff;
+        }
+        .btn-hub-action.primary:hover {
+            background: var(--portal-primary-hover);
+            color: #fff;
+        }
+        .btn-hub-action.secondary {
+            background: #fff;
+            color: var(--portal-primary);
+            border: 1px solid var(--portal-card-border);
+        }
+        .btn-hub-action.secondary:hover {
+            background: var(--portal-bg-gray);
+            border-color: var(--portal-primary);
+        }
+
+        /* ================= STAGED EXPORTS & ACTIVITY SECTION ================= */
+        .activity-card {
+            background: #fff;
+            border: 1px solid var(--portal-card-border);
+            border-radius: 12px;
+            padding: 28px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            margin-bottom: 30px;
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .activity-header h3 {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .activity-search {
+            padding: 8px 12px;
+            border: 1px solid var(--portal-card-border);
+            border-radius: 6px;
+            font-size: 13px;
+            width: 240px;
+            outline: none;
+        }
+        .activity-search:focus {
+            border-color: var(--portal-primary);
+        }
+
+        .exports-table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .exports-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        .exports-table th {
+            background: var(--portal-bg-gray);
+            padding: 10px 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--portal-card-border);
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
+        .exports-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #f1f3f4;
+            color: var(--text-primary);
+            vertical-align: middle;
+        }
+
+        .exports-table tr:hover td {
+            background: #f8fafd;
+        }
+
+        .export-type-tag {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .export-type-tag.ns {
+            background: #e8f0fe;
+            color: #1967d2;
+        }
+        .export-type-tag.boq {
+            background: #fef7e0;
+            color: #b06000;
+        }
+
+        .empty-activity-box {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+        .empty-activity-box .material-icons {
+            font-size: 42px;
+            color: #bdc1c6;
+            margin-bottom: 10px;
+        }
+
+        /* Config warning banner when user hasn't added Supabase keys yet */
+        .config-notice-banner {
+            background: #fff8e1;
+            border: 1px solid #ffe082;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 24px;
+            font-size: 13px;
+            color: #795548;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        @media (max-width: 600px) {
+            .portal-wrapper { padding: 20px 14px 60px 14px; }
+            .dash-topbar { flex-direction: column; align-items: flex-start; }
+            .dash-topbar-actions { width: 100%; justify-content: space-between; }
+            .activity-search { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Unified Site Header -->
+    <header>
+        <div class="logo">
+            <img src="logo.jpg" alt="CivilMate Logo" width="32" height="32" style="border-radius:4px;">
+            <a href="index.html" style="color: inherit;">CivilMate</a>
+        </div>
+        <div class="nav-links">
+            <a href="index.html#features">Features</a>
+            <a href="index.html#learn-section">Learn</a>
+            <a href="index.html#tester-hub-section">Tester Hub</a>
+            <a href="faq.html">FAQ</a>
+            <a href="live-tenders.html">Tenders</a>
+            <div class="dropdown">
+                <a href="#" style="cursor:default">Legal &#9662;</a>
+                <div class="dropdown-content">
+                    <div class="dropdown-group">CivilMate Add-On</div>
+                    <a href="addon-privacy.html">Privacy Policy</a>
+                    <a href="addon-terms.html">Terms of Service</a>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-group">CivilMate Extension</div>
+                    <a href="extension-privacy.html">Privacy Policy</a>
+                </div>
+            </div>
+            <!-- Active Portal Navigation Link -->
+            <a href="portal.html" style="background: var(--google-blue); color: white; padding: 6px 14px; border-radius: 4px; font-weight: 500; font-size: 13px; display: inline-flex; align-items: center; gap: 4px;">
+                <span class="material-icons" style="font-size: 16px;">dashboard</span>
+                Portal
+            </a>
+        </div>
+    </header>
+
+    <div class="portal-wrapper">
+
+        <!-- Supabase Keys Configuration Notice (appears only if keys are placeholder) -->
+        <div id="configNotice" class="config-notice-banner">
+            <div>
+                <strong>Supabase Config Needed:</strong> Replace <code>YOUR_PROJECT_ID</code> and <code>YOUR_SUPABASE_ANON_KEY</code> at the top of <code>portal.html</code> with your project keys from the Supabase dashboard.
+            </div>
+            <button onclick="document.getElementById('configNotice').style.display='none'" style="background:none;border:none;cursor:pointer;color:#795548;font-size:16px;">&times;</button>
+        </div>
+
+        <!-- ================= 1. AUTHENTICATION VIEW (Logged Out) ================= -->
+        <div id="viewAuth" class="state-view active">
+            <div class="auth-card">
+                <div class="auth-brand-icon">
+                    <span class="material-icons" style="font-size: 32px; color: var(--portal-primary);">engineering</span>
+                </div>
+                <h2 id="authHeading">CivilMate Portal</h2>
+                <p class="subtitle" id="authSubtitle">Sign in with your Google account to access your beta dashboard & estimates</p>
+
+                <!-- Feedback alert -->
+                <div id="authAlert" class="alert-box"></div>
+
+                <!-- Primary: Google OAuth Button -->
+                <button type="button" class="btn-google" id="btnGoogleAuth" onclick="signInWithGoogle()">
+                    <svg viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                    </svg>
+                    Continue with Google
+                </button>
+
+                <div class="auth-divider">
+                    <span>or continue with email</span>
+                </div>
+
+                <!-- Email & Password Form -->
+                <form id="emailAuthForm" onsubmit="handleEmailAuth(event)">
+                    <div class="auth-form-group" id="fullNameGroup" style="display: none;">
+                        <label for="inputFullName">Full Name</label>
+                        <input type="text" id="inputFullName" class="auth-input" placeholder="e.g. Rahul Sharma">
+                    </div>
+
+                    <div class="auth-form-group">
+                        <label for="inputEmail">Email Address</label>
+                        <input type="email" id="inputEmail" class="auth-input" required placeholder="name@gmail.com">
+                    </div>
+
+                    <div class="auth-form-group">
+                        <label for="inputPassword">Password</label>
+                        <input type="password" id="inputPassword" class="auth-input" required placeholder="••••••••">
+                    </div>
+
+                    <button type="submit" class="btn-submit-auth" id="btnEmailSubmit">
+                        Sign In
+                    </button>
+                </form>
+
+                <div class="auth-toggle-link">
+                    <span id="authToggleText">Need an account?</span>
+                    <a id="authToggleBtn" onclick="toggleAuthMode()">Sign up for beta</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= 2. WAITLIST STATE VIEW ================= -->
+        <div id="viewWaitlisted" class="state-view">
+            <!-- Top Profile Bar -->
+            <div class="dash-topbar">
+                <div class="dash-user-info">
+                    <div class="avatar-circle" id="wlUserInitial">U</div>
+                    <div class="dash-user-text">
+                        <h3 id="wlUserName">Beta Applicant</h3>
+                        <p>
+                            <span id="wlUserEmail">-</span> &bull; 
+                            <span class="status-pill waitlisted">Waitlisted</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="dash-topbar-actions">
+                    <button class="btn-dash-action" onclick="refreshUserProfile()">
+                        <span class="material-icons" style="font-size: 16px;">refresh</span>
+                        Check Approval Status
+                    </button>
+                    <button class="btn-dash-action btn-signout" onclick="signOut()">
+                        <span class="material-icons" style="font-size: 16px;">logout</span>
+                        Sign Out
+                    </button>
+                </div>
+            </div>
+
+            <!-- Waitlist Notice Box -->
+            <div class="waitlist-card">
+                <div class="waitlist-icon-wrapper">
+                    <span class="material-icons">hourglass_top</span>
+                </div>
+                <h2>You are on the CivilMate Beta Waitlist</h2>
+                <p class="lead">
+                    Seats are limited to maintain high reliability and rate-sync accuracy with the Haryana Schedule of Rates (HSR). Our team is reviewing applications in sequential order.
+                </p>
+
+                <div class="waitlist-queue-box">
+                    <span class="material-icons">mark_email_read</span>
+                    <div>
+                        <div style="font-weight: 600; font-size: 14px; color: var(--text-primary);">Google Account Registered for Whitelisting</div>
+                        <div style="font-size: 13px; color: var(--text-secondary);" id="wlRegisteredEmailText">Checking registered email...</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 10px;">
+                    <button class="btn btn-primary" onclick="refreshUserProfile()" style="padding: 10px 24px; font-size: 14px;">
+                        <span class="material-icons" style="font-size: 18px; margin-right: 6px;">update</span>
+                        Check if I've been approved
+                    </button>
+                </div>
+
+                <!-- Locked Downloads Preview (Hidden / Gated) -->
+                <div class="locked-features-grid">
+                    <div class="locked-card">
+                        <div class="locked-badge"><span class="material-icons" style="font-size: 12px;">lock</span> Locked</div>
+                        <h4 style="margin: 0 0 6px 0; font-size: 15px;">Google Sheets™ Add-on</h4>
+                        <p style="margin: 0; font-size: 13px; color: var(--text-secondary);">Direct unlisted marketplace installation URL will unlock once approved.</p>
+                    </div>
+                    <div class="locked-card">
+                        <div class="locked-badge"><span class="material-icons" style="font-size: 12px;">lock</span> Locked</div>
+                        <h4 style="margin: 0 0 6px 0; font-size: 15px;">Chrome™ Extension</h4>
+                        <p style="margin: 0; font-size: 13px; color: var(--text-secondary);">Automated HEWP portal data extractor and bill sync download link.</p>
+                    </div>
+                    <div class="locked-card">
+                        <div class="locked-badge"><span class="material-icons" style="font-size: 12px;">lock</span> Locked</div>
+                        <h4 style="margin: 0 0 6px 0; font-size: 15px;">Community Hub</h4>
+                        <p style="margin: 0; font-size: 13px; color: var(--text-secondary);">Access to our private Google Chat workspace for civil engineers.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= 3. APPROVED DASHBOARD VIEW ================= -->
+        <div id="viewApproved" class="state-view">
+            <!-- Top Profile Bar -->
+            <div class="dash-topbar">
+                <div class="dash-user-info">
+                    <div class="avatar-circle" id="apUserInitial" style="background:#e6f4ea; color:#137333;">A</div>
+                    <div class="dash-user-text">
+                        <h3 id="apUserName">CivilMate Estimator</h3>
+                        <p>
+                            <span id="apUserEmail">-</span> &bull; 
+                            <span class="status-pill approved">Approved Tester</span> &bull;
+                            <span id="apTierText" style="font-weight: 500; color: var(--portal-primary);">Tier: Beta Access</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="dash-topbar-actions">
+                    <button class="btn-dash-action" onclick="fetchStagedExports()">
+                        <span class="material-icons" style="font-size: 16px;">sync</span>
+                        Refresh Activity
+                    </button>
+                    <button class="btn-dash-action btn-signout" onclick="signOut()">
+                        <span class="material-icons" style="font-size: 16px;">logout</span>
+                        Sign Out
+                    </button>
+                </div>
+            </div>
+
+            <!-- Approved Welcome Banner -->
+            <div class="approved-banner">
+                <div>
+                    <h2>Welcome to the CivilMate Suite!</h2>
+                    <p>Your Google account has been authorized. You can now install the Add-on, Chrome Extension, and view your staged estimate exports below.</p>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <span class="material-icons" style="font-size: 40px; opacity: 0.9;">verified</span>
+                </div>
+            </div>
+
+            <!-- Unlocked Ecosystem Cards -->
+            <div class="hub-grid">
+                <!-- Card 1: Add-on -->
+                <div class="hub-card">
+                    <div class="hub-icon-row">
+                        <div class="hub-icon addon">
+                            <span class="material-icons">table_chart</span>
+                        </div>
+                        <span class="hub-badge">Workspace</span>
+                    </div>
+                    <h3>Google Sheets™ Add-on</h3>
+                    <p>Execute formulas, extract HSR rates, calculate material abstracts, and create Details of Quantity directly within your Google Sheets™.</p>
+                    <a href="https://workspace.google.com/marketplace/app/civilmate/716518784539" target="_blank" rel="noopener noreferrer" class="btn-hub-action primary">
+                        <span class="material-icons" style="font-size: 18px;">download</span>
+                        Install Add-on
+                    </a>
+                </div>
+
+                <!-- Card 2: Chrome Extension -->
+                <div class="hub-card">
+                    <div class="hub-icon-row">
+                        <div class="hub-icon extension">
+                            <span class="material-icons">extension</span>
+                        </div>
+                        <span class="hub-badge">Chrome Web Store</span>
+                    </div>
+                    <h3>Chrome™ Extension</h3>
+                    <p>Automate bill submissions, parse online tender BoQs, and bridge data directly between the Haryana Engineering Works Portal (HEWP) and your Sheet.</p>
+                    <a href="https://chromewebstore.google.com/detail/paadmpfoldjolnnojnihfobplhplbobh?utm_source=item-share-cb" target="_blank" rel="noopener noreferrer" class="btn-hub-action primary">
+                        <span class="material-icons" style="font-size: 18px;">add_to_queue</span>
+                        Get Extension
+                    </a>
+                </div>
+
+                <!-- Card 3: Community Hub -->
+                <div class="hub-card">
+                    <div class="hub-icon-row">
+                        <div class="hub-icon community">
+                            <span class="material-icons">forum</span>
+                        </div>
+                        <span class="hub-badge">Google Chat</span>
+                    </div>
+                    <h3>Community Hub</h3>
+                    <p>Join the CivilMate Beta Builders Google Chat space. Discuss HSR updates, get direct developer support, and request rate items.</p>
+                    <a href="https://mail.google.com/chat/" target="_blank" rel="noopener noreferrer" class="btn-hub-action secondary">
+                        <span class="material-icons" style="font-size: 18px;">open_in_new</span>
+                        Join Chat Space
+                    </a>
+                </div>
+            </div>
+
+            <!-- Activity & Uploaded NS Items Section -->
+            <div class="activity-card">
+                <div class="activity-header">
+                    <div>
+                        <h3>
+                            <span class="material-icons" style="color: var(--portal-primary);">receipt_long</span>
+                            Uploaded NS Items & Staged Exports
+                        </h3>
+                        <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">
+                            Live sync records from your CivilMate connected Google Sheets (<code>staged_exports</code> table)
+                        </div>
+                    </div>
+                    <input type="text" id="exportSearchInput" class="activity-search" placeholder="Filter by item or code..." oninput="filterExportsTable()">
+                </div>
+
+                <div class="exports-table-wrapper">
+                    <table class="exports-table" id="exportsTable">
+                        <thead>
+                            <tr>
+                                <th>Item Code</th>
+                                <th>Description / Item Name</th>
+                                <th>Unit</th>
+                                <th>Estimated Rate</th>
+                                <th>Export Type</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody id="exportsTableBody">
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 20px; color: var(--text-secondary);">
+                                    Connecting to Supabase staged_exports...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Unified Footer -->
+    <footer>
+        <div>&copy; 2026 CivilMate. All rights reserved.</div>
+        <div class="footer-links">
+            <a href="addon-privacy.html">Privacy Policy</a>
+            <a href="addon-terms.html">Terms of Service</a>
+            <a href="faq.html">FAQ</a>
+        </div>
+    </footer>
+
+    <!-- ================= JAVASCRIPT & SUPABASE AUTH LOGIC ================= -->
+    <script>
+        /*
+         * =========================================================================
+         * SUPABASE CONFIGURATION
+         * Replace with your Supabase Project settings (Settings -> API)
+         * =========================================================================
+         */
+        const SUPABASE_CONFIG = {
+            url: "https://qizuppfogzugazpvvaxg.supabase.co", // Replace with your Supabase project URL
+            anonKey: "sb_publishable_rWs1g0hoacGIjeorJCfNqw__B_ztAUG"           // Replace with your Supabase anon public key
+        };
+
+        let supabase = null;
+        let currentUser = null;
+        let currentProfile = null;
+        let authMode = 'login'; // 'login' or 'signup'
+        let allStagedExports = [];
+
+        // Check if user has initialized config
+        const isConfigured = !SUPABASE_CONFIG.url.includes("YOUR_PROJECT_ID") && 
+                             !SUPABASE_CONFIG.anonKey.includes("YOUR_SUPABASE_ANON_KEY");
+
+        if (!isConfigured) {
+            document.getElementById('configNotice').style.display = 'flex';
+        }
+
+        // Initialize Supabase Client
+        try {
+            if (window.supabase) {
+                supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey, {
+                    auth: {
+                        persistSession: true,
+                        autoRefreshToken: true,
+                        detectSessionInUrl: true
+                    }
+                });
+            }
+        } catch (e) {
+            console.error("Supabase client init error:", e);
+        }
+
+        // ================= AUTH FUNCTIONS =================
+        async function signInWithGoogle() {
+            if (!isConfigured || !supabase) {
+                showAlert("Please configure your Supabase Project URL and Anon Key in portal.html first.", "error");
+                return;
+            }
+            try {
+                showAlert("Redirecting to Google Sign-In...", "info");
+                const { error } = await supabase.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo: window.location.href.split('#')[0]
+                    }
+                });
+                if (error) throw error;
+            } catch (err) {
+                showAlert(err.message || "Failed to sign in with Google", "error");
+            }
+        }
+
+        async function handleEmailAuth(event) {
+            event.preventDefault();
+            if (!isConfigured || !supabase) {
+                showAlert("Please configure your Supabase Project URL and Anon Key in portal.html first.", "error");
+                return;
+            }
+
+            const email = document.getElementById('inputEmail').value.trim();
+            const password = document.getElementById('inputPassword').value;
+            const fullName = document.getElementById('inputFullName').value.trim();
+            const submitBtn = document.getElementById('btnEmailSubmit');
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Processing...";
+
+            try {
+                if (authMode === 'login') {
+                    const { data, error } = await supabase.auth.signInWithPassword({
+                        email: email,
+                        password: password
+                    });
+                    if (error) throw error;
+                    handleSession(data.session);
+                } else {
+                    const { data, error } = await supabase.auth.signUp({
+                        email: email,
+                        password: password,
+                        options: {
+                            data: { full_name: fullName }
+                        }
+                    });
+                    if (error) throw error;
+                    if (data.session) {
+                        handleSession(data.session);
+                    } else {
+                        showAlert("Verification link sent! Please check your email to confirm registration.", "info");
+                    }
+                }
+            } catch (err) {
+                showAlert(err.message || "Authentication error", "error");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = authMode === 'login' ? "Sign In" : "Create Account";
+            }
+        }
+
+        function toggleAuthMode() {
+            authMode = (authMode === 'login') ? 'signup' : 'login';
+            const heading = document.getElementById('authHeading');
+            const subtitle = document.getElementById('authSubtitle');
+            const submitBtn = document.getElementById('btnEmailSubmit');
+            const toggleText = document.getElementById('authToggleText');
+            const toggleBtn = document.getElementById('authToggleBtn');
+            const nameGroup = document.getElementById('fullNameGroup');
+
+            if (authMode === 'signup') {
+                heading.textContent = "Join the Beta";
+                subtitle.textContent = "Create an account to join the waitlist for CivilMate Google Sheets™ Add-on";
+                submitBtn.textContent = "Create Account";
+                toggleText.textContent = "Already have an account?";
+                toggleBtn.textContent = "Sign In";
+                nameGroup.style.display = 'block';
+            } else {
+                heading.textContent = "CivilMate Portal";
+                subtitle.textContent = "Sign in with your Google account to access your beta dashboard & estimates";
+                submitBtn.textContent = "Sign In";
+                toggleText.textContent = "Need an account?";
+                toggleBtn.textContent = "Sign up for beta";
+                nameGroup.style.display = 'none';
+            }
+        }
+
+        async function signOut() {
+            if (supabase) {
+                await supabase.auth.signOut();
+            }
+            currentUser = null;
+            currentProfile = null;
+            showView('viewAuth');
+            showAlert("You have successfully signed out.", "info");
+        }
+
+        // ================= USER PROFILE (user_profiles TABLE) =================
+        async function getOrCreateUserProfile(user) {
+            if (!supabase || !isConfigured) {
+                // Fallback demo state if keys not filled yet
+                return {
+                    id: user.id,
+                    email: user.email,
+                    full_name: user.email.split('@')[0],
+                    status: 'waitlisted',
+                    subscription_tier: 'free'
+                };
+            }
+
+            try {
+                // Check if profile exists
+                const { data, error } = await supabase
+                    .from('user_profiles')
+                    .select('*')
+                    .eq('id', user.id)
+                    .maybeSingle();
+
+                if (error && error.code !== 'PGRST116') {
+                    console.warn("Profile query error:", error);
+                }
+
+                if (data) {
+                    return data;
+                }
+
+                // If not found, insert default entry with status = 'waitlisted'
+                const displayName = user.user_metadata?.full_name || 
+                                    user.user_metadata?.name || 
+                                    user.email.split('@')[0];
+
+                const newProfile = {
+                    id: user.id,
+                    email: user.email,
+                    full_name: displayName,
+                    status: 'waitlisted',
+                    subscription_tier: 'free'
+                };
+
+                const { data: inserted, error: insertErr } = await supabase
+                    .from('user_profiles')
+                    .insert([newProfile])
+                    .select()
+                    .single();
+
+                if (insertErr) {
+                    console.warn("Could not insert profile (RLS or table check needed):", insertErr);
+                    return newProfile;
+                }
+
+                return inserted || newProfile;
+            } catch (e) {
+                console.error("Profile resolution exception:", e);
+                return {
+                    id: user.id,
+                    email: user.email,
+                    full_name: user.email.split('@')[0],
+                    status: 'waitlisted',
+                    subscription_tier: 'free'
+                };
+            }
+        }
+
+        async function refreshUserProfile() {
+            if (!currentUser) return;
+            const profile = await getOrCreateUserProfile(currentUser);
+            currentProfile = profile;
+            renderDashboardForProfile(profile);
+        }
+
+        // ================= DASHBOARD RENDERING & GATING =================
+        function renderDashboardForProfile(profile) {
+            const initial = (profile.full_name || profile.email || 'U').charAt(0).toUpperCase();
+
+            if (profile.status === 'approved') {
+                // Populate Approved UI
+                document.getElementById('apUserInitial').textContent = initial;
+                document.getElementById('apUserName').textContent = profile.full_name || 'CivilMate Estimator';
+                document.getElementById('apUserEmail').textContent = profile.email;
+                document.getElementById('apTierText').textContent = `Tier: ${(profile.subscription_tier || 'Beta').toUpperCase()}`;
+
+                showView('viewApproved');
+                fetchStagedExports();
+            } else {
+                // Default / Waitlisted State
+                document.getElementById('wlUserInitial').textContent = initial;
+                document.getElementById('wlUserName').textContent = profile.full_name || 'Beta Applicant';
+                document.getElementById('wlUserEmail').textContent = profile.email;
+                document.getElementById('wlRegisteredEmailText').textContent = profile.email;
+
+                showView('viewWaitlisted');
+            }
+        }
+
+        // ================= STAGED EXPORTS (staged_exports TABLE) =================
+        async function fetchStagedExports() {
+            const tbody = document.getElementById('exportsTableBody');
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: var(--text-secondary);">Loading staged exports...</td></tr>';
+
+            if (!supabase || !isConfigured || !currentUser) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6">
+                            <div class="empty-activity-box">
+                                <span class="material-icons">cloud_off</span>
+                                <div style="font-weight: 500;">No Exports Synced Yet</div>
+                                <div style="font-size: 12px; margin-top: 4px;">Once you generate an estimate in Google Sheets with CivilMate, staged NS items and BoQ exports will appear here.</div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            try {
+                // Query staged_exports by user_email
+                let { data, error } = await supabase
+                    .from('staged_exports')
+                    .select('*')
+                    .eq('user_email', currentUser.email)
+                    .order('created_at', { ascending: false });
+
+                // If user_email fails or user_id exists instead, try user_id fallback
+                if (error && (error.code === '42703' || error.code === 'PGRST204')) {
+                    const fallback = await supabase
+                        .from('staged_exports')
+                        .select('*')
+                        .eq('user_id', currentUser.id)
+                        .order('created_at', { ascending: false });
+                    
+                    if (!fallback.error) {
+                        data = fallback.data;
+                        error = null;
+                    }
+                }
+
+                if (error) throw error;
+
+                allStagedExports = data || [];
+                renderExportsTable(allStagedExports);
+            } catch (err) {
+                console.warn("Could not query staged_exports:", err);
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6">
+                            <div class="empty-activity-box">
+                                <span class="material-icons">inventory_2</span>
+                                <div style="font-weight: 500;">No Staged Exports Recorded</div>
+                                <div style="font-size: 12px; margin-top: 4px;">Connect the CivilMate Add-On to start staging items for Haryana Engineering Works Portal (HEWP).</div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        function renderExportsTable(items) {
+            const tbody = document.getElementById('exportsTableBody');
+            tbody.innerHTML = '';
+
+            if (items.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6">
+                            <div class="empty-activity-box">
+                                <span class="material-icons">inventory_2</span>
+                                <div style="font-weight: 500;">No Staged Items Found</div>
+                                <div style="font-size: 12px; margin-top: 4px;">Estimates or Non-Scheduled (NS) items exported from CivilMate will be displayed here.</div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            items.forEach(item => {
+                const tr = document.createElement('tr');
+                const type = (item.export_type || 'NS Item').toUpperCase();
+                const typeClass = type.includes('NS') ? 'ns' : 'boq';
+                const dateStr = item.created_at ? new Date(item.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '-';
+                const rateFormatted = item.rate ? `₹ ${parseFloat(item.rate).toLocaleString('en-IN')}` : '-';
+
+                tr.innerHTML = `
+                    <td><strong>${escapeHtml(item.item_code || '-')}</strong></td>
+                    <td>${escapeHtml(item.description || 'Untitled Item')}</td>
+                    <td>${escapeHtml(item.unit || '-')}</td>
+                    <td style="font-weight: 600; color: var(--portal-success);">${rateFormatted}</td>
+                    <td><span class="export-type-tag ${typeClass}">${escapeHtml(type)}</span></td>
+                    <td style="color: var(--text-secondary);">${dateStr}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterExportsTable() {
+            const query = (document.getElementById('exportSearchInput').value || '').toLowerCase();
+            const filtered = allStagedExports.filter(item => {
+                const code = (item.item_code || '').toLowerCase();
+                const desc = (item.description || '').toLowerCase();
+                const type = (item.export_type || '').toLowerCase();
+                return code.includes(query) || desc.includes(query) || type.includes(query);
+            });
+            renderExportsTable(filtered);
+        }
+
+        // ================= SESSION & ROUTING =================
+        async function handleSession(session) {
+            if (session && session.user) {
+                currentUser = session.user;
+                currentProfile = await getOrCreateUserProfile(currentUser);
+                renderDashboardForProfile(currentProfile);
+            } else {
+                currentUser = null;
+                currentProfile = null;
+                showView('viewAuth');
+            }
+        }
+
+        function showView(viewId) {
+            document.querySelectorAll('.state-view').forEach(el => el.classList.remove('active'));
+            const target = document.getElementById(viewId);
+            if (target) target.classList.add('active');
+        }
+
+        function showAlert(msg, type) {
+            const alert = document.getElementById('authAlert');
+            alert.textContent = msg;
+            alert.className = `alert-box alert-${type}`;
+            alert.style.display = 'block';
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // ================= LIFECYCLE INIT =================
+        window.addEventListener('DOMContentLoaded', async () => {
+            if (supabase) {
+                // Check existing session
+                const { data: { session } } = await supabase.auth.getSession();
+                handleSession(session);
+
+                // Listen to auth state changes (login, logout, oauth callbacks)
+                supabase.auth.onAuthStateChange((_event, session) => {
+                    handleSession(session);
+                });
+            } else {
+                showView('viewAuth');
+            }
+        });
+    </script>
+</body>
+</html>
