@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -11,6 +11,8 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css">
+    <!-- Supabase JS Client v2 from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -228,7 +230,7 @@
     <h2 style="text-align:center; font-size: 32px; margin-bottom: 24px;">Tester & Feedback Hub</h2>
     
 
-<iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="handleIframeLoad()"></iframe>
+
 
 <div class="tester-container">
     <div class="header">
@@ -277,7 +279,7 @@
             <div class="sync-note">* Note: Data synchronization may take up to 5 minutes to reflect recent submissions.</div>
         </div>
 
-        <form id="form-join" action="https://docs.google.com/forms/d/e/1FAIpQLSfFqDvNcTuLd1ZrCX5IeGOskC2rXY7OqXDC350dQeXZppEcgg/formResponse" method="POST" target="hidden_iframe" onsubmit="handleRealSubmit(event, 'join')">
+        <form id="form-join" onsubmit="handleSupabaseSubmit(event, 'join')">
             <div class="form-group">
                 <label>Full Name</label>
                 <input type="text" name="entry.1107456327" class="form-control" required placeholder="e.g. Rahul Sharma">
@@ -312,7 +314,7 @@
     <!-- TAB 2: FEEDBACK / BUG REPORT -->
     <div id="tab-feedback" class="form-section">
         
-        <form id="form-feedback" action="https://docs.google.com/forms/d/e/1FAIpQLSf_KPcS9oauKWNScmy57qmbOoY5sZBharPNx2SxKmE6KTdgzw/formResponse" method="POST" target="hidden_iframe" onsubmit="handleRealSubmit(event, 'feedback')">
+        <form id="form-feedback" onsubmit="handleSupabaseSubmit(event, 'feedback')">
             <div class="form-group">
                 <label>Registered Tester Email</label>
                 <input type="email" name="entry.979849551" class="form-control" required placeholder="Your whitelisted @gmail.com address" oninput="clearError(this)">
@@ -403,7 +405,7 @@
             <div class="sync-note">* Note: Data synchronization may take up to 5 minutes to reflect recent submissions.</div>
         </div>
 
-        <form id="form-optout" action="https://docs.google.com/forms/d/e/1FAIpQLScU0rO2-XdRwZgmVTyuqpWWXxnmtBjWu1gw7_eETomVzwWT1g/formResponse" method="POST" target="hidden_iframe" onsubmit="handleRealSubmit(event, 'optout')">
+        <form id="form-optout" onsubmit="handleSupabaseSubmit(event, 'optout')">
             <div class="form-group">
                 <label>Registered Tester Email</label>
                 <input type="email" name="entry.2014970164" class="form-control" required placeholder="Your whitelisted @gmail.com address" oninput="clearError(this)">
@@ -448,6 +450,27 @@
     </footer>
 
     <script>
+    /*
+     * CivilMate Supabase Integration & UI Controller
+     */
+    const SUPABASE_CONFIG = {
+        url: "https://qizuppfogzugazpvvaxg.supabase.co",
+        anonKey: "sb_publishable_rWs1g0hoacGIjeorJCfNqw__B_ztAUG"
+    };
+
+    let sbClient = null;
+    function getSbClient() {
+        if (sbClient) return sbClient;
+        if (window.supabase && typeof window.supabase.createClient === 'function') {
+            try {
+                sbClient = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+            } catch (e) {
+                console.error("Supabase init error:", e);
+            }
+        }
+        return sbClient;
+    }
+    getSbClient();
 
     const headerContent = {
         join: { title: "Beta Tester Onboarding", desc: "Help us shape the future of the CivilMate add-on before it hits the Google Workspace Marketplace." },
@@ -455,150 +478,149 @@
         optout: { title: "Access Revocation", desc: "Fill out the form below to remove your email from the whitelist and revoke access." }
     };
 
-    const csvDataUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vREMQABnAVzmU9nXf-BhHS73NiyCVG0ny0MWVmUKJ277KGy39ddSyIQutDEeNqQFpJIvSj4drJShWYc/pub?gid=129930157&single=true&output=csv";
-
-    function parseCSV(str) {
-        let arr = []; let quote = false; let row = 0, col = 0;
-        for (let c = 0; c < str.length; c++) {
-            let cc = str[c], nc = str[c+1];
-            arr[row] = arr[row] || []; arr[row][col] = arr[row][col] || '';
-            if (cc == '"' && quote && nc == '"') { arr[row][col] += cc; ++c; continue; }
-            if (cc == '"') { quote = !quote; continue; }
-            if (cc == ',' && !quote) { ++col; continue; }
-            if (cc == '\r' && nc == '\n' && !quote) { ++row; col = 0; ++c; continue; }
-            if (cc == '\n' && !quote) { ++row; col = 0; continue; }
-            if (cc == '\r' && !quote) { ++row; col = 0; continue; }
-            arr[row][col] += cc;
-        }
-        return arr;
-    }
-
+    // Live Dashboard Metrics Query
     async function fetchAndPopulateDashboards() {
+        const client = getSbClient();
+        if (!client) return;
+
         try {
-            const res = await fetch(csvDataUrl + '&_t=' + new Date().getTime());
-            if (!res.ok) throw new Error("Failed to fetch");
-            const csvText = await res.text();
-            const data = parseCSV(csvText);
+            let totalApps = 0;
+            let approvedSeats = 0;
+            let waitlistedSeats = 0;
+            let optedOutSeats = 0;
+            const maxVacancies = 100;
+            let feedbackStats = {};
 
-            let currentSection = "";
-            let stats = { join: {}, optout: {}, feedback: {} };
-
-            data.forEach(row => {
-                if (row.length === 0) return;
-                
-                let colA = row[0] ? row[0].trim() : "";
-                let colB = row.length > 1 ? row[1].trim() : "";
-
-                if (colA === "Beta Testers" || colA === "New Applications") { 
-                    currentSection = "join"; return; 
+            // 1. Attempt fast RPC stats first
+            let rpcSucceeded = false;
+            try {
+                const { data, error } = await client.rpc('get_beta_program_stats');
+                if (!error && data) {
+                    rpcSucceeded = true;
+                    const p = data.profiles || data;
+                    totalApps = p.total_applications || 0;
+                    approvedSeats = p.allocated_seats || 0;
+                    waitlistedSeats = p.waitlisted_seats || 0;
+                    optedOutSeats = p.opted_out_seats || 0;
+                    if (data.feedback) feedbackStats = data.feedback;
                 }
-                if (colA === "Opt-Out") { 
-                    currentSection = "optout"; return; 
+            } catch (e) {
+                console.warn("RPC stats note:", e);
+            }
+
+            // 2. Direct query fallback
+            if (!rpcSucceeded) {
+                const { data: profiles } = await client.from('user_profiles').select('status');
+                if (profiles && profiles.length > 0) {
+                    totalApps = profiles.length;
+                    approvedSeats = profiles.filter(p => p.status === 'approved').length;
+                    waitlistedSeats = profiles.filter(p => p.status === 'waitlisted').length;
+                    optedOutSeats = profiles.filter(p => p.status === 'opted_out').length;
                 }
-                if (colA === "Feedback") { 
-                    currentSection = "feedback"; return; 
+
+                const { data: feedbackRows } = await client.from('beta_feedback').select('feedback_type, status');
+                if (feedbackRows) {
+                    feedbackRows.forEach(row => {
+                        const type = row.feedback_type || 'Others';
+                        if (!feedbackStats[type]) feedbackStats[type] = { submitted: 0, resolved: 0 };
+                        feedbackStats[type].submitted++;
+                        if (row.status === 'resolved') feedbackStats[type].resolved++;
+                    });
                 }
+            }
 
-                if (colA && currentSection) {
-                    if (currentSection === 'feedback') {
-                        let submitted = 0;
-                        let resolved = 0;
-                        if (colB.includes(';')) {
-                            let parts = colB.split(';');
-                            submitted = parseInt(parts[0]) || 0;
-                            resolved = parseInt(parts[1]) || 0;
-                        } else {
-                            submitted = parseInt(colB) || 0;
-                        }
-                        stats.feedback[colA] = { submitted, resolved };
-                    } else {
-                        let val = parseInt(colB.replace(/[^0-9-]/g, '')) || 0;
-                        stats[currentSection][colA] = val;
-                    }
-                }
-            });
+            // 3. Populate Join Section
+            const availableSeats = Math.max(0, maxVacancies - approvedSeats);
+            const elTotalApps = document.getElementById('ui-total-apps');
+            const elMaxVac = document.getElementById('ui-max-vac');
+            const elFilled = document.getElementById('ui-filled');
+            const elAvail = document.getElementById('ui-avail');
 
-            // 1. Join Dashboard
-            let totalApps = (stats.join["New Entries"] || 0) + (stats.join["Accepted"] || 0) + (stats.join["Rejected"] || 0) + (stats.join["Pending"] || 0);
-            let acceptedTotal = stats.join["Accepted"] || 0;
-            let removedTotal = stats.optout["Removed"] || 0;
-            let filledVacancies = Math.max(0, acceptedTotal - removedTotal); 
-            
-            document.getElementById('ui-total-apps').textContent = totalApps;
-            document.getElementById('ui-max-vac').textContent = stats.join["Maximum Vacancies"] || '-';
-            document.getElementById('ui-filled').textContent = filledVacancies;
-            document.getElementById('ui-avail').textContent = stats.join["Available Vacancies"] || '-';
+            if (elTotalApps) elTotalApps.textContent = totalApps;
+            if (elMaxVac) elMaxVac.textContent = maxVacancies;
+            if (elFilled) elFilled.textContent = approvedSeats;
+            if (elAvail) elAvail.textContent = availableSeats;
 
-            // 2. Opt-Out Dashboard
-            let pendingOptOut = (stats.optout["New Entries"] || 0) + (stats.optout["Pending Removal"] || 0);
-            let totalOptOutReqs = pendingOptOut + removedTotal;
+            // 4. Populate Opt-Out Section
+            const elOptTotal = document.getElementById('ui-optout-total');
+            const elOptPending = document.getElementById('ui-optout-pending');
+            const elOptRemoved = document.getElementById('ui-optout-removed');
 
-            document.getElementById('ui-optout-total').textContent = totalOptOutReqs;
-            document.getElementById('ui-optout-pending').textContent = pendingOptOut;
-            document.getElementById('ui-optout-removed').textContent = removedTotal;
+            if (elOptTotal) elOptTotal.textContent = optedOutSeats;
+            if (elOptPending) elOptPending.textContent = "0";
+            if (elOptRemoved) elOptRemoved.textContent = optedOutSeats;
 
-            // 3. Smart Compact Feedback Dashboard
+            // 5. Populate Feedback Table
+            const categories = [
+                "Bug/Error",
+                "Feature Suggestions",
+                "UI/UX Improvement",
+                "Calculation/Data Correction",
+                "Database Update",
+                "Others"
+            ];
+
             let pivotHtml = '';
             let activeFeedbackCount = 0;
 
-            if (Object.keys(stats.feedback).length > 0) {
-                for (const [category, data] of Object.entries(stats.feedback)) {
-                    if (data.submitted > 0) {
-                        activeFeedbackCount++;
-                        let pct = (data.resolved / data.submitted) * 100;
-                        pct = Math.min(Math.max(pct, 0), 100);
-                        
-                        pivotHtml += `
-                            <tr>
-                                <td>${category}</td>
-                                <td style="text-align: center;"><strong>${data.submitted}</strong></td>
-                                <td>
-                                    <div style="display: flex; justify-content: space-between; font-size: 0.7rem; font-weight: 600;">
-                                        <span>${data.resolved} Resolved</span>
-                                        <span>${Math.round(pct)}%</span>
-                                    </div>
-                                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${pct}%;"></div></div>
-                                </td>
-                            </tr>
-                        `;
-                    }
+            categories.forEach(cat => {
+                const data = feedbackStats[cat];
+                if (data && data.submitted > 0) {
+                    activeFeedbackCount++;
+                    const pct = Math.min(100, Math.max(0, Math.round((data.resolved / data.submitted) * 100)));
+                    pivotHtml += `
+                        <tr>
+                            <td>${escapeHtml(cat)}</td>
+                            <td style="text-align: center;"><strong>${data.submitted}</strong></td>
+                            <td>
+                                <div style="display: flex; justify-content: space-between; font-size: 0.7rem; font-weight: 600;">
+                                    <span>${data.resolved} Resolved</span>
+                                    <span>${pct}%</span>
+                                </div>
+                                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${pct}%;"></div></div>
+                            </td>
+                        </tr>
+                    `;
                 }
-            }
-            
+            });
+
             if (activeFeedbackCount === 0) {
                 pivotHtml = '<tr><td colspan="3" style="text-align:center; padding: 15px; color: #64748b;">No feedback reports have been submitted yet.</td></tr>';
             }
-            document.querySelector('#ui-feedback-pivot tbody').innerHTML = pivotHtml;
+
+            const pivotTbody = document.querySelector('#ui-feedback-pivot tbody');
+            if (pivotTbody) pivotTbody.innerHTML = pivotHtml;
 
         } catch (error) {
             console.error("Dashboard Sync Error:", error);
-            document.querySelector('#ui-feedback-pivot tbody').innerHTML = '<tr><td colspan="3" style="text-align:center; padding: 15px; color: #dc2626;">Unable to sync live data.</td></tr>';
+            const pivotTbody = document.querySelector('#ui-feedback-pivot tbody');
+            if (pivotTbody) pivotTbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding: 15px; color: #dc2626;">Unable to sync live data.</td></tr>';
         }
     }
 
-    // Wrap the fetch call with animation classes for the manual refresh button
     async function manualRefresh(btnElement) {
-        btnElement.classList.add('is-refreshing');
+        if (btnElement) btnElement.classList.add('is-refreshing');
         await fetchAndPopulateDashboards();
-        // Add a slight artificial delay so it doesn't just flicker instantly if fetched from cache, providing better UX
         setTimeout(() => {
-            btnElement.classList.remove('is-refreshing');
+            if (btnElement) btnElement.classList.remove('is-refreshing');
         }, 500);
     }
 
-    // UI Tab & Form Logic
-    let submittedFormType = '';
-
+    // Tab Switching
     function switchTab(tabId, btnElement) {
         document.querySelectorAll('.form-section').forEach(el => el.classList.remove('active'));
-        document.getElementById('success-state').style.display = 'none';
+        const successState = document.getElementById('success-state');
+        if (successState) successState.style.display = 'none';
         document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
         
-        document.getElementById('tab-' + tabId).classList.add('active');
-        btnElement.classList.add('active');
+        const targetTab = document.getElementById('tab-' + tabId);
+        if (targetTab) targetTab.classList.add('active');
+        if (btnElement) btnElement.classList.add('active');
         
-        document.getElementById('headerTitle').textContent = headerContent[tabId].title;
-        document.getElementById('headerDesc').textContent = headerContent[tabId].desc;
+        const hTitle = document.getElementById('headerTitle');
+        const hDesc = document.getElementById('headerDesc');
+        if (hTitle && headerContent[tabId]) hTitle.textContent = headerContent[tabId].title;
+        if (hDesc && headerContent[tabId]) hDesc.textContent = headerContent[tabId].desc;
     }
 
     function clearError(inputElement) {
@@ -607,71 +629,172 @@
         if (errorText) errorText.style.display = 'none';
     }
 
-    function handleRealSubmit(event, type) {
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    function showSuccess(title, htmlDesc) {
+        document.querySelectorAll('.form-section').forEach(el => el.classList.remove('active'));
+        const sTitle = document.getElementById('success-title');
+        const sDesc = document.getElementById('success-desc');
+        const sState = document.getElementById('success-state');
+        if (sTitle) sTitle.textContent = title;
+        if (sDesc) sDesc.innerHTML = htmlDesc;
+        if (sState) sState.style.display = 'flex';
+    }
+
+    function resetForms() {
+        const sState = document.getElementById('success-state');
+        if (sState) sState.style.display = 'none';
+        const activeTabBtn = document.querySelector('.tab-btn.active');
+        if (activeTabBtn && activeTabBtn.textContent.includes('Become')) {
+            document.getElementById('tab-join')?.classList.add('active');
+        } else if (activeTabBtn && activeTabBtn.textContent.includes('Report')) {
+            document.getElementById('tab-feedback')?.classList.add('active');
+        } else {
+            document.getElementById('tab-optout')?.classList.add('active');
+        }
+    }
+
+    // Unified Supabase Form Handler
+    async function handleSupabaseSubmit(event, type) {
+        if (event) event.preventDefault();
+        const client = getSbClient();
+        if (!client) {
+            alert("Database service is connecting. Please refresh and try again.");
+            return false;
+        }
+
         const form = event.target;
         const emailInput = form.querySelector('input[type="email"]');
-        
         if (emailInput) {
             const emailValue = emailInput.value.trim().toLowerCase();
             if (!emailValue.endsWith('@gmail.com')) {
-                event.preventDefault(); 
                 emailInput.classList.add('is-invalid');
                 const errorText = form.querySelector('.error-text');
                 if (errorText) errorText.style.display = 'block';
-                emailInput.focus(); 
+                emailInput.focus();
                 return false;
             }
         }
 
-        submittedFormType = type;
         const btn = document.getElementById('btn-' + type);
-        btn.classList.add('is-loading'); 
-    }
+        if (btn) btn.classList.add('is-loading');
 
-    function handleIframeLoad() {
-        if (submittedFormType !== '') {
-            const btn = document.getElementById('btn-' + submittedFormType);
-            if (btn) btn.classList.remove('is-loading');
-            
-            document.querySelectorAll('.form-section').forEach(el => el.classList.remove('active'));
-            
-            const sTitle = document.getElementById('success-title');
-            const sDesc = document.getElementById('success-desc');
-            
-            if (submittedFormType === 'join') {
-                sTitle.textContent = "Application Received!";
-                sDesc.textContent = "Thank you! If approved, we will whitelist your email and send you the installation instructions.";
-            } else if (submittedFormType === 'feedback') {
-                sTitle.textContent = "Feedback Submitted";
-                sDesc.textContent = "Thank you for helping us improve. Our development team will review your report.";
-            } else if (submittedFormType === 'optout') {
-                sTitle.textContent = "Opt-Out Request Received";
-                sDesc.textContent = "Thank you for participating in the CivilMate Beta. Your request to revoke access has been logged in our system.";
+        try {
+            if (type === 'join') {
+                const fullNameInput = form.querySelector('input[type="text"]');
+                const roleSelect = form.querySelector('select');
+                const fullName = fullNameInput ? fullNameInput.value.trim() : 'Estimator';
+                const email = emailInput.value.trim().toLowerCase();
+                const role = roleSelect ? roleSelect.value : 'Engineer';
+
+                // Insert into user_profiles
+                const { error: profileErr } = await client.from('user_profiles').upsert([
+                    {
+                        email: email,
+                        full_name: fullName,
+                        status: 'waitlisted',
+                        role: role
+                    }
+                ], { onConflict: 'email' });
+
+                if (profileErr) {
+                    console.warn("Profile table note:", profileErr.message);
+                }
+
+                // Also log to beta_feedback as application entry
+                await client.from('beta_feedback').insert([
+                    {
+                        user_email: email,
+                        feedback_type: 'Beta Application',
+                        description: `New beta application from ${fullName} (Profession: ${role})`,
+                        status: 'new'
+                    }
+                ]);
+
+                showSuccess(
+                    "Application Received!",
+                    `Thank you, <strong>${escapeHtml(fullName)}</strong>! Your beta application has been recorded. You can now visit the <a href="portal.html" style="color:var(--google-blue); font-weight:600; text-decoration:underline;">Tester Portal</a> to sign in with your Google account and track your whitelist status in real time.`
+                );
+                form.reset();
+
+            } else if (type === 'feedback') {
+                const email = emailInput.value.trim().toLowerCase();
+                const typeSelect = form.querySelector('select');
+                const textareas = form.querySelectorAll('textarea');
+                const feedbackType = typeSelect ? typeSelect.value : 'Others';
+                const desc = textareas[0] ? textareas[0].value.trim() : '';
+                const steps = textareas[1] ? textareas[1].value.trim() : '';
+
+                const { error } = await client.from('beta_feedback').insert([
+                    {
+                        user_email: email,
+                        feedback_type: feedbackType,
+                        description: desc,
+                        steps_to_reproduce: steps,
+                        status: 'new'
+                    }
+                ]);
+
+                if (error) throw error;
+
+                showSuccess(
+                    "Feedback Submitted",
+                    "Thank you for helping us improve CivilMate. Our development team has received your report and will review it promptly."
+                );
+                form.reset();
+
+            } else if (type === 'optout') {
+                const email = emailInput.value.trim().toLowerCase();
+
+                // 1. Call secure opt out function
+                let optOutHandled = false;
+                try {
+                    const { error: rpcErr } = await client.rpc('request_opt_out', { p_email: email });
+                    if (!rpcErr) optOutHandled = true;
+                } catch (e) {
+                    console.warn("Opt out RPC note:", e);
+                }
+
+                // 2. Also log revocation request in beta_feedback so admin sees it
+                await client.from('beta_feedback').insert([
+                    {
+                        user_email: email,
+                        feedback_type: 'Opt-Out Request',
+                        description: `User requested access revocation and whitelist removal for ${email}`,
+                        status: 'new'
+                    }
+                ]);
+
+                showSuccess(
+                    "Opt-Out Request Received",
+                    `Your request to revoke beta access for <strong>${escapeHtml(email)}</strong> has been registered. You have been removed from the active whitelist.`
+                );
+                form.reset();
             }
-            
-            document.getElementById('success-state').style.display = 'flex';
-            document.getElementById('form-' + submittedFormType).reset();
-            
-            submittedFormType = ''; 
-            
-            fetchAndPopulateDashboards();
-        }
-    }
 
-    function resetForms() {
-        document.getElementById('success-state').style.display = 'none';
-        const activeTabBtn = document.querySelector('.tab-btn.active');
-        if(activeTabBtn.textContent.includes('Become')) {
-            document.getElementById('tab-join').classList.add('active');
-        } else if(activeTabBtn.textContent.includes('Report')) {
-            document.getElementById('tab-feedback').classList.add('active');
-        } else {
-            document.getElementById('tab-optout').classList.add('active');
+            // Sync updated counter numbers immediately
+            fetchAndPopulateDashboards();
+
+        } catch (err) {
+            console.error("Submission failed:", err);
+            alert("Could not complete submission: " + (err.message || "Please check your internet connection."));
+        } finally {
+            if (btn) btn.classList.remove('is-loading');
         }
+
+        return false;
     }
 
     window.addEventListener('DOMContentLoaded', fetchAndPopulateDashboards);
-
 </script>
+
 </body>
 </html>

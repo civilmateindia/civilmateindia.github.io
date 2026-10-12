@@ -331,6 +331,16 @@
             color: var(--portal-success);
             border: 1px solid #ceead6;
         }
+        .status-pill.opted_out {
+            background: #f1f3f4;
+            color: #5f6368;
+            border: 1px solid #dadce0;
+        }
+        .status-pill.blacklisted {
+            background: var(--portal-danger-bg);
+            color: var(--portal-danger);
+            border: 1px solid #f5c2c7;
+        }
 
         .dash-topbar-actions {
             display: flex;
@@ -361,6 +371,136 @@
         }
         .btn-dash-action.btn-signout:hover {
             background: var(--portal-danger-bg);
+        }
+        .btn-dash-action.btn-admin {
+            background: #e8f0fe;
+            color: #1a73e8;
+            border-color: #c2e7ff;
+            font-weight: 600;
+        }
+        .btn-dash-action.btn-admin:hover {
+            background: #d2e3fc;
+        }
+
+        /* Rotating animation */
+        @keyframes spinAnimation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .rotating {
+            animation: spinAnimation 0.9s linear infinite;
+            display: inline-block;
+        }
+
+        /* Floating Toast Component */
+        .portal-toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 12px 20px;
+            background: #323232;
+            color: #fff;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+            z-index: 9999;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            max-width: 420px;
+        }
+        .portal-toast.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        .portal-toast.success { background: #137333; }
+        .portal-toast.warning { background: #e37400; }
+        .portal-toast.error { background: #c5221f; }
+        .portal-toast.info { background: #1a73e8; }
+
+        /* Admin Console Components */
+        .admin-card {
+            background: #fff;
+            border: 1px solid var(--portal-card-border);
+            border-radius: 12px;
+            padding: 24px 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        }
+        .admin-badge {
+            background: #fef7e0;
+            color: #b06000;
+            border: 1px solid #fce8b2;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        .admin-table th {
+            background: var(--portal-bg-gray);
+            padding: 10px 14px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--portal-card-border);
+        }
+        .admin-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #f1f3f4;
+            vertical-align: middle;
+        }
+        .admin-table tr:hover {
+            background: #f8f9fa;
+        }
+        .btn-action-small {
+            padding: 5px 9px;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 4px;
+            border: 1px solid var(--portal-card-border);
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: 4px;
+        }
+        .btn-action-small.approve { background: #e6f4ea; color: #137333; border-color: #ceead6; }
+        .btn-action-small.approve:hover { background: #ceead6; }
+        .btn-action-small.waitlist { background: #fef7e0; color: #b06000; border-color: #fce8b2; }
+        .btn-action-small.waitlist:hover { background: #fce8b2; }
+        .btn-action-small.blacklist { background: #fce8e6; color: #c5221f; border-color: #f5c2c7; }
+        .btn-action-small.blacklist:hover { background: #f5c2c7; }
+        .btn-action-small.warn { background: #e8f0fe; color: #1a73e8; border-color: #c2e7ff; text-decoration: none; }
+        .btn-action-small.warn:hover { background: #c2e7ff; }
+
+        .whitelist-textarea {
+            width: 100%;
+            height: 90px;
+            padding: 10px;
+            border: 1px solid #dadce0;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 12px;
+            resize: vertical;
+            background: #fff;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
         }
 
         /* ================= WAITLIST STATE VIEW ================= */
@@ -835,9 +975,17 @@
                     </div>
                 </div>
                 <div class="dash-topbar-actions">
-                    <button class="btn-dash-action" onclick="refreshUserProfile()">
+                    <button class="btn-dash-action btn-admin admin-only-btn" onclick="openAdminSuite()" style="display:none;">
+                        <span class="material-icons" style="font-size: 16px;">admin_panel_settings</span>
+                        Admin Suite
+                    </button>
+                    <button class="btn-dash-action" id="btnCheckApprovalTop" onclick="checkApprovalStatus(this)">
                         <span class="material-icons" style="font-size: 16px;">refresh</span>
                         Check Approval Status
+                    </button>
+                    <button class="btn-dash-action" onclick="handleUserOptOut()" style="color:#5f6368;" title="Surrender beta seat">
+                        <span class="material-icons" style="font-size: 16px;">person_remove</span>
+                        Opt-Out
                     </button>
                     <button class="btn-dash-action btn-signout" onclick="signOut()">
                         <span class="material-icons" style="font-size: 16px;">logout</span>
@@ -864,10 +1012,14 @@
                     </div>
                 </div>
 
-                <div style="margin-top: 10px;">
-                    <button class="btn btn-primary" onclick="refreshUserProfile()" style="padding: 10px 24px; font-size: 14px;">
+                <div style="margin-top: 10px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                    <button class="btn btn-primary" id="btnCheckApprovalMain" onclick="checkApprovalStatus(this)" style="padding: 10px 24px; font-size: 14px;">
                         <span class="material-icons" style="font-size: 18px; margin-right: 6px;">update</span>
                         Check if I've been approved
+                    </button>
+                    <button class="btn btn-secondary" onclick="handleUserOptOut()" style="padding: 10px 18px; font-size: 13px;">
+                        <span class="material-icons" style="font-size: 16px; margin-right: 4px;">person_remove</span>
+                        Opt-Out of Beta
                     </button>
                 </div>
 
@@ -908,9 +1060,17 @@
                     </div>
                 </div>
                 <div class="dash-topbar-actions">
+                    <button class="btn-dash-action btn-admin admin-only-btn" onclick="openAdminSuite()" style="display:none;">
+                        <span class="material-icons" style="font-size: 16px;">admin_panel_settings</span>
+                        Admin Suite
+                    </button>
                     <button class="btn-dash-action" onclick="fetchStagedExports()">
                         <span class="material-icons" style="font-size: 16px;">sync</span>
                         Refresh Activity
+                    </button>
+                    <button class="btn-dash-action" onclick="handleUserOptOut()" style="color:#5f6368;" title="Opt out of Beta">
+                        <span class="material-icons" style="font-size: 16px;">person_remove</span>
+                        Opt-Out
                     </button>
                     <button class="btn-dash-action btn-signout" onclick="signOut()">
                         <span class="material-icons" style="font-size: 16px;">logout</span>
@@ -1019,6 +1179,180 @@
                 </div>
             </div>
 
+        </div>
+
+        <!-- ================= 4. ADMIN DASHBOARD VIEW ================= -->
+        <div id="viewAdmin" class="state-view">
+            <div class="dash-topbar" style="background: #f8fafd; border-color: #c2e7ff;">
+                <div class="dash-user-info">
+                    <div class="avatar-circle" style="background:#1a73e8; color:#fff;">
+                        <span class="material-icons">security</span>
+                    </div>
+                    <div class="dash-user-text">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <h3 style="margin: 0;">CivilMate Administrator Suite</h3>
+                            <span class="admin-badge">Admin Mode</span>
+                        </div>
+                        <p>Whitelisting, Google Cloud Console Exporter &bull; <code>civilmateindia@gmail.com</code></p>
+                    </div>
+                </div>
+                <div class="dash-topbar-actions">
+                    <button class="btn-dash-action" onclick="loadAdminData()">
+                        <span class="material-icons" style="font-size: 16px;">refresh</span>
+                        Refresh Admin Data
+                    </button>
+                    <button class="btn-dash-action" onclick="renderDashboardForProfile(currentProfile)">
+                        <span class="material-icons" style="font-size: 16px;">arrow_back</span>
+                        Back to User View
+                    </button>
+                    <button class="btn-dash-action btn-signout" onclick="signOut()">
+                        <span class="material-icons" style="font-size: 16px;">logout</span>
+                        Sign Out
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Stats Metric Cards -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">
+                <div class="stat-card" style="background:#fff; border:1px solid var(--portal-card-border); border-radius:10px; padding:20px; text-align:center;">
+                    <div id="admStatTotal" style="font-size: 28px; font-weight: 700; color: var(--portal-primary);">-</div>
+                    <div style="font-size: 12px; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; margin-top: 4px;">Total Registered</div>
+                </div>
+                <div class="stat-card" style="background:#fff; border:1px solid var(--portal-card-border); border-radius:10px; padding:20px; text-align:center;">
+                    <div id="admStatApproved" style="font-size: 28px; font-weight: 700; color: var(--portal-success);">-</div>
+                    <div style="font-size: 12px; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; margin-top: 4px;">Whitelisted (Approved)</div>
+                </div>
+                <div class="stat-card" style="background:#fff; border:1px solid var(--portal-card-border); border-radius:10px; padding:20px; text-align:center;">
+                    <div id="admStatWaitlisted" style="font-size: 28px; font-weight: 700; color: var(--portal-warning);">-</div>
+                    <div style="font-size: 12px; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; margin-top: 4px;">Pending Waitlist</div>
+                </div>
+                <div class="stat-card" style="background:#fff; border:1px solid var(--portal-card-border); border-radius:10px; padding:20px; text-align:center;">
+                    <div id="admStatRevoked" style="font-size: 28px; font-weight: 700; color: var(--portal-danger);">-</div>
+                    <div style="font-size: 12px; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; margin-top: 4px;">Opted-Out / Blacklisted</div>
+                </div>
+            </div>
+
+            <!-- Google Cloud Console Whitelist Exporter Card -->
+            <div class="admin-card">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px;">
+                    <div>
+                        <h3 style="font-size: 18px; margin: 0 0 6px 0; display: flex; align-items: center; gap: 8px;">
+                            <span class="material-icons" style="color: var(--portal-primary);">content_copy</span>
+                            Google Cloud Console Whitelist Exporter
+                        </h3>
+                        <p style="font-size: 13px; color: var(--text-secondary); margin: 0;">
+                            Format and copy approved tester emails to paste into Google Cloud Console text boxes.
+                        </p>
+                    </div>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <label style="font-size: 12px; color: var(--text-secondary);">Format:</label>
+                        <select id="exportFormatSelect" onchange="updateWhitelistExportBox()" style="padding: 6px 10px; border-radius: 4px; border: 1px solid var(--portal-card-border); font-size: 12px;">
+                            <option value="comma">Comma-Separated (email1, email2)</option>
+                            <option value="newline">Line-by-Line (email1 \n email2)</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="copyWhitelistEmails()" style="padding: 7px 16px; font-size: 13px;">
+                            <span class="material-icons" style="font-size: 16px; margin-right: 4px;">content_copy</span>
+                            Copy Approved Emails
+                        </button>
+                    </div>
+                </div>
+
+                <textarea id="whitelistExportTextarea" class="whitelist-textarea" readonly placeholder="No approved emails found yet..."></textarea>
+                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--text-secondary); flex-wrap: wrap; gap: 6px;">
+                    <span id="whitelistCountText" style="font-weight: 600; color: var(--portal-success);">0 emails ready to copy</span>
+                    <span>Paste into: <strong>Google Cloud Console &gt; APIs &amp; Services &gt; OAuth consent screen &gt; Test users</strong></span>
+                </div>
+            </div>
+
+            <!-- User Management & Whitelisting Table Card -->
+            <div class="admin-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+                    <div>
+                        <h3 style="font-size: 18px; margin: 0 0 4px 0;">Beta Applicants &amp; Tester Directory</h3>
+                        <div style="font-size: 13px; color: var(--text-secondary);">Whitelist, revoke, or mark users inactive.</div>
+                    </div>
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <select id="adminStatusFilter" onchange="filterAdminUsersTable()" style="padding: 8px 12px; border-radius: 6px; border: 1px solid var(--portal-card-border); font-size: 13px;">
+                            <option value="all">All Users</option>
+                            <option value="waitlisted">Waitlisted</option>
+                            <option value="approved">Approved (Whitelisted)</option>
+                            <option value="opted_out">Opted-Out</option>
+                            <option value="blacklisted">Blacklisted</option>
+                        </select>
+                        <input type="text" id="adminSearchInput" oninput="filterAdminUsersTable()" placeholder="Filter by name or email..." class="activity-search" style="margin: 0; width: 220px;">
+                    </div>
+                </div>
+
+                <div class="exports-table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Applicant</th>
+                                <th>Registered Date</th>
+                                <th>Activity Status</th>
+                                <th>Status</th>
+                                <th style="text-align: right;">Whitelisting Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminUsersTableBody">
+                            <tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--text-secondary);">Loading registered users...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Feedback Submissions Card -->
+            <div class="admin-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <div>
+                        <h3 style="font-size: 18px; margin: 0 0 4px 0;">Beta Tester Feedback &amp; Bug Reports</h3>
+                        <div style="font-size: 13px; color: var(--text-secondary);">Direct issue submissions from website and add-on users.</div>
+                    </div>
+                    <button class="btn-action-small" onclick="fetchAdminFeedback()">
+                        <span class="material-icons" style="font-size: 14px;">refresh</span> Refresh Feedback
+                    </button>
+                </div>
+
+                <div class="exports-table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>User Email</th>
+                                <th>Feedback Type</th>
+                                <th>Description / Details</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminFeedbackTableBody">
+                            <tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--text-secondary);">Loading feedback submissions...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= 5. OPTED OUT VIEW ================= -->
+        <div id="viewOptedOut" class="state-view">
+            <div class="waitlist-card">
+                <div class="waitlist-icon-wrapper" style="background: #f1f3f4; color: #5f6368;">
+                    <span class="material-icons">person_off</span>
+                </div>
+                <h2>You Have Opted Out of CivilMate Beta</h2>
+                <p class="lead">
+                    Your Google account has been removed from the whitelist pool. If you decide to participate in beta testing in the future, you can rejoin at any time.
+                </p>
+                <div style="display: flex; gap: 12px; justify-content: center; margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="rejoinBetaProgram()">
+                        <span class="material-icons" style="font-size: 18px; margin-right: 6px;">login</span>
+                        Re-Join Waitlist
+                    </button>
+                    <button class="btn btn-secondary" onclick="signOut()">
+                        <span class="material-icons" style="font-size: 18px; margin-right: 6px;">logout</span>
+                        Sign Out
+                    </button>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -1277,19 +1611,334 @@
             }
         }
 
+        let toastTimeout = null;
+        function showToast(msg, type = 'info') {
+            const toast = document.getElementById('portalToast');
+            const msgEl = document.getElementById('toastMsg');
+            const iconEl = document.getElementById('toastIcon');
+            if (!toast || !msgEl) return;
+
+            msgEl.textContent = msg;
+            toast.className = `portal-toast ${type} active`;
+            if (type === 'success') iconEl.textContent = 'check_circle';
+            else if (type === 'error') iconEl.textContent = 'error';
+            else if (type === 'warning') iconEl.textContent = 'warning';
+            else iconEl.textContent = 'info';
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('active');
+            }, 4000);
+        }
+
+        async function checkApprovalStatus(buttonEl) {
+            if (!currentUser) {
+                showToast("Please sign in to check your status.", "warning");
+                return;
+            }
+
+            let originalHtml = "";
+            if (buttonEl) {
+                originalHtml = buttonEl.innerHTML;
+                buttonEl.disabled = true;
+                buttonEl.innerHTML = '<span class="material-icons rotating" style="font-size: 16px; margin-right: 4px;">autorenew</span> Checking live status...';
+            }
+
+            try {
+                const client = getSbClient();
+                if (!client) throw new Error("Supabase client not ready");
+
+                const { data, error } = await client
+                    .from('user_profiles')
+                    .select('*')
+                    .eq('id', currentUser.id)
+                    .maybeSingle();
+
+                if (error) throw error;
+                if (data) currentProfile = data;
+
+                const status = (currentProfile && currentProfile.status) ? currentProfile.status : 'waitlisted';
+
+                if (status === 'approved') {
+                    showToast("🎉 Congratulations! Your account has been approved. Welcome to CivilMate Beta!", "success");
+                    renderDashboardForProfile(currentProfile);
+                } else if (status === 'opted_out') {
+                    showToast("Your account is currently marked as opted-out.", "warning");
+                    renderDashboardForProfile(currentProfile);
+                } else if (status === 'blacklisted') {
+                    showToast("Your beta access has been suspended.", "error");
+                    renderDashboardForProfile(currentProfile);
+                } else {
+                    showToast("⏳ You are on the waitlist. Seats are whitelisted sequentially in batches. Check back soon!", "info");
+                    renderDashboardForProfile(currentProfile);
+                }
+            } catch (err) {
+                console.error("Status check error:", err);
+                showToast("Unable to reach Supabase. Check your connection.", "error");
+            } finally {
+                if (buttonEl) {
+                    buttonEl.disabled = false;
+                    buttonEl.innerHTML = originalHtml;
+                }
+            }
+        }
+
         async function refreshUserProfile() {
+            await checkApprovalStatus(null);
+        }
+
+        // ================= USER SELF-SERVICE OPT-OUT =================
+        async function handleUserOptOut() {
             if (!currentUser) return;
-            const profile = await getOrCreateUserProfile(currentUser);
-            currentProfile = profile;
-            renderDashboardForProfile(profile);
+            const confirmOpt = confirm("Are you sure you want to opt out of the CivilMate Beta program? This will surrender your whitelisted position.");
+            if (!confirmOpt) return;
+
+            try {
+                const client = getSbClient();
+                if (client) {
+                    await client.from('user_profiles').update({ status: 'opted_out' }).eq('id', currentUser.id);
+                }
+                if (currentProfile) currentProfile.status = 'opted_out';
+                showToast("You have opted out of the Beta program.", "warning");
+                showView('viewOptedOut');
+            } catch (e) {
+                console.error("Opt-out error:", e);
+                showToast("Could not process opt-out. Please try again.", "error");
+            }
+        }
+
+        async function rejoinBetaProgram() {
+            if (!currentUser) return;
+            try {
+                const client = getSbClient();
+                if (client) {
+                    await client.from('user_profiles').update({ status: 'waitlisted' }).eq('id', currentUser.id);
+                }
+                if (currentProfile) currentProfile.status = 'waitlisted';
+                showToast("You have re-applied and joined the waitlist!", "success");
+                renderDashboardForProfile(currentProfile);
+            } catch (e) {
+                console.error("Rejoin error:", e);
+                showToast("Could not rejoin waitlist. Please try again.", "error");
+            }
+        }
+
+        // ================= ADMIN MANAGEMENT SUITE =================
+        const ADMIN_EMAILS = ['civilmateindia@gmail.com'];
+
+        function isAdminUser(user) {
+            if (!user || !user.email) return false;
+            return ADMIN_EMAILS.includes(user.email.toLowerCase()) || (currentProfile && currentProfile.role === 'admin');
+        }
+
+        function openAdminSuite() {
+            showView('viewAdmin');
+            loadAdminData();
+        }
+
+        let allAdminUsers = [];
+        let allAdminFeedback = [];
+
+        async function loadAdminData() {
+            const client = getSbClient();
+            if (!client) return;
+
+            try {
+                const { data: users, error: userErr } = await client
+                    .from('user_profiles')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (userErr) throw userErr;
+                allAdminUsers = users || [];
+
+                const total = allAdminUsers.length;
+                const approved = allAdminUsers.filter(u => u.status === 'approved').length;
+                const waitlisted = allAdminUsers.filter(u => u.status === 'waitlisted').length;
+                const revoked = allAdminUsers.filter(u => u.status === 'opted_out' || u.status === 'blacklisted').length;
+
+                document.getElementById('admStatTotal').textContent = total;
+                document.getElementById('admStatApproved').textContent = approved;
+                document.getElementById('admStatWaitlisted').textContent = waitlisted;
+                document.getElementById('admStatRevoked').textContent = revoked;
+
+                updateWhitelistExportBox();
+                renderAdminUsersTable(allAdminUsers);
+                fetchAdminFeedback();
+            } catch (err) {
+                console.error("Admin load error:", err);
+                showToast("Admin data query error: " + err.message, "error");
+            }
+        }
+
+        function updateWhitelistExportBox() {
+            const format = document.getElementById('exportFormatSelect')?.value || 'comma';
+            const approvedEmails = allAdminUsers
+                .filter(u => u.status === 'approved' && u.email)
+                .map(u => u.email.trim().toLowerCase());
+
+            const textarea = document.getElementById('whitelistExportTextarea');
+            const countText = document.getElementById('whitelistCountText');
+
+            if (textarea) {
+                if (approvedEmails.length === 0) {
+                    textarea.value = "";
+                    if (countText) countText.textContent = "0 approved emails";
+                } else {
+                    textarea.value = (format === 'comma') ? approvedEmails.join(', ') : approvedEmails.join('\n');
+                    if (countText) countText.textContent = `${approvedEmails.length} approved emails ready to copy`;
+                }
+            }
+        }
+
+        function copyWhitelistEmails() {
+            const textarea = document.getElementById('whitelistExportTextarea');
+            if (!textarea || !textarea.value.trim()) {
+                showToast("No approved emails to copy.", "warning");
+                return;
+            }
+            navigator.clipboard.writeText(textarea.value).then(() => {
+                showToast("Copied approved emails to clipboard!", "success");
+            }).catch(() => {
+                textarea.select();
+                document.execCommand('copy');
+                showToast("Copied to clipboard!", "success");
+            });
+        }
+
+        async function setAdminUserStatus(userId, newStatus) {
+            const client = getSbClient();
+            if (!client) return;
+
+            try {
+                const { error } = await client
+                    .from('user_profiles')
+                    .update({ status: newStatus })
+                    .eq('id', userId);
+
+                if (error) throw error;
+                showToast(`User status set to ${newStatus.toUpperCase()}`, "success");
+                await loadAdminData();
+            } catch (err) {
+                console.error("Status update error:", err);
+                showToast("Failed to update status: " + err.message, "error");
+            }
+        }
+
+        function renderAdminUsersTable(users) {
+            const tbody = document.getElementById('adminUsersTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            if (users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-secondary);">No registered applicants found.</td></tr>';
+                return;
+            }
+
+            users.forEach(u => {
+                const tr = document.createElement('tr');
+                const st = u.status || 'waitlisted';
+                const dateStr = u.created_at ? new Date(u.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '-';
+                
+                const mailSubject = encodeURIComponent("Action Required: CivilMate Beta Tester Activity Check");
+                const mailBody = encodeURIComponent(
+                    `Hi ${u.full_name || 'Estimator'},\n\nWe noticed you haven't used the CivilMate Add-On or Chrome Extension recently. Because beta seats are strictly limited, please open CivilMate in your Google Sheets and perform an estimate within the next 5 days, or your seat will be re-assigned to the next waiting engineer.\n\nThank you,\nCivilMate Engineering Team`
+                );
+                const mailtoLink = `mailto:${encodeURIComponent(u.email || '')}?subject=${mailSubject}&body=${mailBody}`;
+
+                tr.innerHTML = `
+                    <td>
+                        <div style="font-weight: 600; color: var(--text-primary);">${escapeHtml(u.full_name || 'Anonymous')}</div>
+                        <div style="font-size: 12px; color: var(--text-secondary);">${escapeHtml(u.email || '-')}</div>
+                    </td>
+                    <td style="color: var(--text-secondary);">${dateStr}</td>
+                    <td>
+                        <span style="font-size: 12px; color: var(--text-secondary);">${u.last_active_at ? 'Active ' + new Date(u.last_active_at).toLocaleDateString('en-IN') : 'No exports yet'}</span>
+                    </td>
+                    <td>
+                        <span class="status-pill ${st}">${st}</span>
+                    </td>
+                    <td style="text-align: right; white-space: nowrap;">
+                        ${st !== 'approved' ? `<button class="btn-action-small approve" onclick="setAdminUserStatus('${u.id}', 'approved')"><span class="material-icons" style="font-size:12px;">check</span> Approve</button>` : ''}
+                        ${st !== 'waitlisted' ? `<button class="btn-action-small waitlist" onclick="setAdminUserStatus('${u.id}', 'waitlisted')"><span class="material-icons" style="font-size:12px;">hourglass_top</span> Waitlist</button>` : ''}
+                        ${st !== 'blacklisted' ? `<button class="btn-action-small blacklist" onclick="setAdminUserStatus('${u.id}', 'blacklisted')"><span class="material-icons" style="font-size:12px;">block</span> Revoke</button>` : ''}
+                        <a href="${mailtoLink}" class="btn-action-small warn" title="Email inactivity warning">
+                            <span class="material-icons" style="font-size:12px;">email</span> Warn
+                        </a>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterAdminUsersTable() {
+            const statusFilter = document.getElementById('adminStatusFilter')?.value || 'all';
+            const query = (document.getElementById('adminSearchInput')?.value || '').toLowerCase();
+
+            const filtered = allAdminUsers.filter(u => {
+                const matchesStatus = (statusFilter === 'all') || (u.status === statusFilter);
+                const matchesSearch = (u.email || '').toLowerCase().includes(query) || (u.full_name || '').toLowerCase().includes(query);
+                return matchesStatus && matchesSearch;
+            });
+
+            renderAdminUsersTable(filtered);
+        }
+
+        async function fetchAdminFeedback() {
+            const tbody = document.getElementById('adminFeedbackTableBody');
+            if (!tbody) return;
+            const client = getSbClient();
+            if (!client) return;
+
+            try {
+                const { data, error } = await client
+                    .from('beta_feedback')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+                allAdminFeedback = data || [];
+
+                if (allAdminFeedback.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-secondary);">No feedback submissions recorded yet.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = '';
+                allAdminFeedback.forEach(f => {
+                    const tr = document.createElement('tr');
+                    const dateStr = f.created_at ? new Date(f.created_at).toLocaleDateString('en-IN') : '-';
+                    tr.innerHTML = `
+                        <td><strong>${escapeHtml(f.user_email || '-')}</strong></td>
+                        <td><span class="export-type-tag boq">${escapeHtml(f.feedback_type || 'General')}</span></td>
+                        <td>
+                            <div style="font-weight: 500;">${escapeHtml(f.description || '-')}</div>
+                            ${f.steps_to_reproduce ? `<div style="font-size: 11px; color: var(--text-secondary); margin-top: 3px;">Steps: ${escapeHtml(f.steps_to_reproduce)}</div>` : ''}
+                        </td>
+                        <td style="color: var(--text-secondary);">${dateStr}</td>
+                        <td>
+                            <span class="status-pill ${f.status === 'resolved' ? 'approved' : 'waitlisted'}">${escapeHtml(f.status || 'new')}</span>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) {
+                console.warn("Feedback query error:", err);
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-secondary);">Table beta_feedback pending. Run supabase_setup.sql in Supabase.</td></tr>';
+            }
         }
 
         // ================= DASHBOARD RENDERING & GATING =================
         function renderDashboardForProfile(profile) {
             const initial = (profile.full_name || profile.email || 'U').charAt(0).toUpperCase();
 
+            // Check if current user is admin
+            const isUserAdmin = isAdminUser(currentUser);
+            document.querySelectorAll('.admin-only-btn').forEach(btn => {
+                btn.style.display = isUserAdmin ? 'inline-flex' : 'none';
+            });
+
             if (profile.status === 'approved') {
-                // Populate Approved UI
                 document.getElementById('apUserInitial').textContent = initial;
                 document.getElementById('apUserName').textContent = profile.full_name || 'CivilMate Estimator';
                 document.getElementById('apUserEmail').textContent = profile.email;
@@ -1297,8 +1946,9 @@
 
                 showView('viewApproved');
                 fetchStagedExports();
+            } else if (profile.status === 'opted_out') {
+                showView('viewOptedOut');
             } else {
-                // Default / Waitlisted State
                 document.getElementById('wlUserInitial').textContent = initial;
                 document.getElementById('wlUserName').textContent = profile.full_name || 'Beta Applicant';
                 document.getElementById('wlUserEmail').textContent = profile.email;
@@ -1486,5 +2136,12 @@
             }
         });
     </script>
+
+    <!-- Floating Notification Toast -->
+    <div id="portalToast" class="portal-toast">
+        <span class="material-icons" id="toastIcon">info</span>
+        <span id="toastMsg">Notification message</span>
+    </div>
+
 </body>
 </html>
