@@ -922,18 +922,40 @@
             flex-direction: column !important;
             border-radius: 14px !important;
             box-shadow: 0 16px 48px rgba(0,0,0,0.3) !important;
+            overflow: hidden !important;
+            box-sizing: border-box !important;
+        }
+        #payloadTableContainer {
+            flex: 1 1 auto !important;
+            min-height: 0 !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 14px !important;
+            background: #f1f3f4 !important;
+            box-sizing: border-box !important;
         }
         .est-item-card {
-            background: #ffffff;
-            border: 1px solid #dadce0;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            transition: border-color 0.15s ease, box-shadow 0.15s ease;
-            overflow: hidden;
+            background: #ffffff !important;
+            border: 1px solid #dadce0 !important;
+            border-radius: 8px !important;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+            overflow: hidden !important;
+            flex-shrink: 0 !important;
+            flex-grow: 0 !important;
+            min-height: -webkit-fit-content !important;
+            min-height: -moz-fit-content !important;
+            min-height: fit-content !important;
+            height: auto !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            display: block !important;
         }
         .est-item-card:hover {
-            border-color: #b0c4de;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.09);
+            border-color: #b0c4de !important;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.09) !important;
         }
         .mono-num {
             font-family: 'Roboto Mono', monospace;
@@ -1888,7 +1910,7 @@
     <div id="payloadViewerModal" class="portal-modal-backdrop">
         <div class="portal-modal-content payload-modal-dialog">
             <!-- Modal Top Bar -->
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; gap: 16px; flex-wrap: wrap;">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; gap: 16px; flex-wrap: wrap; flex-shrink: 0;">
                 <div style="flex: 1; min-width: 260px;">
                     <div style="display:flex; align-items:center; gap:8px; flex-wrap: wrap;">
                         <span class="material-icons" style="color:var(--portal-primary); font-size: 22px;">format_list_bulleted</span>
@@ -1908,7 +1930,7 @@
             </div>
 
             <!-- Toolbar inside modal -->
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 12px; flex-wrap: wrap;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 12px; flex-wrap: wrap; flex-shrink: 0;">
                 <div style="display: flex; align-items: center; gap: 8px; flex: 1; max-width: 420px; background: #f8f9fa; border: 1px solid var(--portal-card-border); border-radius: 6px; padding: 6px 12px;">
                     <span class="material-icons" style="color: #5f6368; font-size: 18px;">search</span>
                     <input type="text" id="payloadFilterInput" placeholder="Filter items by description, code, or HSR number..." style="border: none; background: transparent; outline: none; font-size: 12px; width: 100%; color: var(--text-primary);" oninput="filterPayloadModalItems()">
@@ -1924,14 +1946,14 @@
             </div>
 
             <!-- Items Container (Clean Full-Width Estimate Cards) -->
-            <div id="payloadTableContainer" style="flex: 1; overflow-y: auto; border: 1px solid var(--portal-card-border); border-radius: 8px; padding: 12px; background: #f1f3f4; display: flex; flex-direction: column; gap: 12px;">
+            <div id="payloadTableContainer" style="flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden; border: 1px solid var(--portal-card-border); border-radius: 8px; padding: 12px; background: #f1f3f4; display: flex; flex-direction: column; gap: 14px;">
                 <!-- Populated dynamically via renderPayloadTableView() -->
             </div>
 
             <textarea id="payloadModalTextarea" style="display:none;"></textarea>
 
             <!-- Modal Footer (Zero Copy Buttons, Just Summary & Close) -->
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; padding-top: 10px; border-top: 1px solid var(--portal-card-border); flex-wrap: wrap; gap: 12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; padding-top: 10px; border-top: 1px solid var(--portal-card-border); flex-wrap: wrap; gap: 12px; flex-shrink: 0;">
                 <div id="payloadModalSummaryText" style="font-size: 13px; color: var(--text-primary); font-weight: 500;"></div>
                 <button class="btn btn-primary" onclick="closePayloadModal()" style="padding: 8px 26px; font-size: 13px;">
                     Close
@@ -4080,7 +4102,7 @@
             const item = list.find(x => x.id === id);
             if (!item) return;
             const title = (item.work_name || item.name || 'Package') + ' (' + (item.doc_type || 'Data') + ')';
-            const subtitle = 'Status: ' + (item.status || 'Ready') + ' • Created: ' + formatKolkataTimestamp(item.created_at);
+            const subtitle = 'Status: ' + (item.status || 'Ready') + ' &bull; Created: ' + formatKolkataTimestamp(item.created_at);
             openPayloadModal(title, subtitle, item.details || {});
         }
 
@@ -4188,7 +4210,7 @@
                     const formattedAmt = Number(totalAmountSum.toFixed(2)).toLocaleString('en-IN', { maximumFractionDigits: 2 });
                     statsHtml += `
                         <span style="font-size:12px; font-weight:600; padding:4px 10px; border-radius:12px; background:#e6f4ea; color:#137333; border:1px solid #ceead6;">
-                            ₹ ${formattedAmt} Total
+                            &#8377; ${formattedAmt} Total
                         </span>
                     `;
                 }
@@ -4380,7 +4402,7 @@
                 }
 
                 cardsHtml += `
-                    <div class="est-item-card" id="est-card-${idx}">
+                    <div class="est-item-card" id="est-card-${idx}" style="flex-shrink: 0; min-height: fit-content; width: 100%; box-sizing: border-box; display: block; background: #ffffff;">
                         <!-- Top Strip: Item Header, Classification, Rates & Total Amount -->
                         <div style="padding: 12px 16px; background: #ffffff; display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; border-bottom: 1px solid #f1f3f4;">
                             <div style="flex: 1; min-width: 260px;">
@@ -4405,14 +4427,14 @@
                                 <div style="text-align: right;">
                                     <div style="font-size: 11px; color: #70757a; text-transform: uppercase; font-weight: 500;">Rate</div>
                                     <div style="font-size: 13px; font-weight: 600; color: #444746;">
-                                        ₹ <span class="mono-num">${escapeHtml(rate)}</span>
+                                        &#8377; <span class="mono-num">${escapeHtml(rate)}</span>
                                     </div>
                                 </div>
 
                                 <div style="text-align: right; background: #e6f4ea; border: 1px solid #ceead6; border-radius: 8px; padding: 5px 12px;">
                                     <div style="font-size: 10px; color: #137333; text-transform: uppercase; font-weight: 700; letter-spacing: 0.3px;">Amount</div>
                                     <div style="font-size: 15px; font-weight: 700; color: #137333;">
-                                        ₹ <span class="mono-num">${escapeHtml(amount)}</span>
+                                        &#8377; <span class="mono-num">${escapeHtml(amount)}</span>
                                     </div>
                                 </div>
                             </div>
