@@ -912,6 +912,33 @@
             overflow-y: auto;
         }
 
+        .payload-modal-dialog {
+            max-width: 1240px !important;
+            width: 96vw !important;
+            height: 92vh !important;
+            max-height: 92vh !important;
+            padding: 20px 24px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            border-radius: 14px !important;
+            box-shadow: 0 16px 48px rgba(0,0,0,0.3) !important;
+        }
+        .est-item-card {
+            background: #ffffff;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+            overflow: hidden;
+        }
+        .est-item-card:hover {
+            border-color: #b0c4de;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.09);
+        }
+        .mono-num {
+            font-family: 'Roboto Mono', monospace;
+        }
+
         @media (max-width: 600px) {
             .portal-wrapper { padding: 80px 12px 60px 12px; }
             .dash-topbar { 
@@ -1420,13 +1447,9 @@
                                     <span class="material-icons" style="font-size: 15px;">cloud_upload</span>
                                     Stage to Cloud Table
                                 </button>
-                                <button class="btn-dash-action" onclick="copyExtractedResultJson()" style="background: #fff; font-size: 12px; display: inline-flex; align-items: center; gap: 6px;">
-                                    <span class="material-icons" style="font-size: 15px;">content_copy</span>
-                                    Copy JSON
-                                </button>
                                 <button class="btn-dash-action" onclick="inspectExtractedResultJson()" style="background: #fff; font-size: 12px; display: inline-flex; align-items: center; gap: 6px;">
                                     <span class="material-icons" style="font-size: 15px;">visibility</span>
-                                    Inspect JSON
+                                    View Extracted Items
                                 </button>
                                 <button class="btn-dash-action" onclick="resetPortalPdfExtractor()" style="color: #5f6368; font-size: 12px; display: inline-flex; align-items: center; gap: 4px;">
                                     <span class="material-icons" style="font-size: 15px;">close</span>
@@ -1484,7 +1507,7 @@
                 <div class="auto-delete-notice">
                     <span class="material-icons" style="font-size: 18px; color: #137333;">cloud_sync</span>
                     <div>
-                        <strong>Clipboard & Cloud Bridge:</strong> Click <strong>Copy JSON</strong> to paste directly into your Google Sheets Add-on (current copy-paste bridge), or let the add-on import it automatically. Records are preserved for 30 days.
+                        <strong>Cloud & Connected Workspace:</strong> Extracted estimate and BoQ packages are automatically synchronized to your connected Google Sheets Add-on and Chrome Extension. Records are preserved for 30 days.
                     </div>
                 </div>
             </div>
@@ -1859,26 +1882,58 @@
                 </div>
             </form>
         </div>
-    <!-- Modal 5: JSON Payload Viewer / Copy Modal -->
+    </div>
+
+    <!-- Modal 5: Package Items Viewer Modal (Enhanced Engineering Workspace View) -->
     <div id="payloadViewerModal" class="portal-modal-backdrop">
-        <div class="portal-modal-content" style="max-width: 660px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <h3 style="margin:0; font-size:17px; font-family:'Google Sans', sans-serif; display:flex; align-items:center; gap:6px;">
-                    <span class="material-icons" style="color:var(--portal-primary);">data_object</span>
-                    <span id="payloadModalTitle">JSON Payload Details</span>
-                </h3>
-                <button onclick="closePayloadModal()" style="background:none; border:none; font-size:22px; cursor:pointer; color:#5f6368;">&times;</button>
+        <div class="portal-modal-content payload-modal-dialog">
+            <!-- Modal Top Bar -->
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; gap: 16px; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 260px;">
+                    <div style="display:flex; align-items:center; gap:8px; flex-wrap: wrap;">
+                        <span class="material-icons" style="color:var(--portal-primary); font-size: 22px;">format_list_bulleted</span>
+                        <h3 style="margin:0; font-size:18px; font-family:'Google Sans', sans-serif;" id="payloadModalTitle">Package Items</h3>
+                        <span id="payloadModalDocBadge" class="export-type-tag" style="background:#e8f0fe; color:#1a73e8; font-weight:600;">Detailed Estimate</span>
+                    </div>
+                    <div style="font-size:13px; color:var(--text-secondary); margin-top:4px; font-weight: 500;" id="payloadModalSubtitle">
+                        Package data synced with CivilMate Cloud
+                    </div>
+                </div>
+
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <!-- Quick Stats Badges -->
+                    <div id="payloadModalHeaderStats" style="display:flex; gap:8px; align-items:center; flex-wrap: wrap;"></div>
+                    <button onclick="closePayloadModal()" style="background:none; border:none; font-size:26px; cursor:pointer; color:#5f6368; line-height: 1; padding: 2px 6px; border-radius: 4px;" title="Close viewer">&times;</button>
+                </div>
             </div>
-            <div style="font-size:12px; color:var(--text-secondary); margin-bottom:12px;" id="payloadModalSubtitle">
-                Package data synced with CivilMate Cloud
+
+            <!-- Toolbar inside modal -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 12px; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 8px; flex: 1; max-width: 420px; background: #f8f9fa; border: 1px solid var(--portal-card-border); border-radius: 6px; padding: 6px 12px;">
+                    <span class="material-icons" style="color: #5f6368; font-size: 18px;">search</span>
+                    <input type="text" id="payloadFilterInput" placeholder="Filter items by description, code, or HSR number..." style="border: none; background: transparent; outline: none; font-size: 12px; width: 100%; color: var(--text-primary);" oninput="filterPayloadModalItems()">
+                </div>
+                <div style="display: flex; gap: 8px; align-items: center; font-size: 12px;">
+                    <button class="btn-action-small" onclick="toggleAllMeasurementSheets(true)" title="Expand all measurement sheets">
+                        <span class="material-icons" style="font-size: 14px;">unfold_more</span> Expand Measurements
+                    </button>
+                    <button class="btn-action-small" onclick="toggleAllMeasurementSheets(false)" title="Collapse all measurement sheets">
+                        <span class="material-icons" style="font-size: 14px;">unfold_less</span> Collapse Measurements
+                    </button>
+                </div>
             </div>
-            <textarea id="payloadModalTextarea" class="whitelist-export-box" rows="13" readonly style="font-family: monospace; font-size: 11px; line-height: 1.45; white-space: pre;"></textarea>
-            <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:14px;">
-                <button class="btn-dash-action" onclick="copyCurrentPayload()">
-                    <span class="material-icons" style="font-size:16px;">content_copy</span>
-                    Copy JSON
-                </button>
-                <button class="btn-dash-action" onclick="closePayloadModal()">
+
+            <!-- Items Container (Clean Full-Width Estimate Cards) -->
+            <div id="payloadTableContainer" style="flex: 1; overflow-y: auto; border: 1px solid var(--portal-card-border); border-radius: 8px; padding: 12px; background: #f1f3f4; display: flex; flex-direction: column; gap: 12px;">
+                <!-- Populated dynamically via renderPayloadTableView() -->
+            </div>
+
+            <textarea id="payloadModalTextarea" style="display:none;"></textarea>
+
+            <!-- Modal Footer (Zero Copy Buttons, Just Summary & Close) -->
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; padding-top: 10px; border-top: 1px solid var(--portal-card-border); flex-wrap: wrap; gap: 12px;">
+                <div id="payloadModalSummaryText" style="font-size: 13px; color: var(--text-primary); font-weight: 500;"></div>
+                <button class="btn btn-primary" onclick="closePayloadModal()" style="padding: 8px 26px; font-size: 13px;">
                     Close
                 </button>
             </div>
@@ -3135,10 +3190,7 @@
                     <td style="color: #5f6368;"><span class="material-icons" style="font-size: 14px; vertical-align: middle; margin-right: 4px;">schedule</span>${dateStr}</td>
                     <td><span class="export-type-tag" style="background:#e6f4ea; color:#137333;">${escapeHtml(status)}</span></td>
                     <td style="text-align: right; white-space: nowrap;">
-                        <button class="btn-action-small" onclick="copyStagedItemJson('${item.id}', 'export')" title="Copy JSON payload to clipboard">
-                            <span class="material-icons" style="font-size: 12px;">content_copy</span> Copy JSON
-                        </button>
-                        <button class="btn-action-small" onclick="viewStagedItemJson('${item.id}', 'export')" title="View JSON structure">
+                        <button class="btn-action-small" onclick="viewStagedItemJson('${item.id}', 'export')" title="View package items">
                             <span class="material-icons" style="font-size: 12px;">visibility</span> View
                         </button>
                         <button class="btn-action-small btn-danger" onclick="deleteStagedExport('${item.id}')" title="Delete record">
@@ -3682,16 +3734,24 @@
                         continue;
                     }
 
-                    if (rowStr.toUpperCase().startsWith('WORK NAME:')) {
-                        currentWorkName = rowStr.replace(/^WORK NAME:\s*/i, '').trim();
+                    // Flexible Work Name extraction: "WORK NAME :", "Work Name:", "Name of Work :", etc.
+                    const workMatch = rowStr.match(/^(?:WORK NAME|Work Name|Name of Work)\s*:\s*(.*)/i);
+                    if (workMatch) {
+                        currentWorkName = workMatch[1].trim();
                         continue;
                     }
-                    if (rowStr.startsWith('Main-Component :')) {
-                        currentComponent = rowStr.replace('Main-Component :', '').trim();
+
+                    // Component extraction
+                    const compMatch = rowStr.match(/^(?:Main-Component|Main Component|Component Name)\s*[:-]+\s*(.*)/i);
+                    if (compMatch) {
+                        currentComponent = compMatch[1].trim();
                         continue;
                     }
-                    if (rowStr.startsWith('Sub-Component :-')) {
-                        currentSubComponent = rowStr.replace('Sub-Component :-', '').trim();
+
+                    // Sub-Component extraction
+                    const subCompMatch = rowStr.match(/^(?:Sub-Component|Sub Component)\s*[:-]+\s*(.*)/i);
+                    if (subCompMatch) {
+                        currentSubComponent = subCompMatch[1].trim();
                         continue;
                     }
 
@@ -3713,7 +3773,7 @@
 
                     if ((srMatch || mergedMatch || rowStrMatch) && firstItem.x < 150) {
                         let srNo = srMatch ? srMatch[1] : (mergedMatch ? mergedMatch[1] : rowStrMatch[1]);
-                        let type = '';
+                        let type = (mergedMatch ? mergedMatch[2] : (rowStrMatch ? rowStrMatch[2] : ''));
                         let description = '';
                         let unit = '';
                         let quantity = '';
@@ -3737,16 +3797,17 @@
                             }
                         }
 
-                        if (type.includes('HSR')) type = 'HSR';
-                        else if (type.includes('NS')) type = 'NS';
+                        if (type.toUpperCase().includes('HSR') || firstItemText.toUpperCase().includes('HSR') || rowStr.toUpperCase().includes(' HSR ')) type = 'HSR';
+                        else if (type.toUpperCase().includes('NS') || firstItemText.toUpperCase().includes('NS') || rowStr.toUpperCase().includes(' NS ')) type = 'NS';
+                        else if (!type) type = 'HSR';
 
                         let itemNo = '';
                         let rateType = '';
 
                         if (type === 'HSR') {
-                            const itemMatch = description.match(/^(?:HSR Item\s*)?([\w\.]+)-/);
-                            if (itemMatch) itemNo = itemMatch[1];
-                            const rateMatch = description.match(/HSR Rate\(Rs\.\)\s+[\d\.]+\s+(.*)/);
+                            const itemMatch = description.match(/^(?:HSR Item\s*)?([A-Za-z0-9\._]+)\s*[-–—]/i);
+                            if (itemMatch) itemNo = itemMatch[1].trim();
+                            const rateMatch = description.match(/HSR\s*Rate\s*\(\s*Rs\.?\s*\)\s*[\d\.,]+\s+([\s\S]*)/i);
                             if (rateMatch) rateType = rateMatch[1].trim();
                             if (/^(1|2)\.([A-Za-z].*)$/.test(itemNo)) {
                                 itemNo = itemNo.replace(/^(1|2)\./, '');
@@ -3756,11 +3817,14 @@
                             rateType = 'NS';
                         }
 
+                        const compVal = currentComponent || currentWorkName;
+                        const subCompVal = currentSubComponent || compVal;
+
                         currentParent = {
                             documentType: 'Detailed Estimate',
                             workName: currentWorkName,
-                            component: currentComponent,
-                            subComponent: currentSubComponent,
+                            component: compVal,
+                            subComponent: subCompVal,
                             srNo: srNo,
                             type: type,
                             itemNo: itemNo,
@@ -3827,7 +3891,7 @@
                         if (depth === '0.000' || depth === '0.00' || depth === '0') depth = '';
                         if (totalQty === '0.000' || totalQty === '0.00' || totalQty === '0') totalQty = '';
 
-                        let num = noQty === '0.000' || noQty === '0.00' || noQty === '0' ? '' : noQty;
+                        let num = (noQty === '0.000' || noQty === '0.00' || noQty === '0') ? '' : noQty;
                         let qty = '';
                         if (noQty.includes('/')) {
                             let parts = noQty.split('/');
@@ -3851,16 +3915,28 @@
 
             for (let item of extractedItems) {
                 if (item.type === 'HSR') {
-                    const rateMatch = item.description.match(/HSR Rate\(Rs\.\)\s+[\d\.]+\s+([\s\S]*)/);
+                    if (!item.itemNo) {
+                        const itemMatch = item.description.match(/^(?:HSR Item\s*)?([A-Za-z0-9\._]+)\s*[-–—]/i);
+                        if (itemMatch) {
+                            item.itemNo = itemMatch[1].trim();
+                            if (/^(1|2)\.([A-Za-z].*)$/.test(item.itemNo)) {
+                                item.itemNo = item.itemNo.replace(/^(1|2)\./, '');
+                            }
+                        }
+                    }
+                    const rateMatch = item.description.match(/HSR\s*Rate\s*\(\s*Rs\.?\s*\)\s*[\d\.,]+\s+([\s\S]*)/i);
                     if (rateMatch) {
                         item.rateType = rateMatch[1].trim().replace(/\n/g, ' ').replace(/\s+/g, ' ');
                     }
-                    item.description = item.description.replace(/^(?:HSR Item\s*)?[\w\.]+-\s*/, '');
-                    item.description = item.description.replace(/\s*HSR Rate\(Rs\.\)\s+[\d\.]+\s+[\s\S]*$/, '');
+                    item.description = item.description.replace(/^(?:HSR Item\s*)?[A-Za-z0-9\._]+\s*[-–—]\s*/i, '');
+                    item.description = item.description.replace(/\s*HSR\s*Rate\s*\(\s*Rs\.?\s*\)\s*[\d\.,]+\s+[\s\S]*$/i, '');
                 }
                 if (item.description) {
                     item.description = item.description.replace(/\s+/g, ' ').trim();
                 }
+                if (!item.workName) item.workName = currentWorkName || "Detailed Estimate";
+                if (!item.component) item.component = currentComponent || item.workName;
+                if (!item.subComponent) item.subComponent = currentSubComponent || item.component || item.workName;
             }
 
             return { workName: currentWorkName, items: extractedItems };
@@ -3952,10 +4028,7 @@
                     <td style="color: #5f6368;"><span class="material-icons" style="font-size: 14px; vertical-align: middle; margin-right: 4px;">schedule</span>${dateStr}</td>
                     <td><span class="export-type-tag" style="background:#e6f4ea; color:#137333;">${escapeHtml(status)}</span></td>
                     <td style="text-align: right; white-space: nowrap;">
-                        <button class="btn-action-small" onclick="copyStagedItemJson('${item.id}', 'import')" title="Copy JSON payload to clipboard">
-                            <span class="material-icons" style="font-size: 12px;">content_copy</span> Copy JSON
-                        </button>
-                        <button class="btn-action-small" onclick="viewStagedItemJson('${item.id}', 'import')" title="View JSON structure">
+                        <button class="btn-action-small" onclick="viewStagedItemJson('${item.id}', 'import')" title="View package items">
                             <span class="material-icons" style="font-size: 12px;">visibility</span> View
                         </button>
                         <button class="btn-action-small btn-danger" onclick="deleteStagedImport('${item.id}')" title="Delete record">
@@ -4001,19 +4074,7 @@
             renderImportsTable(filtered);
         }
 
-        // ================= SHARED JSON PAYLOAD MODAL & CLIPBOARD HELPERS =================
-        function copyStagedItemJson(id, type) {
-            const list = type === 'import' ? allStagedImports : allStagedExports;
-            const item = list.find(x => x.id === id);
-            if (!item) return;
-            const text = JSON.stringify(item.details || {}, null, 2);
-            navigator.clipboard.writeText(text).then(() => {
-                showToast("JSON copied! You can now paste into CivilMate Google Sheets Add-on.", "success");
-            }).catch(() => {
-                showToast("Could not copy automatically. Click 'View' to copy manually.", "warning");
-            });
-        }
-
+        // ================= SHARED PACKAGE VIEWER & CLIPBOARD HELPERS =================
         function viewStagedItemJson(id, type) {
             const list = type === 'import' ? allStagedImports : allStagedExports;
             const item = list.find(x => x.id === id);
@@ -4023,26 +4084,352 @@
             openPayloadModal(title, subtitle, item.details || {});
         }
 
-        function openPayloadModal(title, subtitle, jsonDetails) {
-            currentViewPayload = jsonDetails;
-            document.getElementById('payloadModalTitle').textContent = title || 'JSON Payload Details';
-            document.getElementById('payloadModalSubtitle').textContent = subtitle || '';
-            document.getElementById('payloadModalTextarea').value = typeof jsonDetails === 'string' ? jsonDetails : JSON.stringify(jsonDetails, null, 2);
-            document.getElementById('payloadViewerModal').classList.add('active');
+        let currentModalDisplayItems = [];
+
+        function openPayloadModal(title, subtitle, payload) {
+            currentViewPayload = payload;
+            const titleEl = document.getElementById('payloadModalTitle');
+            const subEl = document.getElementById('payloadModalSubtitle');
+            if (titleEl) titleEl.textContent = title || 'Package Items';
+            if (subEl) subEl.textContent = subtitle || '';
+
+            let parsed = payload;
+            if (typeof payload === 'string') {
+                try { parsed = JSON.parse(payload); } catch (_) {}
+            }
+
+            // Flatten outbound staged export components if needed
+            let displayItems = parsed;
+            if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].items && Array.isArray(parsed[0].items)) {
+                displayItems = [];
+                parsed.forEach(grp => {
+                    (grp.items || []).forEach(it => {
+                        displayItems.push({
+                            ...it,
+                            component: grp.main_comp || it.component || '',
+                            subComponent: grp.sub_comp || it.subComponent || ''
+                        });
+                    });
+                });
+            } else if (!Array.isArray(displayItems) && displayItems && typeof displayItems === 'object') {
+                if (Array.isArray(displayItems.items)) {
+                    displayItems = displayItems.items;
+                } else {
+                    displayItems = [displayItems];
+                }
+            }
+
+            if (!Array.isArray(displayItems)) {
+                displayItems = [];
+            }
+
+            currentModalDisplayItems = displayItems;
+
+            // Clear search filter input
+            const searchInput = document.getElementById('payloadFilterInput');
+            if (searchInput) searchInput.value = '';
+
+            // Detect document type
+            let docTypeDetected = 'Detailed Estimate';
+            if (displayItems.length > 0) {
+                const first = displayItems[0];
+                if (first.documentType) {
+                    docTypeDetected = first.documentType;
+                } else if (first.doc_type) {
+                    docTypeDetected = first.doc_type;
+                } else if (first.rate_type === undefined && first.children === undefined && first.description && (first.qty || first.quantity)) {
+                    docTypeDetected = 'BoQ Tender';
+                }
+            }
+            if (title && title.includes('BoQ')) {
+                docTypeDetected = 'BoQ Tender';
+            } else if (title && title.includes('Bill')) {
+                docTypeDetected = 'Bill Staging';
+            }
+
+            const docBadge = document.getElementById('payloadModalDocBadge');
+            if (docBadge) {
+                docBadge.textContent = docTypeDetected;
+                if (docTypeDetected.includes('BoQ')) {
+                    docBadge.style.background = '#fef7e0';
+                    docBadge.style.color = '#b06000';
+                    docBadge.style.border = '1px solid #fce8b2';
+                } else if (docTypeDetected.includes('Bill')) {
+                    docBadge.style.background = '#f3e8fd';
+                    docBadge.style.color = '#7627bb';
+                    docBadge.style.border = '1px solid #e1c3fc';
+                } else {
+                    docBadge.style.background = '#e8f0fe';
+                    docBadge.style.color = '#1a73e8';
+                    docBadge.style.border = '1px solid #d2e3fc';
+                }
+            }
+
+            // Calculate stats: total items and total amount
+            let totalAmountSum = 0;
+            let hasValidAmount = false;
+            displayItems.forEach(it => {
+                const amtRaw = (it.amount || it.total_amount || '').toString().replace(/,/g, '').trim();
+                const num = parseFloat(amtRaw);
+                if (!isNaN(num)) {
+                    totalAmountSum += num;
+                    hasValidAmount = true;
+                }
+            });
+
+            const headerStatsEl = document.getElementById('payloadModalHeaderStats');
+            if (headerStatsEl) {
+                let statsHtml = `
+                    <span style="font-size:12px; font-weight:600; padding:4px 10px; border-radius:12px; background:#f1f3f4; color:#3c4043; border:1px solid #dadce0;">
+                        ${displayItems.length} Item${displayItems.length === 1 ? '' : 's'}
+                    </span>
+                `;
+                if (hasValidAmount && totalAmountSum > 0) {
+                    const formattedAmt = Number(totalAmountSum.toFixed(2)).toLocaleString('en-IN', { maximumFractionDigits: 2 });
+                    statsHtml += `
+                        <span style="font-size:12px; font-weight:600; padding:4px 10px; border-radius:12px; background:#e6f4ea; color:#137333; border:1px solid #ceead6;">
+                            ₹ ${formattedAmt} Total
+                        </span>
+                    `;
+                }
+                headerStatsEl.innerHTML = statsHtml;
+            }
+
+            renderPayloadTableView(displayItems);
+
+            const summaryEl = document.getElementById('payloadModalSummaryText');
+            if (summaryEl) {
+                summaryEl.textContent = `${displayItems.length} total item(s) in this package`;
+            }
+
+            const modal = document.getElementById('payloadViewerModal');
+            if (modal) {
+                modal.classList.add('active');
+                modal.style.display = 'flex';
+            }
         }
 
         function closePayloadModal() {
-            document.getElementById('payloadViewerModal').classList.remove('active');
+            const modal = document.getElementById('payloadViewerModal');
+            if (modal) {
+                modal.classList.remove('active');
+                modal.style.display = 'none';
+            }
             currentViewPayload = null;
+            currentModalDisplayItems = [];
         }
 
-        function copyCurrentPayload() {
-            const text = document.getElementById('payloadModalTextarea').value;
-            navigator.clipboard.writeText(text).then(() => {
-                showToast("JSON copied to clipboard!", "success");
-            }).catch(() => {
-                showToast("Please select and copy text manually.", "warning");
+        function filterPayloadModalItems() {
+            const query = (document.getElementById('payloadFilterInput').value || '').toLowerCase().trim();
+            if (!query) {
+                renderPayloadTableView(currentModalDisplayItems);
+                return;
+            }
+            const filtered = currentModalDisplayItems.filter(item => {
+                const itemNo = (item.itemNo || item.item_no || item.hsr_no || '').toLowerCase();
+                const desc = (item.description || item.desc || '').toLowerCase();
+                const comp = (item.component || item.subComponent || '').toLowerCase();
+                const rateType = (item.rateType || item.rate_type || '').toLowerCase();
+                const unit = (item.unit || '').toLowerCase();
+                const amt = (item.amount || item.total_amount || '').toString().toLowerCase();
+                return itemNo.includes(query) || desc.includes(query) || comp.includes(query) || rateType.includes(query) || unit.includes(query) || amt.includes(query);
             });
+            renderPayloadTableView(filtered);
+        }
+
+        function toggleAllMeasurementSheets(expand) {
+            const sheets = document.querySelectorAll('.est-measurement-container');
+            sheets.forEach(s => {
+                s.style.display = expand ? 'block' : 'none';
+            });
+            const icons = document.querySelectorAll('.est-measurement-toggle-icon');
+            icons.forEach(i => {
+                i.textContent = expand ? 'expand_less' : 'expand_more';
+            });
+        }
+
+        function toggleSingleMeasurement(idx) {
+            const sheet = document.getElementById('sheet-item-' + idx);
+            const icon = document.getElementById('icon-item-' + idx);
+            if (!sheet) return;
+            const isHidden = (sheet.style.display === 'none');
+            sheet.style.display = isHidden ? 'block' : 'none';
+            if (icon) {
+                icon.textContent = isHidden ? 'expand_less' : 'expand_more';
+            }
+        }
+
+        function renderPayloadTableView(items) {
+            const container = document.getElementById('payloadTableContainer');
+            if (!container) return;
+
+            if (!Array.isArray(items) || items.length === 0) {
+                container.innerHTML = `
+                    <div style="padding: 48px 24px; text-align: center; color: var(--text-secondary); background: #ffffff; border-radius: 8px; border: 1px dashed #dadce0;">
+                        <span class="material-icons" style="font-size:40px; color:#bdc1c6; display:block; margin-bottom:8px;">search_off</span>
+                        <div style="font-size: 15px; font-weight: 500; color: #3c4043;">No items found</div>
+                        <div style="font-size: 13px; color: #70757a; margin-top: 4px;">Adjust your search filter or inspect another package.</div>
+                    </div>
+                `;
+                return;
+            }
+
+            let cardsHtml = '';
+
+            items.forEach((item, idx) => {
+                const sr = (item.srNo !== undefined && item.srNo !== null && item.srNo !== '') ? item.srNo : (idx + 1);
+                const itemNo = item.itemNo || item.item_no || item.hsr_no || '-';
+                const type = (item.type || 'HSR').trim().toUpperCase();
+                const rateType = item.rateType || item.rate_type || '';
+                const desc = item.description || item.desc || '-';
+                const qty = item.quantity || item.totalQty || item.total_qty || item.qty || '-';
+                const unit = item.unit || '-';
+                const rate = item.rate || '-';
+                const amount = item.amount || item.total_amount || '-';
+                const component = item.component || '';
+                const subComponent = item.subComponent || '';
+
+                const children = item.children || item.child_rows || [];
+                const hasChildren = Array.isArray(children) && children.length > 0;
+
+                const typeBadge = (type === 'NS')
+                    ? `<span style="font-size: 11px; font-weight: 700; background: #fce8e6; color: #c5221f; border: 1px solid #fad2cf; padding: 2px 7px; border-radius: 4px;">NS</span>`
+                    : `<span style="font-size: 11px; font-weight: 700; background: #e8f0fe; color: #1a73e8; border: 1px solid #d2e3fc; padding: 2px 7px; border-radius: 4px;">HSR</span>`;
+
+                const rateTypeBadge = rateType
+                    ? `<span style="font-size: 11px; font-weight: 500; background: #f1f3f4; color: #5f6368; border: 1px solid #dadce0; padding: 2px 7px; border-radius: 4px;">${escapeHtml(rateType)}</span>`
+                    : '';
+
+                let compBreadcrumb = '';
+                if (component && component !== desc) {
+                    compBreadcrumb = `<div style="font-size: 11px; color: #70757a; margin-top: 2px; display: flex; align-items: center; gap: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                        <span class="material-icons" style="font-size: 13px; color: #9aa0a6;">folder</span>
+                        <span>${escapeHtml(component)}</span>
+                        ${(subComponent && subComponent !== component) ? `<span style="color:#bdc1c6;">/</span><span>${escapeHtml(subComponent)}</span>` : ''}
+                    </div>`;
+                }
+
+                let measurementSheetHtml = '';
+                if (hasChildren) {
+                    let rowsHtml = '';
+                    children.forEach((c, cIdx) => {
+                        const cDesc = (c.description || c.desc || '-').replace(/\n/g, '<br>');
+                        const cNo = (c.no !== undefined && c.no !== null && c.no !== '') ? c.no : (c.qty ? c.qty : '-');
+                        const cL = (c.length !== undefined && c.length !== null && c.length !== '') ? c.length : (c.l || '-');
+                        const cB = (c.breadth !== undefined && c.breadth !== null && c.breadth !== '') ? c.breadth : (c.b || '-');
+                        const cD = (c.depth !== undefined && c.depth !== null && c.depth !== '') ? c.depth : (c.d || '-');
+                        const cTot = (c.totalQty !== undefined && c.totalQty !== null && c.totalQty !== '') ? c.totalQty : (c.qty || '-');
+
+                        const isDeduction = typeof cTot === 'string' && cTot.trim().startsWith('-');
+                        const qtyStyle = isDeduction ? 'color: #d93025; font-weight: 700;' : 'color: #202124; font-weight: 600;';
+
+                        rowsHtml += `
+                            <tr style="border-bottom: 1px solid #e8eaed; background: ${cIdx % 2 === 0 ? '#ffffff' : '#fafafa'};">
+                                <td style="padding: 7px 12px; color: #202124; line-height: 1.45; vertical-align: top;">
+                                    ${cDesc}
+                                </td>
+                                <td style="padding: 7px 10px; text-align: center; color: #5f6368; vertical-align: top;" class="mono-num">${escapeHtml(cNo)}</td>
+                                <td style="padding: 7px 10px; text-align: right; color: #5f6368; vertical-align: top;" class="mono-num">${escapeHtml(cL)}</td>
+                                <td style="padding: 7px 10px; text-align: right; color: #5f6368; vertical-align: top;" class="mono-num">${escapeHtml(cB)}</td>
+                                <td style="padding: 7px 10px; text-align: right; color: #5f6368; vertical-align: top;" class="mono-num">${escapeHtml(cD)}</td>
+                                <td style="padding: 7px 12px; text-align: right; vertical-align: top; ${qtyStyle}" class="mono-num">${escapeHtml(cTot)}</td>
+                            </tr>
+                        `;
+                    });
+
+                    measurementSheetHtml = `
+                        <div style="background: #f8f9fa; border-top: 1px solid #dadce0;">
+                            <!-- Collapsible Bar -->
+                            <div onclick="toggleSingleMeasurement(${idx})" style="cursor: pointer; padding: 8px 14px; display: flex; justify-content: space-between; align-items: center; user-select: none; background: #f1f3f4;">
+                                <div style="display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: #444746; text-transform: uppercase; letter-spacing: 0.3px;">
+                                    <span class="material-icons" style="font-size: 15px; color: var(--portal-primary);">straighten</span>
+                                    <span>Detailed Measurement Breakdown (${children.length} Dimensions)</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 4px; font-size: 11px; color: #5f6368;">
+                                    <span>Toggle Sheet</span>
+                                    <span class="material-icons est-measurement-toggle-icon" id="icon-item-${idx}" style="font-size: 18px;">expand_less</span>
+                                </div>
+                            </div>
+
+                            <!-- Full-Width Measurement Grid -->
+                            <div id="sheet-item-${idx}" class="est-measurement-container" style="display: block; overflow-x: auto;">
+                                <table style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; background: #ffffff;">
+                                    <thead>
+                                        <tr style="background: #f8f9fa; border-bottom: 2px solid #dadce0; color: #5f6368; font-size: 11px; text-transform: uppercase; letter-spacing: 0.3px;">
+                                            <th style="padding: 8px 12px; font-weight: 600;">Particulars / Dimension Breakdown</th>
+                                            <th style="padding: 8px 10px; text-align: center; font-weight: 600; width: 65px;">No.</th>
+                                            <th style="padding: 8px 10px; text-align: right; font-weight: 600; width: 80px;">Length (L)</th>
+                                            <th style="padding: 8px 10px; text-align: right; font-weight: 600; width: 80px;">Breadth (B)</th>
+                                            <th style="padding: 8px 10px; text-align: right; font-weight: 600; width: 80px;">Depth (D)</th>
+                                            <th style="padding: 8px 12px; text-align: right; font-weight: 600; width: 100px;">Quantity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${rowsHtml}
+                                    </tbody>
+                                    <tfoot>
+                                        <tr style="background: #f1f3f4; border-top: 2px solid #dadce0; font-weight: 600; font-size: 12px; color: #202124;">
+                                            <td colspan="5" style="padding: 8px 12px; text-align: right; color: #5f6368;">Total Computed Quantity for Item:</td>
+                                            <td style="padding: 8px 12px; text-align: right; color: var(--portal-primary);" class="mono-num">${escapeHtml(qty)} ${escapeHtml(unit)}</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                cardsHtml += `
+                    <div class="est-item-card" id="est-card-${idx}">
+                        <!-- Top Strip: Item Header, Classification, Rates & Total Amount -->
+                        <div style="padding: 12px 16px; background: #ffffff; display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; border-bottom: 1px solid #f1f3f4;">
+                            <div style="flex: 1; min-width: 260px;">
+                                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                    <span style="font-size: 11px; font-weight: 700; color: #5f6368; background: #f1f3f4; padding: 2px 7px; border-radius: 4px;">#${sr}</span>
+                                    <span style="font-size: 15px; font-weight: 700; color: #1a73e8; letter-spacing: 0.2px;">Item ${escapeHtml(itemNo)}</span>
+                                    ${typeBadge}
+                                    ${rateTypeBadge}
+                                </div>
+                                ${compBreadcrumb}
+                            </div>
+
+                            <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: flex-end;">
+                                <div style="text-align: right;">
+                                    <div style="font-size: 11px; color: #70757a; text-transform: uppercase; font-weight: 500;">Quantity & Unit</div>
+                                    <div style="font-size: 14px; font-weight: 700; color: #202124;">
+                                        <span class="mono-num">${escapeHtml(qty)}</span>
+                                        <span style="font-size: 12px; font-weight: 500; color: #5f6368;">${escapeHtml(unit)}</span>
+                                    </div>
+                                </div>
+
+                                <div style="text-align: right;">
+                                    <div style="font-size: 11px; color: #70757a; text-transform: uppercase; font-weight: 500;">Rate</div>
+                                    <div style="font-size: 13px; font-weight: 600; color: #444746;">
+                                        ₹ <span class="mono-num">${escapeHtml(rate)}</span>
+                                    </div>
+                                </div>
+
+                                <div style="text-align: right; background: #e6f4ea; border: 1px solid #ceead6; border-radius: 8px; padding: 5px 12px;">
+                                    <div style="font-size: 10px; color: #137333; text-transform: uppercase; font-weight: 700; letter-spacing: 0.3px;">Amount</div>
+                                    <div style="font-size: 15px; font-weight: 700; color: #137333;">
+                                        ₹ <span class="mono-num">${escapeHtml(amount)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Full Width Description Area -->
+                        <div style="padding: 12px 16px; font-size: 13px; color: #3c4043; line-height: 1.6; background: #ffffff;">
+                            ${escapeHtml(desc)}
+                        </div>
+
+                        <!-- Dedicated Measurement Sheet (if applicable) -->
+                        ${measurementSheetHtml}
+                    </div>
+                `;
+            });
+
+            container.innerHTML = cardsHtml;
         }
 
         // ================= SESSION ROUTING & INACTIVITY TIMEOUT =================
