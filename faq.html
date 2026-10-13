@@ -8,7 +8,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <script src="nav.js"></script>
     <style>
         :root {
             --primary: #2563eb;
@@ -163,14 +165,17 @@
             <img src="logo.jpg" alt="CivilMate Logo" width="32" height="32" style="border-radius:4px;">
             <a href="index.html" style="color: inherit;">CivilMate</a>
         </div>
-        <div class="nav-links">
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation menu" onclick="toggleMobileNav()">
+            <span class="material-icons">menu</span>
+        </button>
+        <div class="nav-links" id="navLinks">
             <a href="index.html#features">Features</a>
             <a href="index.html#learn-section">Learn</a>
-            <a href="index.html#tester-hub-section">Tester Hub</a>
+            <a href="index.html#register-section">Apply</a>
             <a href="faq.html">FAQ</a>
             <a href="live-tenders.html">Tenders</a>
             <div class="dropdown">
-                <a href="#" style="cursor:default">Legal &#9662;</a>
+                <a href="javascript:void(0)" onclick="toggleMobileDropdown(event)">Legal &#9662;</a>
                 <div class="dropdown-content">
                     <div class="dropdown-group">CivilMate Add-On</div>
                     <a href="addon-privacy.html">Privacy Policy</a>
@@ -180,7 +185,7 @@
                     <a href="extension-privacy.html">Privacy Policy</a>
                 </div>
             </div>
-            <a href="portal.html" style="background: var(--google-blue); color: white; padding: 6px 14px; border-radius: 4px; font-weight: 500; font-size: 13px; display: inline-flex; align-items: center; gap: 4px;">
+            <a href="portal.html" class="nav-portal-btn" style="background: var(--google-blue); color: white; padding: 6px 14px; border-radius: 4px; font-weight: 500; font-size: 13px; display: inline-flex; align-items: center; gap: 4px;">
                 <span class="material-icons" style="font-size: 16px;">dashboard</span>
                 Portal
             </a>

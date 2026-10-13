@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="style.css">
     <!-- CivilMate Cloud Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Universal Mobile Navigation -->
+    <script src="nav.js"></script>
 </head>
 <body>
 
@@ -21,14 +23,17 @@
             <img src="logo.jpg" alt="CivilMate Logo" width="32" height="32" style="border-radius:4px;">
             <a href="index.html" style="color: inherit;">CivilMate</a>
         </div>
-        <div class="nav-links">
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation menu" onclick="toggleMobileNav()">
+            <span class="material-icons">menu</span>
+        </button>
+        <div class="nav-links" id="navLinks">
             <a href="index.html#features">Features</a>
             <a href="index.html#learn-section">Learn</a>
             <a href="index.html#register-section">Apply</a>
             <a href="faq.html">FAQ</a>
             <a href="live-tenders.html">Tenders</a>
             <div class="dropdown">
-                <a href="#" style="cursor:default">Legal &#9662;</a>
+                <a href="javascript:void(0)" onclick="toggleMobileDropdown(event)">Legal &#9662;</a>
                 <div class="dropdown-content">
                     <div class="dropdown-group">CivilMate Add-On</div>
                     <a href="addon-privacy.html">Privacy Policy</a>
@@ -38,7 +43,7 @@
                     <a href="extension-privacy.html">Privacy Policy</a>
                 </div>
             </div>
-            <a href="portal.html" style="background: var(--google-blue); color: white; padding: 6px 14px; border-radius: 4px; font-weight: 500; font-size: 13px; display: inline-flex; align-items: center; gap: 4px;">
+            <a href="portal.html" class="nav-portal-btn" style="background: var(--google-blue); color: white; padding: 6px 14px; border-radius: 4px; font-weight: 500; font-size: 13px; display: inline-flex; align-items: center; gap: 4px;">
                 <span class="material-icons" style="font-size: 16px;">dashboard</span>
                 Portal
             </a>
@@ -48,12 +53,15 @@
     <section class="hero">
         <h1>Smart Estimation Tools for Civil Engineers</h1>
         <p>The essential ecosystem combining a powerful Google Workspace&trade; Add-on and a Chrome&trade; Extension. Streamline your estimating, upload bills to HEWP seamlessly, and extract BoQs effortlessly.</p>
-        <div class="hero-actions" style="flex-direction: column; align-items: center; gap: 12px;">
-            <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
-                <a href="portal.html?mode=signup" class="btn btn-primary">Apply for Access</a>
-                <a href="portal.html" class="btn btn-secondary">Estimator Portal</a>
+        <div class="hero-actions" style="flex-direction: column; align-items: center; gap: 10px;">
+            <a href="portal.html?mode=signup" class="btn btn-primary" style="padding: 13px 32px; font-size: 16px; display: inline-flex; align-items: center; gap: 8px;">
+                <span class="material-icons" style="font-size: 18px;">how_to_reg</span>
+                Apply for Access
+            </a>
+            <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">
+                Already have access? <a href="portal.html?mode=login" style="color: var(--google-blue); font-weight: 500; text-decoration: none;">Sign in to Portal</a>
             </div>
-            <p style="font-size: 13px; color: var(--text-secondary); margin: 0;">Installation links unlock inside the portal once authorized.</p>
+            <p style="font-size: 12px; color: var(--text-secondary); margin: 2px 0 0 0;">Installation links unlock inside the portal once authorized.</p>
         </div>
     </section>
 
@@ -204,15 +212,15 @@
             </div>
         </div>
 
-        <div class="install-links">
+        <div class="install-links" style="text-align: center;">
             <h3>Get CivilMate Access</h3>
-            <div class="install-buttons">
-                <a href="portal.html?mode=signup" class="btn btn-primary">
-                    <span class="material-icons" style="margin-right: 8px;">how_to_reg</span> Apply for Access
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 14px;">
+                <a href="portal.html?mode=signup" class="btn btn-primary" style="padding: 12px 28px; display: inline-flex; align-items: center; gap: 8px;">
+                    <span class="material-icons" style="font-size: 18px;">how_to_reg</span> Apply for Access
                 </a>
-                <a href="portal.html" class="btn btn-secondary">
-                    <span class="material-icons" style="margin-right: 8px;">dashboard</span> Estimator Portal
-                </a>
+                <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">
+                    Already have access? <a href="portal.html?mode=login" style="color: var(--google-blue); font-weight: 500; text-decoration: none;">Sign in to Portal</a>
+                </div>
             </div>
         </div>
     </div>
@@ -224,8 +232,8 @@
 
     <section id="register-section" style="background: var(--bg-gray); padding: 50px 0;">
         <h2 style="text-align:center; font-size: 32px; margin-bottom: 8px; font-family: 'Google Sans', sans-serif;">Apply for CivilMate Access</h2>
-        <p style="text-align:center; font-size: 15px; color: var(--text-secondary); max-width: 600px; margin: 0 auto 30px auto;">
-            Seats are authorized sequentially to ensure high rate-sync accuracy with the Haryana Schedule of Rates (HSR). Track live capacity and apply through the estimator portal.
+        <p style="text-align:center; font-size: 15px; color: var(--text-secondary); max-width: 620px; margin: 0 auto 30px auto; line-height: 1.5;">
+            Early access seats are provisioned sequentially to maintain high server performance, seamless Google Workspace integration, and dedicated user support. Track live capacity below and submit your application to join the workspace.
         </p>
 
         <div class="tester-container" style="max-width: 620px; margin: 0 auto; background: #fff; padding: 32px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
@@ -268,7 +276,7 @@
                     <span class="material-icons" style="font-size: 20px;">arrow_forward</span>
                 </a>
                 <div style="margin-top: 14px; font-size: 13px; color: var(--text-secondary);">
-                    Already have an account? <a href="portal.html" style="color: var(--google-blue); font-weight: 500; text-decoration: none;">Sign in to Portal</a>
+                    Already have access? <a href="portal.html?mode=login" style="color: var(--google-blue); font-weight: 500; text-decoration: none;">Sign in to Portal</a>
                 </div>
             </div>
         </div>

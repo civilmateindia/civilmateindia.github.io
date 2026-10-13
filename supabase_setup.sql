@@ -122,16 +122,35 @@ CREATE TABLE IF NOT EXISTS public.staged_exports (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   user_email text NOT NULL,
   work_name text NOT NULL,
+  doc_type text DEFAULT 'Estimate', -- 'Estimate', 'Bill', 'BoQ'
   status text DEFAULT 'Ready for HEWP',
   details jsonb DEFAULT '{}'::jsonb,
   created_at timestamptz DEFAULT now()
 );
+
+ALTER TABLE IF EXISTS public.staged_exports 
+  ADD COLUMN IF NOT EXISTS doc_type text DEFAULT 'Estimate';
+
+-- 4b. Create staged_imports table for PDF extracted data (BoQ & Detailed Estimate for Sheets Import)
+CREATE TABLE IF NOT EXISTS public.staged_imports (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_email text NOT NULL,
+  work_name text NOT NULL,
+  doc_type text DEFAULT 'BoQ', -- 'BoQ', 'Detailed Estimate', 'Bill Template'
+  status text DEFAULT 'Ready for Sheets',
+  details jsonb DEFAULT '{}'::jsonb,
+  created_at timestamptz DEFAULT now()
+);
+
+ALTER TABLE IF EXISTS public.staged_imports 
+  ADD COLUMN IF NOT EXISTS doc_type text DEFAULT 'BoQ';
 
 -- 5. Enable Row Level Security (RLS) on all tables
 ALTER TABLE public.user_profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.beta_feedback ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_activity ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.staged_exports ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.staged_imports ENABLE ROW LEVEL SECURITY;
 
 -- 6. RLS Policies for user_profiles
 DROP POLICY IF EXISTS "Users and admin can view profiles" ON public.user_profiles;
@@ -214,6 +233,29 @@ WITH CHECK (true);
 
 CREATE POLICY "Users can delete own staged exports"
 ON public.staged_exports FOR DELETE TO authenticated
+USING (
+  lower(coalesce(auth.jwt() ->> 'email', '')) = 'civilmateindia@gmail.com'
+  OR lower(user_email) = lower(coalesce(auth.jwt() ->> 'email', ''))
+);
+
+-- 9b. RLS Policies for staged_imports (Select, Insert, Delete)
+DROP POLICY IF EXISTS "Users can read own staged imports" ON public.staged_imports;
+DROP POLICY IF EXISTS "Users can insert staged imports" ON public.staged_imports;
+DROP POLICY IF EXISTS "Users can delete own staged imports" ON public.staged_imports;
+
+CREATE POLICY "Users can read own staged imports"
+ON public.staged_imports FOR SELECT TO authenticated, anon
+USING (
+  lower(coalesce(auth.jwt() ->> 'email', '')) = 'civilmateindia@gmail.com'
+  OR lower(user_email) = lower(coalesce(auth.jwt() ->> 'email', ''))
+);
+
+CREATE POLICY "Users can insert staged imports"
+ON public.staged_imports FOR INSERT TO authenticated, anon
+WITH CHECK (true);
+
+CREATE POLICY "Users can delete own staged imports"
+ON public.staged_imports FOR DELETE TO authenticated
 USING (
   lower(coalesce(auth.jwt() ->> 'email', '')) = 'civilmateindia@gmail.com'
   OR lower(user_email) = lower(coalesce(auth.jwt() ->> 'email', ''))
@@ -309,3 +351,21 @@ BEGIN
 END;
 $$;
 GRANT EXECUTE ON FUNCTION purge_old_staged_exports() TO anon, authenticated;
+
+-- 14. RPC: Automatic 30-Day Staged Imports Purge
+CREATE OR REPLACE FUNCTION purge_old_staged_imports()
+RETURNS int
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  v_count int;
+BEGIN
+  DELETE FROM public.staged_imports
+  WHERE created_at < (now() - interval '30 days');
+  GET DIAGNOSTICS v_count = ROW_COUNT;
+  RETURN v_count;
+END;
+$$;
+GRANT EXECUTE ON FUNCTION purge_old_staged_imports() TO anon, authenticated;
+
