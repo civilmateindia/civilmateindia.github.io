@@ -1315,6 +1315,57 @@
                 </div>
             </div>
 
+            <!-- Extracted PDF Data for Google Sheets Import Section -->
+            <div class="activity-card">
+                <div class="activity-header">
+                    <div>
+                        <h3>
+                            <span class="material-icons" style="color: #137333;">picture_as_pdf</span>
+                            Extracted PDF Data for Google Sheets Import
+                        </h3>
+                        <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">
+                            Tender BoQs & Detailed Estimates extracted via CivilMate Extension ready for Sheets
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                        <input type="text" id="importSearchInput" class="activity-search" placeholder="Filter by tender or type..." oninput="filterImportsTable()">
+                        <button class="btn-dash-action" onclick="fetchStagedImports()" title="Refresh extracted data list" style="background: #fff;">
+                            <span class="material-icons" style="font-size: 16px;">sync</span>
+                            Refresh Imports
+                        </button>
+                    </div>
+                </div>
+
+                <div class="exports-table-wrapper">
+                    <table class="exports-table" id="importsTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;">#</th>
+                                <th>Tender / Work Name</th>
+                                <th style="width: 140px;">Extraction Type</th>
+                                <th>Extracted At (IST)</th>
+                                <th>Status</th>
+                                <th style="text-align: right;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="importsTableBody">
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 24px; color: var(--text-secondary);">
+                                    Connecting to CivilMate Cloud...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="auto-delete-notice">
+                    <span class="material-icons" style="font-size: 18px; color: #137333;">cloud_sync</span>
+                    <div>
+                        <strong>Clipboard & Cloud Bridge:</strong> Click <strong>Copy JSON</strong> to paste directly into your Google Sheets Add-on (current copy-paste bridge), or let the add-on import it automatically. Records are preserved for 30 days.
+                    </div>
+                </div>
+            </div>
+
             <!-- My Submitted Feedback & Requests (Approved View) -->
             <div class="activity-card">
                 <div class="activity-header">
@@ -1685,6 +1736,30 @@
                 </div>
             </form>
         </div>
+    <!-- Modal 5: JSON Payload Viewer / Copy Modal -->
+    <div id="payloadViewerModal" class="portal-modal-backdrop">
+        <div class="portal-modal-content" style="max-width: 660px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h3 style="margin:0; font-size:17px; font-family:'Google Sans', sans-serif; display:flex; align-items:center; gap:6px;">
+                    <span class="material-icons" style="color:var(--portal-primary);">data_object</span>
+                    <span id="payloadModalTitle">JSON Payload Details</span>
+                </h3>
+                <button onclick="closePayloadModal()" style="background:none; border:none; font-size:22px; cursor:pointer; color:#5f6368;">&times;</button>
+            </div>
+            <div style="font-size:12px; color:var(--text-secondary); margin-bottom:12px;" id="payloadModalSubtitle">
+                Package data synced with CivilMate Cloud
+            </div>
+            <textarea id="payloadModalTextarea" class="whitelist-export-box" rows="13" readonly style="font-family: monospace; font-size: 11px; line-height: 1.45; white-space: pre;"></textarea>
+            <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:14px;">
+                <button class="btn-dash-action" onclick="copyCurrentPayload()">
+                    <span class="material-icons" style="font-size:16px;">content_copy</span>
+                    Copy JSON
+                </button>
+                <button class="btn-dash-action" onclick="closePayloadModal()">
+                    Close
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Floating Notification Toast -->
@@ -1705,6 +1780,8 @@
         let currentProfile = null;
         let authMode = 'login'; // 'login' or 'signup'
         let allStagedExports = [];
+        let allStagedImports = [];
+        let currentViewPayload = null;
 
         function getSbClient() {
             if (sbClient) return sbClient;
@@ -2808,6 +2885,7 @@
 
                 showView('viewApproved');
                 fetchStagedExports();
+                fetchStagedImports();
                 fetchUserFeedback();
             } else if (profile.status === 'opted_out') {
                 showView('viewOptedOut');
@@ -2933,8 +3011,14 @@
                     <td>${docBadge}</td>
                     <td style="color: #5f6368;"><span class="material-icons" style="font-size: 14px; vertical-align: middle; margin-right: 4px;">schedule</span>${dateStr}</td>
                     <td><span class="export-type-tag" style="background:#e6f4ea; color:#137333;">${escapeHtml(status)}</span></td>
-                    <td style="text-align: right;">
-                        <button class="btn-action-small btn-danger" onclick="deleteStagedExport('${item.id}')" title="Delete exported record">
+                    <td style="text-align: right; white-space: nowrap;">
+                        <button class="btn-action-small" onclick="copyStagedItemJson('${item.id}', 'export')" title="Copy JSON payload to clipboard">
+                            <span class="material-icons" style="font-size: 12px;">content_copy</span> Copy JSON
+                        </button>
+                        <button class="btn-action-small" onclick="viewStagedItemJson('${item.id}', 'export')" title="View JSON structure">
+                            <span class="material-icons" style="font-size: 12px;">visibility</span> View
+                        </button>
+                        <button class="btn-action-small btn-danger" onclick="deleteStagedExport('${item.id}')" title="Delete record">
                             <span class="material-icons" style="font-size: 12px;">delete</span> Delete
                         </button>
                     </td>
@@ -2975,6 +3059,185 @@
                 return name.includes(query) || docType.includes(query) || status.includes(query);
             });
             renderExportsTable(filtered);
+        }
+
+        // ================= EXTRACTED PDF PACKAGES (BOQS & DETAILED ESTIMATES FOR SHEETS) =================
+        async function fetchStagedImports() {
+            const tbody = document.getElementById('importsTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: var(--text-secondary);">Loading extracted PDF packages...</td></tr>';
+
+            const client = getSbClient();
+            if (!client || !currentUser) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: var(--text-secondary);">Please sign in to view extracted PDF packages.</td></tr>';
+                return;
+            }
+
+            try {
+                let { data, error } = await client
+                    .from('staged_imports')
+                    .select('*')
+                    .eq('user_email', currentUser.email)
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    if (error.code === '42P01' || error.code === 'PGRST204') {
+                        allStagedImports = [];
+                        renderImportsTable([]);
+                        return;
+                    }
+                    throw error;
+                }
+                allStagedImports = data || [];
+                renderImportsTable(allStagedImports);
+            } catch (err) {
+                console.warn("Imports query note:", err);
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6">
+                            <div style="text-align:center; padding:32px; color:var(--text-secondary);">
+                                <span class="material-icons" style="font-size:36px; color:#bdc1c6; display:block; margin-bottom:6px;">picture_as_pdf</span>
+                                <div style="font-weight: 500;">No Extracted PDF Packages Synced Yet</div>
+                                <div style="font-size: 12px; margin-top: 4px;">When you extract BoQs or Detailed Estimates in the CivilMate Chrome Extension, your data packages will appear here ready to import into Google Sheets.</div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        function renderImportsTable(items) {
+            const tbody = document.getElementById('importsTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            if (items.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6">
+                            <div style="text-align:center; padding:32px; color:var(--text-secondary);">
+                                <span class="material-icons" style="font-size:36px; color:#bdc1c6; display:block; margin-bottom:6px;">picture_as_pdf</span>
+                                <div style="font-weight: 500;">No Extracted PDF Packages Synced Yet</div>
+                                <div style="font-size: 12px; margin-top: 4px;">When you extract BoQs or Detailed Estimates in the CivilMate Chrome Extension, your data packages will appear here ready to import into Google Sheets.</div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            items.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                const workName = item.work_name || item.name || 'Extracted PDF Package';
+                const dateStr = formatKolkataTimestamp(item.created_at);
+                const status = item.status || 'Ready for Sheets';
+                const rawType = (item.doc_type || 'BoQ').trim();
+
+                let docBadge = '';
+                if (rawType.toLowerCase().includes('detailed') || rawType.toLowerCase().includes('estimate')) {
+                    docBadge = `<span class="export-type-tag" style="background:#e8f0fe; color:#1a73e8; border:1px solid #d2e3fc;"><span class="material-icons" style="font-size:12px; vertical-align:middle; margin-right:3px;">description</span>Detailed Estimate</span>`;
+                } else {
+                    docBadge = `<span class="export-type-tag" style="background:#fef7e0; color:#b06000; border:1px solid #fce8b2;"><span class="material-icons" style="font-size:12px; vertical-align:middle; margin-right:3px;">table_chart</span>BoQ Tender</span>`;
+                }
+
+                tr.innerHTML = `
+                    <td style="color: var(--text-secondary);">${index + 1}</td>
+                    <td><strong style="color: var(--text-primary);">${escapeHtml(workName)}</strong></td>
+                    <td>${docBadge}</td>
+                    <td style="color: #5f6368;"><span class="material-icons" style="font-size: 14px; vertical-align: middle; margin-right: 4px;">schedule</span>${dateStr}</td>
+                    <td><span class="export-type-tag" style="background:#e6f4ea; color:#137333;">${escapeHtml(status)}</span></td>
+                    <td style="text-align: right; white-space: nowrap;">
+                        <button class="btn-action-small" onclick="copyStagedItemJson('${item.id}', 'import')" title="Copy JSON payload to clipboard">
+                            <span class="material-icons" style="font-size: 12px;">content_copy</span> Copy JSON
+                        </button>
+                        <button class="btn-action-small" onclick="viewStagedItemJson('${item.id}', 'import')" title="View JSON structure">
+                            <span class="material-icons" style="font-size: 12px;">visibility</span> View
+                        </button>
+                        <button class="btn-action-small btn-danger" onclick="deleteStagedImport('${item.id}')" title="Delete record">
+                            <span class="material-icons" style="font-size: 12px;">delete</span> Delete
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function deleteStagedImport(importId) {
+            const confirmed = confirm("Are you sure you want to delete this extracted PDF package record?");
+            if (!confirmed) return;
+
+            const client = getSbClient();
+            if (!client) return;
+
+            try {
+                const { error } = await client
+                    .from('staged_imports')
+                    .delete()
+                    .eq('id', importId);
+
+                if (error) throw error;
+                showToast("Extracted package record deleted successfully.", "success");
+                allStagedImports = allStagedImports.filter(e => e.id !== importId);
+                renderImportsTable(allStagedImports);
+            } catch (e) {
+                console.error("Delete error:", e);
+                showToast("Could not delete record: " + e.message, "error");
+            }
+        }
+
+        function filterImportsTable() {
+            const query = (document.getElementById('importSearchInput').value || '').toLowerCase();
+            const filtered = allStagedImports.filter(item => {
+                const name = (item.work_name || item.name || '').toLowerCase();
+                const docType = (item.doc_type || '').toLowerCase();
+                const status = (item.status || '').toLowerCase();
+                return name.includes(query) || docType.includes(query) || status.includes(query);
+            });
+            renderImportsTable(filtered);
+        }
+
+        // ================= SHARED JSON PAYLOAD MODAL & CLIPBOARD HELPERS =================
+        function copyStagedItemJson(id, type) {
+            const list = type === 'import' ? allStagedImports : allStagedExports;
+            const item = list.find(x => x.id === id);
+            if (!item) return;
+            const text = JSON.stringify(item.details || {}, null, 2);
+            navigator.clipboard.writeText(text).then(() => {
+                showToast("JSON copied! You can now paste into CivilMate Google Sheets Add-on.", "success");
+            }).catch(() => {
+                showToast("Could not copy automatically. Click 'View' to copy manually.", "warning");
+            });
+        }
+
+        function viewStagedItemJson(id, type) {
+            const list = type === 'import' ? allStagedImports : allStagedExports;
+            const item = list.find(x => x.id === id);
+            if (!item) return;
+            const title = (item.work_name || item.name || 'Package') + ' (' + (item.doc_type || 'Data') + ')';
+            const subtitle = 'Status: ' + (item.status || 'Ready') + ' • Created: ' + formatKolkataTimestamp(item.created_at);
+            openPayloadModal(title, subtitle, item.details || {});
+        }
+
+        function openPayloadModal(title, subtitle, jsonDetails) {
+            currentViewPayload = jsonDetails;
+            document.getElementById('payloadModalTitle').textContent = title || 'JSON Payload Details';
+            document.getElementById('payloadModalSubtitle').textContent = subtitle || '';
+            document.getElementById('payloadModalTextarea').value = typeof jsonDetails === 'string' ? jsonDetails : JSON.stringify(jsonDetails, null, 2);
+            document.getElementById('payloadViewerModal').classList.add('active');
+        }
+
+        function closePayloadModal() {
+            document.getElementById('payloadViewerModal').classList.remove('active');
+            currentViewPayload = null;
+        }
+
+        function copyCurrentPayload() {
+            const text = document.getElementById('payloadModalTextarea').value;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast("JSON copied to clipboard!", "success");
+            }).catch(() => {
+                showToast("Please select and copy text manually.", "warning");
+            });
         }
 
         // ================= SESSION ROUTING & INACTIVITY TIMEOUT =================
