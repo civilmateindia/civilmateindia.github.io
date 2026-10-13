@@ -59,6 +59,20 @@
         .state-view.active {
             display: block;
         }
+        #viewLoading.active {
+            display: flex !important;
+        }
+        .portal-spinner {
+            width: 42px;
+            height: 42px;
+            border: 3.5px solid rgba(26, 115, 232, 0.15);
+            border-top-color: var(--portal-primary);
+            border-radius: 50%;
+            animation: portalSpin 0.8s linear infinite;
+        }
+        @keyframes portalSpin {
+            to { transform: rotate(360deg); }
+        }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
@@ -924,8 +938,15 @@
 
     <div class="portal-wrapper">
 
+        <!-- ================= 0. LOADING / SESSION RESOLUTION VIEW ================= -->
+        <div id="viewLoading" class="state-view active" style="min-height: 60vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 20px;">
+            <div class="portal-spinner"></div>
+            <div style="font-family: 'Google Sans', sans-serif; font-size: 16px; font-weight: 500; color: var(--text-primary); margin-top: 18px;">Loading CivilMate Portal...</div>
+            <div style="font-size: 13px; color: var(--text-secondary); margin-top: 6px;">Verifying secure session</div>
+        </div>
+
         <!-- ================= 1. AUTHENTICATION VIEW (Logged Out) ================= -->
-        <div id="viewAuth" class="state-view active">
+        <div id="viewAuth" class="state-view">
             <div class="auth-card">
                 <!-- Authentic CivilMate Logo -->
                 <div class="auth-brand-icon">
@@ -1382,7 +1403,7 @@
                         <span class="material-icons" style="font-size: 16px;">refresh</span>
                         Refresh Data
                     </button>
-                    <button class="btn-dash-action" onclick="showView('viewApproved')">
+                    <button class="btn-dash-action" onclick="closeAdminSuite()">
                         <span class="material-icons" style="font-size: 16px;">dashboard</span>
                         User View
                     </button>
@@ -1972,15 +1993,23 @@
             setAuthMode(authMode === 'login' ? 'signup' : 'login');
         }
 
-        async function signOut() {
+        async function signOut(silent = false) {
+            localStorage.removeItem('civilmate_last_activity');
             const client = getSbClient();
             if (client) {
-                await client.auth.signOut();
+                try {
+                    await client.auth.signOut();
+                } catch (e) {
+                    console.warn("Signout error:", e);
+                }
             }
             currentUser = null;
             currentProfile = null;
+            window.location.hash = '';
             showView('viewAuth');
-            showAlert("You have signed out successfully.", "info");
+            if (!silent) {
+                showAlert("You have signed out successfully.", "info");
+            }
         }
 
         // ================= USER PROFILE =================
@@ -2392,8 +2421,18 @@
         }
 
         function openAdminSuite() {
+            window.location.hash = 'admin';
             showView('viewAdmin');
             loadAdminData();
+        }
+
+        function closeAdminSuite() {
+            window.location.hash = '';
+            if (currentProfile) {
+                renderDashboardForProfile(currentProfile);
+            } else {
+                showView('viewAuth');
+            }
         }
 
         let allAdminUsers = [];
@@ -2751,6 +2790,13 @@
                 btn.style.display = isUserAdmin ? 'inline-flex' : 'none';
             });
 
+            // Retain Admin Suite view if admin was previously in Admin Suite
+            if (window.location.hash === '#admin' && isUserAdmin) {
+                showView('viewAdmin');
+                loadAdminData();
+                return;
+            }
+
             if (profile.status === 'approved') {
                 document.getElementById('apUserInitial').textContent = initial;
                 document.getElementById('apUserName').textContent = profile.full_name || 'CivilMate Estimator';
@@ -2896,15 +2942,50 @@
             renderExportsTable(filtered);
         }
 
-        // ================= SESSION ROUTING =================
+        // ================= SESSION ROUTING & INACTIVITY TIMEOUT =================
+        const INACTIVITY_TIMEOUT_MS = 2 * 60 * 60 * 1000; // 2 hours auto-logout
+
+        function updateActivityTimestamp() {
+            if (currentUser) {
+                localStorage.setItem('civilmate_last_activity', Date.now().toString());
+            }
+        }
+
+        let activityThrottle = null;
+        function onUserInteraction() {
+            if (!currentUser) return;
+            if (!activityThrottle) {
+                updateActivityTimestamp();
+                activityThrottle = setTimeout(() => { activityThrottle = null; }, 30000);
+            }
+        }
+        ['click', 'keydown', 'scroll', 'touchstart'].forEach(evt => {
+            window.addEventListener(evt, onUserInteraction, { passive: true });
+        });
+
         async function handleSession(session) {
             if (session && session.user) {
+                // Inactivity check: if user hasn't interacted for > 2 hours, auto-logout
+                const lastActiveStr = localStorage.getItem('civilmate_last_activity');
+                const now = Date.now();
+                if (lastActiveStr) {
+                    const lastActive = parseInt(lastActiveStr, 10);
+                    if (!isNaN(lastActive) && (now - lastActive > INACTIVITY_TIMEOUT_MS)) {
+                        console.info("Session expired due to inactivity.");
+                        await signOut(true);
+                        showAlert("Your session has timed out due to 2 hours of inactivity. Please sign in again.", "info");
+                        return;
+                    }
+                }
+                updateActivityTimestamp();
+
                 currentUser = session.user;
                 currentProfile = await getOrCreateUserProfile(currentUser);
                 renderDashboardForProfile(currentProfile);
             } else {
                 currentUser = null;
                 currentProfile = null;
+                localStorage.removeItem('civilmate_last_activity');
                 showView('viewAuth');
             }
         }
@@ -2912,7 +2993,9 @@
         function showView(viewId) {
             document.querySelectorAll('.state-view').forEach(el => el.classList.remove('active'));
             const target = document.getElementById(viewId);
-            if (target) target.classList.add('active');
+            if (target) {
+                target.classList.add('active');
+            }
         }
 
         function showAlert(msg, type) {
@@ -2932,6 +3015,16 @@
                 .replace(/'/g, "&#039;");
         }
 
+        // Keep view in sync when user navigates using back/forward or hash
+        window.addEventListener('hashchange', () => {
+            if (window.location.hash === '#admin' && isAdminUser(currentUser)) {
+                showView('viewAdmin');
+                loadAdminData();
+            } else if (currentUser && currentProfile) {
+                renderDashboardForProfile(currentProfile);
+            }
+        });
+
         // ================= LIFECYCLE =================
         window.addEventListener('DOMContentLoaded', async () => {
             const tabLoginEl = document.getElementById('tabLogin');
@@ -2941,24 +3034,37 @@
             if (tabSignupEl) tabSignupEl.addEventListener('click', () => setAuthMode('signup'));
             if (authToggleBtnEl) authToggleBtnEl.addEventListener('click', () => toggleAuthMode());
 
-            // Auto-switch to Apply for Access mode if navigated from CTA
+            // Auto-switch to Apply for Access or Login mode based on URL query
             const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('mode') === 'signup' || window.location.hash === '#signup') {
+            const modeParam = urlParams.get('mode');
+            if (modeParam === 'signup' || window.location.hash === '#signup') {
                 setAuthMode('signup');
+            } else if (modeParam === 'login' || window.location.hash === '#login') {
+                setAuthMode('login');
             }
 
             const client = getSbClient();
             if (client) {
                 try {
+                    let initialHandled = false;
                     const { data: { session } } = await client.auth.getSession();
-                    handleSession(session);
+                    initialHandled = true;
+                    await handleSession(session);
 
-                    client.auth.onAuthStateChange((event, session) => {
-                        // Custom styled modal instead of browser prompt
+                    client.auth.onAuthStateChange(async (event, session) => {
+                        // Prevent redundant second render on initial load
+                        if (event === 'INITIAL_SESSION' && initialHandled) {
+                            return;
+                        }
                         if (event === 'PASSWORD_RECOVERY') {
                             openNewPasswordModal();
+                            return;
                         }
-                        handleSession(session);
+                        if (event === 'SIGNED_OUT') {
+                            await handleSession(null);
+                        } else if (event === 'SIGNED_IN') {
+                            await handleSession(session);
+                        }
                     });
                 } catch (e) {
                     console.warn("Session check error:", e);
@@ -2967,6 +3073,19 @@
             } else {
                 showView('viewAuth');
             }
+
+            // Periodic background check for session inactivity (every 60s)
+            setInterval(async () => {
+                if (!currentUser) return;
+                const lastActiveStr = localStorage.getItem('civilmate_last_activity');
+                if (lastActiveStr) {
+                    const lastActive = parseInt(lastActiveStr, 10);
+                    if (!isNaN(lastActive) && (Date.now() - lastActive > INACTIVITY_TIMEOUT_MS)) {
+                        await signOut(true);
+                        showAlert("Your session has timed out due to 2 hours of inactivity. Please sign in again.", "info");
+                    }
+                }
+            }, 60000);
         });
     </script>
 </body>
