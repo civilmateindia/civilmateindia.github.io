@@ -24,6 +24,79 @@ ALTER TABLE IF EXISTS public.user_profiles
   ADD COLUMN IF NOT EXISTS updated_at timestamptz DEFAULT now(),
   ALTER COLUMN id SET DEFAULT gen_random_uuid();
 
+-- Safely deduplicate older duplicate records if any exist
+DELETE FROM public.user_profiles a
+USING public.user_profiles b
+WHERE a.ctid < b.ctid
+  AND lower(a.email) = lower(b.email);
+
+-- Ensure UNIQUE constraint on email so ON CONFLICT (email) never triggers 42P10
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint 
+    WHERE conname = 'user_profiles_email_key' 
+      AND conrelid = 'public.user_profiles'::regclass
+  ) THEN
+    ALTER TABLE public.user_profiles ADD CONSTRAINT user_profiles_email_key UNIQUE (email);
+  END IF;
+EXCEPTION
+  WHEN duplicate_table THEN NULL;
+  WHEN duplicate_object THEN NULL;
+  WHEN others THEN NULL;
+END $$;
+
+CREATE UNIQUE INDEX IF NOT EXISTS user_profiles_email_uidx ON public.user_profiles (email);
+
+-- Automatic Trigger: Whenever a new account registers in Supabase Auth, insert to user_profiles
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  INSERT INTO public.user_profiles (id, email, full_name, status, subscription_tier, role)
+  VALUES (
+    new.id,
+    lower(new.email),
+    COALESCE(new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'name', split_part(new.email, '@', 1)),
+    'waitlisted',
+    'free',
+    CASE WHEN lower(new.email) = 'civilmateindia@gmail.com' THEN 'admin' ELSE 'user' END
+  )
+  ON CONFLICT (id) DO UPDATE SET
+    email = EXCLUDED.email,
+    full_name = COALESCE(EXCLUDED.full_name, public.user_profiles.full_name),
+    last_active_at = now();
+  RETURN new;
+EXCEPTION
+  WHEN others THEN
+    RETURN new;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- Backfill any existing users from auth.users who registered but were missing from user_profiles
+INSERT INTO public.user_profiles (id, email, full_name, status, subscription_tier, role)
+SELECT 
+  u.id, 
+  lower(u.email), 
+  COALESCE(u.raw_user_meta_data->>'full_name', u.raw_user_meta_data->>'name', split_part(u.email, '@', 1)),
+  'waitlisted',
+  'free',
+  CASE WHEN lower(u.email) = 'civilmateindia@gmail.com' THEN 'admin' ELSE 'user' END
+FROM auth.users u
+WHERE u.email IS NOT NULL
+  AND NOT EXISTS (
+    SELECT 1 FROM public.user_profiles p 
+    WHERE p.id = u.id OR lower(p.email) = lower(u.email)
+  );
+
 -- 2. Create beta_feedback table for feedback, requests, and bug reports
 CREATE TABLE IF NOT EXISTS public.beta_feedback (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),

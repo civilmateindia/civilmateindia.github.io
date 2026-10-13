@@ -1990,51 +1990,90 @@
                 return {
                     id: user.id,
                     email: user.email,
-                    full_name: user.email.split('@')[0],
+                    full_name: (user.email || '').split('@')[0],
                     status: 'waitlisted',
                     subscription_tier: 'free'
                 };
             }
 
             try {
-                const { data } = await client
+                const cleanEmail = (user.email || '').toLowerCase().trim();
+
+                // 1. Check if user profile already exists (by Auth ID or Email)
+                const { data: existing, error: selectErr } = await client
                     .from('user_profiles')
                     .select('*')
-                    .or(`id.eq.${user.id},email.eq.${user.email}`)
+                    .or(`id.eq.${user.id},email.ilike.${cleanEmail}`)
                     .maybeSingle();
 
-                if (data) {
-                    if (data.id !== user.id) {
-                        await client.from('user_profiles').update({ id: user.id }).eq('email', user.email);
-                    }
-                    return data;
+                if (selectErr) {
+                    console.warn("Profile query notice:", selectErr);
                 }
 
+                if (existing) {
+                    if (existing.id !== user.id) {
+                        try {
+                            await client.from('user_profiles').update({ id: user.id }).eq('id', existing.id);
+                            existing.id = user.id;
+                        } catch (e) {
+                            console.warn("Could not sync profile id:", e);
+                        }
+                    }
+                    return existing;
+                }
+
+                // 2. Prepare new profile object
                 const displayName = user.user_metadata?.full_name || 
                                     user.user_metadata?.name || 
-                                    user.email.split('@')[0];
+                                    cleanEmail.split('@')[0];
 
                 const newProfile = {
                     id: user.id,
-                    email: user.email,
+                    email: cleanEmail,
                     full_name: displayName,
                     status: 'waitlisted',
                     subscription_tier: 'free'
                 };
 
-                const { data: upserted } = await client
+                // 3. Insert cleanly without requiring an ON CONFLICT specification (prevents Postgres 42P10)
+                const { data: inserted, error: insertErr } = await client
                     .from('user_profiles')
-                    .upsert([newProfile], { onConflict: 'email' })
+                    .insert([newProfile])
                     .select()
                     .maybeSingle();
 
-                return upserted || newProfile;
+                if (!insertErr && inserted) {
+                    return inserted;
+                }
+
+                // 4. In case of duplicate/concurrent insertion, refetch the stored profile
+                if (insertErr) {
+                    console.warn("Insert notice, querying existing profile:", insertErr);
+                    const { data: refetched } = await client
+                        .from('user_profiles')
+                        .select('*')
+                        .or(`id.eq.${user.id},email.ilike.${cleanEmail}`)
+                        .maybeSingle();
+
+                    if (refetched) return refetched;
+
+                    // Fallback to upsert on primary key 'id' (always supported by PostgreSQL)
+                    const { data: upsertedById } = await client
+                        .from('user_profiles')
+                        .upsert([newProfile], { onConflict: 'id' })
+                        .select()
+                        .maybeSingle();
+
+                    if (upsertedById) return upsertedById;
+                }
+
+                return newProfile;
             } catch (e) {
                 console.error("Profile resolution error:", e);
                 return {
                     id: user.id,
                     email: user.email,
-                    full_name: user.email.split('@')[0],
+                    full_name: (user.email || '').split('@')[0],
                     status: 'waitlisted',
                     subscription_tier: 'free'
                 };
@@ -2061,14 +2100,19 @@
             try {
                 if (!client) throw new Error("Database service not initialized.");
 
+                const cleanEmail = (currentUser.email || '').toLowerCase().trim();
                 const { data, error } = await client
                     .from('user_profiles')
                     .select('*')
-                    .or(`id.eq.${currentUser.id},email.eq.${currentUser.email}`)
+                    .or(`id.eq.${currentUser.id},email.ilike.${cleanEmail}`)
                     .maybeSingle();
 
                 if (error) throw error;
-                if (data) currentProfile = data;
+                if (data) {
+                    currentProfile = data;
+                } else {
+                    currentProfile = await getOrCreateUserProfile(currentUser);
+                }
 
                 const status = (currentProfile && currentProfile.status) ? currentProfile.status : 'waitlisted';
 
@@ -2128,15 +2172,41 @@
 
             try {
                 const client = getSbClient();
+                const cleanEmail = (currentUser.email || '').toLowerCase().trim();
+
                 if (client) {
-                    await client.from('user_profiles').update({ status: 'opted_out' }).eq('email', currentUser.email);
+                    // Update user status in Supabase table
+                    const { data: updated, error: updateErr } = await client
+                        .from('user_profiles')
+                        .update({ status: 'opted_out' })
+                        .or(`id.eq.${currentUser.id},email.ilike.${cleanEmail}`)
+                        .select();
+
+                    if (updateErr) {
+                        console.warn("Revoke update attempt:", updateErr);
+                    }
+
+                    // If user was not yet in user_profiles, create the row with opted_out status
+                    if (!updated || updated.length === 0) {
+                        const displayName = currentUser.user_metadata?.full_name || 
+                                            currentUser.user_metadata?.name || 
+                                            cleanEmail.split('@')[0];
+                        await client.from('user_profiles').insert([{
+                            id: currentUser.id,
+                            email: cleanEmail,
+                            full_name: displayName,
+                            status: 'opted_out',
+                            subscription_tier: 'free'
+                        }]);
+                    }
                 }
+
                 if (currentProfile) currentProfile.status = 'opted_out';
                 showToast("Your access has been revoked.", "warning");
                 showView('viewOptedOut');
             } catch (e) {
                 console.error("Opt-out error:", e);
-                showToast("Could not process revocation.", "error");
+                showToast("Could not process revocation: " + (e.message || "Database busy"), "error");
             }
         }
 
@@ -2144,15 +2214,39 @@
             if (!currentUser) return;
             try {
                 const client = getSbClient();
+                const cleanEmail = (currentUser.email || '').toLowerCase().trim();
+
                 if (client) {
-                    await client.from('user_profiles').update({ status: 'waitlisted' }).eq('email', currentUser.email);
+                    const { data: updated, error: updateErr } = await client
+                        .from('user_profiles')
+                        .update({ status: 'waitlisted' })
+                        .or(`id.eq.${currentUser.id},email.ilike.${cleanEmail}`)
+                        .select();
+
+                    if (updateErr) {
+                        console.warn("Rejoin update attempt:", updateErr);
+                    }
+
+                    if (!updated || updated.length === 0) {
+                        const displayName = currentUser.user_metadata?.full_name || 
+                                            currentUser.user_metadata?.name || 
+                                            cleanEmail.split('@')[0];
+                        await client.from('user_profiles').insert([{
+                            id: currentUser.id,
+                            email: cleanEmail,
+                            full_name: displayName,
+                            status: 'waitlisted',
+                            subscription_tier: 'free'
+                        }]);
+                    }
                 }
+
                 if (currentProfile) currentProfile.status = 'waitlisted';
                 showToast("You have re-applied and joined the waitlist!", "success");
                 renderDashboardForProfile(currentProfile);
             } catch (e) {
                 console.error("Rejoin error:", e);
-                showToast("Could not rejoin waitlist.", "error");
+                showToast("Could not rejoin waitlist: " + (e.message || "Database busy"), "error");
             }
         }
 
