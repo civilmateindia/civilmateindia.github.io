@@ -1,4 +1,4 @@
-﻿:root {
+:root {
     --google-blue: #1a73e8;
     --google-blue-hover: #1557b0;
     --text-primary: #202124;
@@ -105,7 +105,154 @@ header {
     background-color: var(--bg-gray);
 }
 
-/* Hero Section */
+/* =============================================================================
+   PARALLAX HERO & VECTOR ENGINEERING BACKGROUND
+   ============================================================================= */
+.hero-parallax-wrapper {
+    position: relative;
+    overflow: hidden;
+    margin-top: 65px;
+    padding: 70px 24px 85px 24px;
+    background: linear-gradient(180deg, #ffffff 0%, #f7faff 50%, #edf3fc 100%);
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Parallax Stage (Behind Hero Content) */
+.parallax-stage {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+/* Layer 1: Blueprint CAD Grid Pattern */
+.parallax-layer-grid {
+    position: absolute;
+    top: -80px;
+    left: 0;
+    right: 0;
+    bottom: -160px;
+    background-image: 
+        linear-gradient(to right, rgba(26, 115, 232, 0.045) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(26, 115, 232, 0.045) 1px, transparent 1px),
+        linear-gradient(to right, rgba(26, 115, 232, 0.09) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(26, 115, 232, 0.09) 1px, transparent 1px);
+    background-size: 24px 24px, 24px 24px, 120px 120px, 120px 120px;
+    mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 35%, rgba(0, 0, 0, 0) 85%);
+    -webkit-mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 35%, rgba(0, 0, 0, 0) 85%);
+    will-change: transform;
+    transition: transform 0.05s linear;
+}
+
+/* Layer 2: Vector Architectural & Contour SVG */
+.parallax-layer-vectors {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    width: 100%;
+    height: 125%;
+    will-change: transform;
+    transition: transform 0.05s linear;
+    opacity: 0.95;
+}
+
+.parallax-vector-svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Layer 3: Floating Engineering Geometric Badges & Crosshairs */
+.parallax-layer-accents {
+    position: absolute;
+    inset: 0;
+    will-change: transform;
+    transition: transform 0.08s linear;
+}
+
+.cad-crosshair {
+    position: absolute;
+    font-family: 'Roboto Mono', 'Courier New', Courier, monospace;
+    font-size: 16px;
+    font-weight: 700;
+    color: rgba(26, 115, 232, 0.35);
+    user-select: none;
+    line-height: 1;
+}
+.ch-1 { top: 18%; left: 8%; }
+.ch-2 { top: 32%; right: 9%; }
+.ch-3 { bottom: 22%; left: 12%; }
+.ch-4 { bottom: 30%; right: 14%; }
+
+
+/* Hero Content (Foreground) */
+.hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 880px;
+    margin: 0 auto;
+}
+
+.hero-pill-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    background: rgba(232, 240, 254, 0.85);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid #d2e3fc;
+    border-radius: 20px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--google-blue);
+    margin-bottom: 22px;
+    box-shadow: 0 2px 8px rgba(26, 115, 232, 0.08);
+}
+
+.hero-pill-badge .pill-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #1e8e3e;
+    box-shadow: 0 0 0 0 rgba(30, 142, 62, 0.7);
+    animation: pillDotPulse 2s infinite;
+}
+
+@keyframes pillDotPulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(30, 142, 62, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 7px rgba(30, 142, 62, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(30, 142, 62, 0); }
+}
+
+.hero-content h1 {
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    line-height: 1.18;
+    margin-bottom: 20px;
+    letter-spacing: -0.6px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.hero-content p {
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    color: var(--text-secondary);
+    margin-bottom: 34px;
+    max-width: 740px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+}
+
+/* Backward compatibility for .hero */
 .hero {
     margin-top: 65px;
     padding: 80px 24px;
@@ -113,28 +260,6 @@ header {
     max-width: 900px;
     margin-left: auto;
     margin-right: auto;
-}
-
-.hero h1 {
-    font-size: 56px;
-    line-height: 1.2;
-    margin-bottom: 24px;
-    letter-spacing: -0.5px;
-}
-
-.hero p {
-    font-size: 20px;
-    color: var(--text-secondary);
-    margin-bottom: 40px;
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.hero-actions {
-    display: flex;
-    gap: 16px;
-    justify-content: center;
 }
 
 /* Features Section */
@@ -954,4 +1079,272 @@ footer {
             .form-section { padding: 20px; }
             .stat-grid { grid-template-columns: 1fr 1fr; }
         }
-    
+
+        /* --- Rough Cost / Plinth Area Rates Banner --- */
+        .plinth-banner {
+            background: linear-gradient(135deg, #1a73e8 0%, #1557b0 100%);
+            color: #ffffff;
+            padding: 36px 32px;
+            border-radius: 12px;
+            margin: 40px auto;
+            max-width: 1200px;
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            box-shadow: 0 8px 24px rgba(26, 115, 232, 0.2);
+            box-sizing: border-box;
+        }
+
+        .plinth-banner-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .plinth-banner-icon .material-icons {
+            font-size: 36px;
+            color: #fff;
+        }
+
+        .plinth-banner-content {
+            flex: 1;
+        }
+
+        .plinth-banner-content h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            color: #ffffff;
+        }
+
+        .plinth-banner-content p {
+            font-size: 15px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.92);
+            margin: 0;
+        }
+
+        .plinth-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .plinth-banner {
+                flex-direction: column;
+                text-align: center;
+                padding: 24px 20px;
+                gap: 16px;
+                margin: 24px 16px;
+            }
+        }
+
+        /* --- GIF Screenshots / Workflow Walkthrough --- */
+        .workflow-section {
+            padding: 70px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .workflow-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 32px;
+            margin-top: 36px;
+        }
+
+        .workflow-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .workflow-card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .workflow-card-header {
+            padding: 22px 24px 16px;
+            border-bottom: 1px solid #f1f3f4;
+        }
+
+        .workflow-card-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--google-blue);
+            background: #e8f0fe;
+            padding: 4px 10px;
+            border-radius: 14px;
+            margin-bottom: 8px;
+        }
+
+        .workflow-card-title {
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 6px 0;
+        }
+
+        .workflow-card-desc {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        /* GIF Screen Recording Container */
+        .gif-screen-container {
+            background: #0f141c;
+            position: relative;
+            min-height: 240px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-top: 1px solid #e8eaed;
+            border-bottom: 1px solid #e8eaed;
+        }
+
+        .gif-screen-img {
+            width: 100%;
+            height: auto;
+            max-height: 520px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .gif-dummy-overlay {
+            width: 100%;
+            min-height: 260px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at center, #23272d 0%, #16181d 100%);
+            color: #ffffff;
+            padding: 24px;
+            text-align: center;
+            gap: 10px;
+            box-sizing: border-box;
+        }
+
+        .gif-dummy-icon {
+            font-size: 46px;
+            color: #4285f4;
+            filter: drop-shadow(0 2px 8px rgba(66, 133, 244, 0.4));
+        }
+
+        .gif-dummy-title {
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+        }
+
+        .gif-dummy-hint {
+            font-size: 11.5px;
+            color: #9aa0a6;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px dashed rgba(255, 255, 255, 0.25);
+            padding: 6px 14px;
+            border-radius: 6px;
+            max-width: 85%;
+            line-height: 1.4;
+        }
+
+        .workflow-features-list {
+            list-style: none;
+            padding: 18px 24px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #fafbfc;
+            flex: 1;
+        }
+
+        .workflow-features-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 13px;
+            color: var(--text-primary);
+        }
+
+        .workflow-features-list .material-icons {
+            font-size: 17px;
+            color: #1e8e3e;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* Modern Positive Strengths Grid */
+        .positive-strengths-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 36px;
+        }
+
+        .strength-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 28px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .strength-card:hover {
+            border-color: var(--google-blue);
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .strength-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: #e8f0fe;
+            color: var(--google-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .strength-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .strength-desc {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            line-height: 1.55;
+            margin: 0;
+        }

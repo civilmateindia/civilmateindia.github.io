@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CivilMate - Smart Estimation for Civil Engineers</title>
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>CivilMate - Smart Estimation & HEWP Workflow for Engineers, Staff & Contractors</title>
     <!-- Using Google Fonts for that Google Workspace&trade; feel -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,8 +29,9 @@
         </button>
         <div class="nav-links" id="navLinks">
             <a href="index.html#features">Features</a>
-            <a href="index.html#learn-section">Learn</a>
-            <a href="index.html#register-section">Apply</a>
+            <a href="index.html#plinth-rates">Plinth Rates</a>
+            <a href="index.html#workflows">Demos</a>
+            <a href="index.html#advantages">Advantages</a>
             <a href="faq.html">FAQ</a>
             <a href="live-tenders.html">Tenders</a>
             <div class="dropdown">
@@ -50,29 +52,316 @@
         </div>
     </header>
 
-    <section class="hero">
-        <h1>Smart Estimation Tools for Civil Engineers</h1>
-        <p>The essential ecosystem combining a powerful Google Workspace&trade; Add-on and a Chrome&trade; Extension. Streamline your estimating, upload bills to HEWP seamlessly, and extract BoQs effortlessly.</p>
-        <div class="hero-actions" style="flex-direction: column; align-items: center; gap: 10px;">
-            <a href="portal.html?mode=signup" class="btn btn-primary" style="padding: 13px 32px; font-size: 16px; display: inline-flex; align-items: center; gap: 8px;">
-                <span class="material-icons" style="font-size: 18px;">how_to_reg</span>
-                Apply for Access
-            </a>
-            <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">
-                Already have access? <a href="portal.html?mode=login" style="color: var(--google-blue); font-weight: 500; text-decoration: none;">Sign in to Portal</a>
+    <section class="hero-parallax-wrapper" id="heroWrapper">
+        <!-- PARALLAX STAGE (BEHIND CONTENT) -->
+        <div class="parallax-stage" id="parallaxStage" aria-hidden="true">
+            <!-- Layer 1: Blueprint CAD Coordinate Grid Pattern -->
+            <div class="parallax-layer-grid" id="parallaxGrid"></div>
+
+            <!-- Layer 2: Vector Engineering & Cloud Ecosystem SVG -->
+            <div class="parallax-layer-vectors" id="parallaxVectors">
+                <svg class="parallax-vector-svg" viewBox="0 0 1440 680" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                    <defs>
+                        <linearGradient id="engBlueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#1a73e8" stop-opacity="0.38" />
+                            <stop offset="100%" stop-color="#4285f4" stop-opacity="0.12" />
+                        </linearGradient>
+                        <linearGradient id="engGreenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#34a853" stop-opacity="0.38" />
+                            <stop offset="100%" stop-color="#1e8e3e" stop-opacity="0.10" />
+                        </linearGradient>
+                        <linearGradient id="roadGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#1a73e8" stop-opacity="0.25" />
+                            <stop offset="50%" stop-color="#4285f4" stop-opacity="0.16" />
+                            <stop offset="100%" stop-color="#34a853" stop-opacity="0.22" />
+                        </linearGradient>
+                        <linearGradient id="cloudGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#4285f4" stop-opacity="0.22" />
+                            <stop offset="100%" stop-color="#1a73e8" stop-opacity="0.05" />
+                        </linearGradient>
+                        <linearGradient id="sheetGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.75" />
+                            <stop offset="100%" stop-color="#f8fafd" stop-opacity="0.45" />
+                        </linearGradient>
+                    </defs>
+
+                    <!-- 1. BUILDING CONSTRUCTION & TOWER CRANE (Left Bay) -->
+                    <g class="vector-building" opacity="0.65">
+                        <!-- Ground / Foundation Line -->
+                        <line x1="30" y1="620" x2="330" y2="620" stroke="#1a73e8" stroke-width="2" stroke-linecap="round" />
+                        <line x1="40" y1="626" x2="320" y2="626" stroke="#1a73e8" stroke-width="1" stroke-dasharray="4 4" opacity="0.5" />
+
+                        <!-- Rooftop Tower Crane -->
+                        <!-- Vertical Mast Truss -->
+                        <line x1="160" y1="130" x2="160" y2="290" stroke="#1a73e8" stroke-width="2" />
+                        <line x1="174" y1="130" x2="174" y2="290" stroke="#1a73e8" stroke-width="2" />
+                        <line x1="160" y1="150" x2="174" y2="170" stroke="#1a73e8" stroke-width="1" />
+                        <line x1="174" y1="150" x2="160" y2="170" stroke="#1a73e8" stroke-width="1" />
+                        <line x1="160" y1="190" x2="174" y2="210" stroke="#1a73e8" stroke-width="1" />
+                        <line x1="174" y1="190" x2="160" y2="210" stroke="#1a73e8" stroke-width="1" />
+                        <line x1="160" y1="230" x2="174" y2="250" stroke="#1a73e8" stroke-width="1" />
+                        <line x1="174" y1="230" x2="160" y2="250" stroke="#1a73e8" stroke-width="1" />
+                        <line x1="160" y1="270" x2="174" y2="290" stroke="#1a73e8" stroke-width="1" />
+
+                        <!-- Slewing Ring & Operator Cab -->
+                        <rect x="154" y="122" width="26" height="8" rx="2" fill="#1a73e8" opacity="0.3" stroke="#1a73e8" stroke-width="1" />
+                        <rect x="146" y="106" width="16" height="16" rx="2" fill="#1a73e8" opacity="0.2" stroke="#1a73e8" stroke-width="1" />
+
+                        <!-- Crane Apex Tower -->
+                        <polygon points="167,78 160,122 174,122" stroke="#1a73e8" stroke-width="1.5" fill="none" />
+
+                        <!-- Crane Jib (Long Horizontal Boom) -->
+                        <line x1="80" y1="122" x2="275" y2="122" stroke="#1a73e8" stroke-width="2" />
+                        <line x1="80" y1="128" x2="275" y2="128" stroke="#1a73e8" stroke-width="1" />
+                        <line x1="174" y1="128" x2="194" y2="122" stroke="#1a73e8" stroke-width="1" />
+                        <line x1="194" y1="128" x2="214" y2="122" stroke="#1a73e8" stroke-width="1" />
+                        <line x1="214" y1="128" x2="234" y2="122" stroke="#1a73e8" stroke-width="1" />
+                        <line x1="234" y1="128" x2="254" y2="122" stroke="#1a73e8" stroke-width="1" />
+                        <line x1="254" y1="128" x2="274" y2="122" stroke="#1a73e8" stroke-width="1" />
+
+                        <!-- Tie Pendants / Cables -->
+                        <line x1="167" y1="78" x2="240" y2="122" stroke="#1a73e8" stroke-width="1" stroke-dasharray="2 2" />
+                        <line x1="167" y1="78" x2="110" y2="122" stroke="#1a73e8" stroke-width="1" />
+
+                        <!-- Counterweight Block -->
+                        <rect x="84" y="118" width="18" height="14" rx="2" fill="#1a73e8" opacity="0.4" stroke="#1a73e8" stroke-width="1" />
+
+                        <!-- Trolley, Hoist Cable & Hook -->
+                        <rect x="230" y="126" width="10" height="4" fill="#1a73e8" />
+                        <line x1="235" y1="130" x2="235" y2="175" stroke="#1a73e8" stroke-width="1" stroke-dasharray="2 2" />
+                        <polygon points="232,175 238,175 235,182" fill="#1a73e8" />
+
+                        <!-- Building Structural Skeleton (Multi-Story Slab & Column Frame) -->
+                        <rect x="60" y="290" width="220" height="6" rx="2" fill="#1a73e8" opacity="0.3" stroke="#1a73e8" stroke-width="1.2" />
+                        <rect x="60" y="370" width="220" height="6" rx="2" fill="#1a73e8" opacity="0.3" stroke="#1a73e8" stroke-width="1.2" />
+                        <rect x="60" y="450" width="220" height="6" rx="2" fill="#1a73e8" opacity="0.3" stroke="#1a73e8" stroke-width="1.2" />
+                        <rect x="60" y="530" width="220" height="6" rx="2" fill="#1a73e8" opacity="0.3" stroke="#1a73e8" stroke-width="1.2" />
+                        <rect x="50" y="614" width="240" height="8" rx="2" fill="#1a73e8" opacity="0.4" stroke="#1a73e8" stroke-width="1.5" />
+
+                        <!-- Columns -->
+                        <line x1="75" y1="290" x2="75" y2="614" stroke="#1a73e8" stroke-width="2.5" />
+                        <line x1="135" y1="290" x2="135" y2="614" stroke="#1a73e8" stroke-width="2.5" />
+                        <line x1="205" y1="290" x2="205" y2="614" stroke="#1a73e8" stroke-width="2.5" />
+                        <line x1="265" y1="290" x2="265" y2="614" stroke="#1a73e8" stroke-width="2.5" />
+
+                        <!-- Lower Bay X-Bracing -->
+                        <line x1="75" y1="536" x2="135" y2="614" stroke="#1a73e8" stroke-width="1" stroke-dasharray="3 3" opacity="0.6" />
+                        <line x1="135" y1="536" x2="75" y2="614" stroke="#1a73e8" stroke-width="1" stroke-dasharray="3 3" opacity="0.6" />
+                        <line x1="205" y1="536" x2="265" y2="614" stroke="#1a73e8" stroke-width="1" stroke-dasharray="3 3" opacity="0.6" />
+                        <line x1="265" y1="536" x2="205" y2="614" stroke="#1a73e8" stroke-width="1" stroke-dasharray="3 3" opacity="0.6" />
+
+                        <!-- Structural Nodes -->
+                        <circle cx="75" cy="293" r="3" fill="#1a73e8" />
+                        <circle cx="135" cy="293" r="3" fill="#1a73e8" />
+                        <circle cx="205" cy="293" r="3" fill="#1a73e8" />
+                        <circle cx="265" cy="293" r="3" fill="#1a73e8" />
+                        <circle cx="75" cy="373" r="3" fill="#1a73e8" />
+                        <circle cx="135" cy="373" r="3" fill="#1a73e8" />
+                        <circle cx="205" cy="373" r="3" fill="#1a73e8" />
+                        <circle cx="265" cy="373" r="3" fill="#1a73e8" />
+                    </g>
+
+                    <!-- 2. HIGHWAY & ROADS / OVERPASS (Sweeping across bottom & middle) -->
+                    <g class="vector-road" opacity="0.6">
+                        <!-- Bridge Piers -->
+                        <g stroke="#1a73e8" stroke-width="2" fill="none" opacity="0.4">
+                            <line x1="390" y1="465" x2="390" y2="620" />
+                            <line x1="414" y1="465" x2="414" y2="620" />
+                            <line x1="385" y1="620" x2="419" y2="620" stroke-width="3" />
+
+                            <line x1="720" y1="510" x2="720" y2="640" />
+                            <line x1="744" y1="510" x2="744" y2="640" />
+                            <line x1="715" y1="640" x2="749" y2="640" stroke-width="3" />
+
+                            <line x1="1040" y1="480" x2="1040" y2="630" />
+                            <line x1="1064" y1="480" x2="1064" y2="630" />
+                            <line x1="1035" y1="630" x2="1069" y2="630" stroke-width="3" />
+                        </g>
+
+                        <!-- Highway Deck Surface Fill -->
+                        <path d="M-40,430 C300,380 520,530 840,480 C1140,430 1280,360 1480,410 L1480,446 C1280,396 1140,466 840,516 C520,566 300,416 -40,466 Z" fill="url(#roadGrad)" />
+
+                        <!-- Guardrails -->
+                        <path d="M-40,430 C300,380 520,530 840,480 C1140,430 1280,360 1480,410" stroke="url(#engBlueGrad)" stroke-width="2.5" stroke-linecap="round" fill="none" />
+                        <path d="M-40,466 C300,416 520,566 840,516 C1140,466 1280,396 1480,446" stroke="url(#engBlueGrad)" stroke-width="2.5" stroke-linecap="round" fill="none" />
+
+                        <!-- Dashed Centerline -->
+                        <path d="M-40,448 C300,398 520,548 840,498 C1140,448 1280,378 1480,428" stroke="#1a73e8" stroke-width="2" stroke-dasharray="14 10" stroke-linecap="round" opacity="0.85" fill="none" />
+
+                        <!-- Secondary Arterial Road Ribbon -->
+                        <path d="M-40,540 C350,510 650,620 1020,560 C1250,520 1380,550 1480,520" stroke="url(#engGreenGrad)" stroke-width="1.8" stroke-dasharray="8 6" opacity="0.5" fill="none" />
+                    </g>
+
+                    <!-- 3. SPREADSHEETS (Floating Estimation Sheet) -->
+                    <g class="vector-spreadsheet" opacity="0.7">
+                        <!-- Sheet Window Frame -->
+                        <rect x="1140" y="160" width="260" height="230" rx="8" fill="url(#sheetGrad)" stroke="#1a73e8" stroke-width="1.5" />
+                        
+                        <!-- Header Bar -->
+                        <rect x="1140" y="160" width="260" height="32" rx="8" fill="#1a73e8" opacity="0.15" />
+                        <circle cx="1158" cy="176" r="4" fill="#ea4335" opacity="0.8" />
+                        <circle cx="1172" cy="176" r="4" fill="#fbbc04" opacity="0.8" />
+                        <circle cx="1186" cy="176" r="4" fill="#34a853" opacity="0.8" />
+                        
+                        <!-- Formula Bar fx Pill -->
+                        <rect x="1204" y="169" width="180" height="14" rx="4" fill="#ffffff" stroke="#1a73e8" stroke-width="1" opacity="0.8" />
+                        <line x1="1212" y1="176" x2="1290" y2="176" stroke="#1a73e8" stroke-width="2" stroke-linecap="round" opacity="0.6" />
+
+                        <!-- Column Header Row -->
+                        <rect x="1140" y="192" width="260" height="22" fill="#1a73e8" opacity="0.08" />
+                        <line x1="1140" y1="214" x2="1400" y2="214" stroke="#1a73e8" stroke-width="1" opacity="0.4" />
+                        
+                        <!-- Column Dividers -->
+                        <line x1="1195" y1="192" x2="1195" y2="390" stroke="#1a73e8" stroke-width="1" opacity="0.35" />
+                        <line x1="1265" y1="192" x2="1265" y2="390" stroke="#1a73e8" stroke-width="1" opacity="0.35" />
+                        <line x1="1335" y1="192" x2="1335" y2="390" stroke="#1a73e8" stroke-width="1" opacity="0.35" />
+
+                        <!-- Column Header Labels (Graphic Bars) -->
+                        <rect x="1152" y="198" width="28" height="8" rx="2" fill="#1a73e8" opacity="0.3" />
+                        <rect x="1210" y="198" width="38" height="8" rx="2" fill="#1a73e8" opacity="0.3" />
+                        <rect x="1280" y="198" width="38" height="8" rx="2" fill="#1a73e8" opacity="0.3" />
+                        <rect x="1350" y="198" width="34" height="8" rx="2" fill="#1a73e8" opacity="0.3" />
+
+                        <!-- Data Row 1 -->
+                        <line x1="1140" y1="244" x2="1400" y2="244" stroke="#1a73e8" stroke-width="1" opacity="0.25" />
+                        <rect x="1150" y="224" width="30" height="7" rx="2" fill="#1a73e8" opacity="0.25" />
+                        <rect x="1205" y="224" width="46" height="7" rx="2" fill="#1a73e8" opacity="0.4" />
+                        <rect x="1275" y="224" width="42" height="7" rx="2" fill="#34a853" opacity="0.45" />
+                        <rect x="1345" y="224" width="38" height="7" rx="2" fill="#1a73e8" opacity="0.4" />
+
+                        <!-- Data Row 2 -->
+                        <line x1="1140" y1="274" x2="1400" y2="274" stroke="#1a73e8" stroke-width="1" opacity="0.25" />
+                        <rect x="1150" y="254" width="24" height="7" rx="2" fill="#1a73e8" opacity="0.25" />
+                        <rect x="1205" y="254" width="52" height="7" rx="2" fill="#1a73e8" opacity="0.4" />
+                        <rect x="1275" y="254" width="36" height="7" rx="2" fill="#34a853" opacity="0.45" />
+                        <rect x="1345" y="254" width="44" height="7" rx="2" fill="#1a73e8" opacity="0.4" />
+
+                        <!-- Data Row 3 (Active Highlighted Cell) -->
+                        <rect x="1265" y="274" width="70" height="30" fill="#34a853" opacity="0.12" stroke="#34a853" stroke-width="1.5" />
+                        <line x1="1140" y1="304" x2="1400" y2="304" stroke="#1a73e8" stroke-width="1" opacity="0.25" />
+                        <rect x="1150" y="284" width="28" height="7" rx="2" fill="#1a73e8" opacity="0.25" />
+                        <rect x="1205" y="284" width="40" height="7" rx="2" fill="#1a73e8" opacity="0.4" />
+                        <rect x="1275" y="284" width="48" height="7" rx="2" fill="#34a853" opacity="0.6" />
+                        <rect x="1345" y="284" width="36" height="7" rx="2" fill="#1a73e8" opacity="0.4" />
+
+                        <!-- Data Row 4 -->
+                        <line x1="1140" y1="334" x2="1400" y2="334" stroke="#1a73e8" stroke-width="1" opacity="0.25" />
+                        <rect x="1150" y="314" width="30" height="7" rx="2" fill="#1a73e8" opacity="0.25" />
+                        <rect x="1205" y="314" width="48" height="7" rx="2" fill="#1a73e8" opacity="0.4" />
+                        <rect x="1275" y="314" width="44" height="7" rx="2" fill="#34a853" opacity="0.45" />
+                        <rect x="1345" y="314" width="40" height="7" rx="2" fill="#1a73e8" opacity="0.4" />
+
+                        <!-- Summary Row -->
+                        <rect x="1140" y="360" width="260" height="30" rx="4" fill="#1a73e8" opacity="0.06" />
+                        <line x1="1140" y1="360" x2="1400" y2="360" stroke="#1a73e8" stroke-width="1.5" opacity="0.5" />
+                        <rect x="1205" y="371" width="42" height="8" rx="2" fill="#1a73e8" opacity="0.5" />
+                        <rect x="1335" y="371" width="52" height="8" rx="2" fill="#1a73e8" opacity="0.6" />
+                    </g>
+
+                    <!-- 4. CLOUD & DATA SYNC -->
+                    <g class="vector-cloud" opacity="0.65">
+                        <!-- Main Vector Cloud (Top Center-Right) -->
+                        <g transform="translate(950, 65)">
+                            <path d="M 40,70 A 28,28 0 0,1 68,36 A 42,42 0 0,1 142,30 A 34,34 0 0,1 185,55 A 24,24 0 0,1 185,70 Z" fill="url(#cloudGrad)" stroke="#1a73e8" stroke-width="1.8" stroke-linejoin="round" />
+                            <line x1="38" y1="70" x2="187" y2="70" stroke="#1a73e8" stroke-width="1.8" stroke-linecap="round" />
+
+                            <!-- Sync Direction Arrows -->
+                            <g stroke="#1a73e8" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="102" y1="46" x2="102" y2="60" />
+                                <polyline points="97,51 102,46 107,51" />
+                                <line x1="120" y1="44" x2="120" y2="58" />
+                                <polyline points="115,53 120,58 125,53" />
+                            </g>
+                        </g>
+
+                        <!-- Secondary Accent Cloud (Top Left) -->
+                        <g transform="translate(340, 100)" opacity="0.5">
+                            <path d="M 25,48 A 18,18 0 0,1 42,24 A 28,28 0 0,1 92,20 A 22,22 0 0,1 122,38 A 16,16 0 0,1 122,48 Z" fill="url(#cloudGrad)" stroke="#1a73e8" stroke-width="1.4" stroke-linejoin="round" />
+                            <line x1="24" y1="48" x2="123" y2="48" stroke="#1a73e8" stroke-width="1.4" stroke-linecap="round" />
+                        </g>
+
+                        <!-- Data Flow Stream Connections -->
+                        <path d="M 1060,135 C 1090,170 1120,180 1140,195" stroke="#1a73e8" stroke-width="1.5" stroke-dasharray="4 4" fill="none" opacity="0.6" />
+                        <circle cx="1100" cy="165" r="2.5" fill="#1a73e8" opacity="0.7" />
+                        <circle cx="1125" cy="182" r="2" fill="#34a853" opacity="0.7" />
+                        <path d="M 960,110 C 680,60 480,180 275,125" stroke="#1a73e8" stroke-width="1.2" stroke-dasharray="5 5" fill="none" opacity="0.45" />
+                    </g>
+
+                    <!-- 5. COORDINATE & SURVEY NODES -->
+                    <g class="vector-nodes" opacity="0.5">
+                        <circle cx="390" cy="465" r="3.5" fill="#1a73e8" />
+                        <circle cx="720" cy="510" r="3.5" fill="#34a853" />
+                        <circle cx="1040" cy="480" r="3.5" fill="#1a73e8" />
+                        <circle cx="840" cy="480" r="4" fill="#34a853" />
+                        <circle cx="520" cy="530" r="3" fill="#1a73e8" />
+                    </g>
+                </svg>
             </div>
-            <p style="font-size: 12px; color: var(--text-secondary); margin: 2px 0 0 0;">Installation links unlock inside the portal once authorized.</p>
+
+            <!-- Layer 3: Engineering Coordinate Crosshairs (No text badges) -->
+            <div class="parallax-layer-accents" id="parallaxAccents">
+                <div class="cad-crosshair ch-1">+</div>
+                <div class="cad-crosshair ch-2">+</div>
+                <div class="cad-crosshair ch-3">+</div>
+                <div class="cad-crosshair ch-4">+</div>
+            </div>
+        </div>
+
+        <!-- HERO FOREGROUND CONTENT -->
+        <div class="hero-content">
+            <div class="hero-pill-badge">
+                <span class="pill-dot"></span>
+                <span>Haryana PWD B&R Plinth Rates &bull; HEWP Workflow Automator</span>
+            </div>
+            <h1>Smart Estimation & HEWP Workflow Suite</h1>
+            <p>Built for Engineers, Technical Staff, and Contractors across all departments. Accelerate detailed estimates, automatically calculate Rough Cost Estimates based on the latest Plinth Area Rates published by Haryana PWD B&R Department, upload running bills to HEWP, and extract BoQ PDFs effortlessly.</p>
+            <div class="hero-actions" style="flex-direction: column; align-items: center; gap: 8px;">
+                <div style="display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;">
+                    <a href="portal.html" class="btn btn-primary" style="padding: 13px 32px; font-size: 15px; display: inline-flex; align-items: center; gap: 8px;">
+                        <span class="material-icons" style="font-size: 18px;">dashboard</span>
+                        Open CivilMate Portal
+                    </a>
+                    <a href="#workflows" class="btn btn-secondary" style="padding: 13px 26px; font-size: 15px; display: inline-flex; align-items: center; gap: 6px;">
+                        <span class="material-icons" style="font-size: 18px;">play_circle_outline</span>
+                        See Demos
+                    </a>
+                </div>
+                <p style="font-size: 12px; color: var(--text-secondary); margin: 6px 0 0 0;">Cloud-powered in Google Workspace&trade; & modern browsers. 100% Free during Early Access.</p>
+            </div>
         </div>
     </section>
 
+    <!-- ROUGH COST ESTIMATE & PLINTH AREA RATES BANNER -->
+    <section id="plinth-rates" style="padding: 0 20px;">
+        <div class="plinth-banner">
+            <div class="plinth-banner-icon">
+                <span class="material-icons">architecture</span>
+            </div>
+            <div class="plinth-banner-content">
+                <span class="plinth-badge">Official Standard Rates</span>
+                <h3>Automated Rough Cost Estimates based on Haryana PWD B&R Plinth Area Rates</h3>
+                <p>Instantly generate standard Rough Cost Estimates calibrated with the latest Plinth Area Rates published by the Haryana PWD (B&R) Department. Tailored for engineers, planning staff, and contractors to prepare administrative approval estimates, preliminary cost forecasts, and departmental proposals in seconds with zero manual calculation errors.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CORE FEATURES SECTION -->
     <section id="features" class="features">
         <div class="features-container">
             <div class="feature-card">
                 <div class="feature-icon">
+                    <span class="material-icons">calculate</span>
+                </div>
+                <h3>Rough Cost & Plinth Rates Engine</h3>
+                <p>Automatically compiles project estimates using official Haryana PWD B&R Plinth Area Rates. Compute structural cost parameters, contingency margins, and departmental percentages with zero manual lookup.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
                     <span class="material-icons">table_chart</span>
                 </div>
-                <h3>Google Sheets&trade; Add-on</h3>
-                <p>Integrates directly into Google Sheets&trade;. Eliminate manual data entry, format, validate, and compile your structural estimates seamlessly.</p>
+                <h3>Google Sheets&trade; Estimation Add-on</h3>
+                <p>Integrates directly into Google Sheets&trade;. Prepare measurement sheets (L, B, D), format abstracts, evaluate item rates, and manage multi-tier estimates with real-time cloud auto-save.</p>
             </div>
             
             <div class="feature-card">
@@ -80,167 +369,217 @@
                     <span class="material-icons">extension</span>
                 </div>
                 <h3>Chrome&trade; Extension for HEWP</h3>
-                <p>Push estimates and bills data straight to the Haryana Engineering Works Portal (HEWP), or extract BoQs and Detailed Estimates directly into your spreadsheet.</p>
+                <p>Bridge your estimates and running bills directly to the Haryana Engineering Works Portal (works.haryana.gov.in). Support for Form entry and Excel uploads with 1-click execution.</p>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon">
-                    <span class="material-icons">sync</span>
+                    <span class="material-icons">picture_as_pdf</span>
                 </div>
-                <h3>To-Fro Data Movement</h3>
-                <p>Keep your data consistent. Prepare in Google Sheets&trade;, push to HEWP using the extension, or import PDFs from HEWP back into sheets.</p>
+                <h3>BoQ & PDF Extractor</h3>
+                <p>Extract tabulated BoQs, schedule items, quantities, and rates from tender PDFs or HEWP exports back into clean spreadsheets ready for cross-checking and immediate reuse.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <span class="material-icons">drafts</span>
+                </div>
+                <h3>Official Letter &amp; Memo Builder</h3>
+                <p>Quickly prepare standardized bilingual (English &amp; Hindi) official letters, memo numbers, and endorsements. Clean layout, automatic margins, and print-ready formatting built for engineering offices.</p>
+                <div style="margin-top: 16px;">
+                    <a href="letter.html" class="btn btn-primary" style="padding: 8px 16px; font-size: 13.5px; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; border-radius: 6px;">
+                        <span class="material-icons" style="font-size: 16px;">open_in_new</span>
+                        Open Letter Builder
+                    </a>
+                </div>
             </div>
         </div>
     </section>
 
-        <section id="learn-section">
-        <div class="learn-content">
+    <!-- WORKFLOWS & GIF SHOWCASE SECTION -->
+    <section id="workflows" class="workflow-section">
         <div class="header-text">
-            <h2>Why Top Engineers Choose Cloud over Desktop</h2>
-            <p>Stop wrestling with outdated software, security warnings, and manual updates. See why CivilMate is the smart upgrade.</p>
+            <h2>See CivilMate in Action</h2>
+            <p>Visual screen recordings of how the Google Sheets&trade; Add-on and HEWP Chrome&trade; Extension automate your daily estimating, billing, and portal tasks.</p>
         </div>
 
-        <div class="grid-container">
-            <div class="card card-old">
-                <h3 class="card-title">Traditional Add-ins</h3>
-                <div class="card-subtitle">The old way of working</div>
-                <ul class="features">
-                    <li>
-                        <svg class="icon icon-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <div>
-                            <span class="feature-title">Security Warnings</span>
-                            <span class="feature-desc">Requires downloading .exe files that trigger Antivirus alarms.</span>
-                        </div>
-                    </li>
-                    <li>
-                        <svg class="icon icon-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <div>
-                            <span class="feature-title">Tethered to One PC</span>
-                            <span class="feature-desc">Only works on the specific Windows machine where installed.</span>
-                        </div>
-                    </li>
-                    <li>
-                        <svg class="icon icon-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <div>
-                            <span class="feature-title">Manual Updates</span>
-                            <span class="feature-desc">Must manually download and reinstall new patches constantly.</span>
-                        </div>
-                    </li>
-                    <li>
-                        <svg class="icon icon-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <div>
-                            <span class="feature-title">Data Loss Risk</span>
-                            <span class="feature-desc">Vulnerable to hard drive crashes and corrupted Excel files.</span>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="card card-new">
-                <div class="winner-badge">The Smart Choice</div>
-                <h3 class="card-title">CivilMate</h3>
-                <div class="card-subtitle">Modern Google Workspace&#8482; Ecosystem</div>
-                <ul class="features">
-                    <li>
-                        <svg class="icon icon-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <div>
-                            <span class="feature-title">100% Cloud-Based</span>
-                            <span class="feature-desc">Zero .exe downloads. Installs safely in Google Workspace&#8482;.</span>
-                        </div>
-                    </li>
-                    <li>
-                        <svg class="icon icon-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <div>
-                            <span class="feature-title">Work From Anywhere</span>
-                            <span class="feature-desc">Access estimates on PC, Mac, iPad, or mobile devices.</span>
-                        </div>
-                    </li>
-                    <li>
-                        <svg class="icon icon-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <div>
-                            <span class="feature-title">Silent Auto-Updates</span>
-                            <span class="feature-desc">Always on the latest version. We update the cloud instantly.</span>
-                        </div>
-                    </li>
-                    <li>
-                        <svg class="icon icon-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <div>
-                            <span class="feature-title">Automated Backups</span>
-                            <span class="feature-desc">Every keystroke saved to Google Drive&#8482;. Never lose an estimate.</span>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="header-text">
-            <h2>CivilMate Pricing Comparison</h2>
-            <p>We build tools for our comrades. See how our pricing stacks up against traditional desktop software.</p>
-        </div>
-
-        <div class="pricing-container">
-            <div class="card card-old">
-                <h3 class="card-title">Traditional Desktop Add-ins</h3>
-                <div class="price-container">
-                    <div class="price strike-price">₹4,999<span>/yr</span></div>
-                    <div class="footnote" style="margin-top: 5px;">or up to ₹5,999/yr for premium</div>
+        <div class="workflow-grid">
+            <!-- WORKFLOW 1: ADD-ON GIF SHOWCASE -->
+            <div class="workflow-card">
+                <div class="workflow-card-header">
+                    <div class="workflow-card-badge">
+                        <span class="material-icons" style="font-size: 14px;">table_chart</span>
+                        Google Sheets&trade; Add-on
+                    </div>
+                    <h3 class="workflow-card-title">Rough Cost & Detailed Estimation</h3>
+                    <p class="workflow-card-desc">Watch how quickly engineers and technical staff can generate automated Rough Cost Estimates with Haryana PWD B&R Plinth Area Rates, format detailed measurements, and stage data to the cloud.</p>
                 </div>
-                <ul class="features">
-                    <li><span class="icon icon-cross">✕</span> <span>Expensive yearly renewals</span></li>
-                    <li><span class="icon icon-cross">✕</span> <span>Paid trials (up to ₹99 just to test)</span></li>
-                    <li><span class="icon icon-cross">✕</span> <span>Locked to a single PC/Device</span></li>
-                    <li><span class="icon icon-cross">✕</span> <span>Manual downloads for updates</span></li>
+
+                <!-- GIF Screen Recording Container -->
+                <div class="gif-screen-container">
+                    <img src="addon-demo.gif" alt="CivilMate Google Sheets&trade; Add-on Demo - Rough Cost & Detailed Estimation" class="gif-screen-img" loading="lazy">
+                </div>
+
+                <ul class="workflow-features-list">
+                    <li>
+                        <span class="material-icons">check_circle</span>
+                        <span><strong>1-Click Plinth Estimation:</strong> Choose building class and auto-fetch official Haryana PWD B&R rates.</span>
+                    </li>
+                    <li>
+                        <span class="material-icons">check_circle</span>
+                        <span><strong>Automated Formatting:</strong> Generate standardized L&times;B&times;D measurement rows with live totals.</span>
+                    </li>
+                    <li>
+                        <span class="material-icons">check_circle</span>
+                        <span><strong>Cloud Sync:</strong> Stage estimate packages directly for seamless transfer to HEWP.</span>
+                    </li>
                 </ul>
-                <div class="btn-outline">Outdated Model</div>
             </div>
 
-            <div class="card card-new">
-                <div class="badge">Early Adopter Advantage</div>
-                <h3 class="card-title">CivilMate Cloud</h3>
-                <div class="price-container">
-                    <div class="price">₹0<span>/Early Access</span></div>
-                    <div class="footnote" style="margin-top: 5px;">No credit card or payment required</div>
+            <!-- WORKFLOW 2: EXTENSION GIF SHOWCASE -->
+            <div class="workflow-card">
+                <div class="workflow-card-header">
+                    <div class="workflow-card-badge">
+                        <span class="material-icons" style="font-size: 14px;">extension</span>
+                        HEWP Chrome&trade; Extension
+                    </div>
+                    <h3 class="workflow-card-title">HEWP Portal Upload & BoQ Extraction</h3>
+                    <p class="workflow-card-desc">See the Chrome&trade; extension automatically populate running bills, inject estimate items into works.haryana.gov.in, and extract BoQ PDFs in seconds.</p>
                 </div>
-                <ul class="features">
-                    <li><span class="icon icon-check">✓</span> <span><strong>100% Free</strong> during Early Access & rollout</span></li>
-                    <li><span class="icon icon-check">✓</span> <span><strong>Zero</strong> paid trials or hidden setup fees</span></li>
-                    <li><span class="icon icon-check">✓</span> <span>Cloud-synced across all your devices</span></li>
-                    <li><span class="icon icon-check">✓</span> <span>Transparent, community-first future pricing</span></li>
+
+                <!-- Interactive Video Screen Recording Container (Fixes Error 153 & File Protocol) -->
+                <div class="gif-screen-container" id="ytContainer" style="background: #0a0d14; min-height: 440px; position: relative; padding: 16px 12px; display: flex; align-items: center; justify-content: center;">
+                    <!-- Facade / Poster View (Displays on initial load without any Error 153) -->
+                    <div id="ytPoster" style="width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; text-align: center;" onclick="loadYtShort()">
+                        <div style="position: relative; max-width: 230px; display: inline-block;">
+                            <img src="extension-demo-card.jpg" alt="HEWP Extension Live Demo Screenshot" style="width: 100%; max-height: 400px; object-fit: contain; border-radius: 10px; box-shadow: 0 6px 24px rgba(0,0,0,0.6); display: block; border: 1px solid rgba(255,255,255,0.1);">
+                            <!-- Play Button Overlay -->
+                            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 62px; height: 62px; background: rgba(234, 67, 53, 0.95); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 18px rgba(234,67,53,0.5); transition: transform 0.2s ease;">
+                                <span class="material-icons" style="font-size: 34px; color: #ffffff; margin-left: 3px;">play_arrow</span>
+                            </div>
+                            <div style="position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: #ffffff; padding: 4px 12px; border-radius: 14px; font-size: 11px; font-weight: 600; white-space: nowrap; backdrop-filter: blur(4px);">
+                                ▶ Click to Play Video
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Dynamic Iframe View (Loads only when clicked with proper referrer headers) -->
+                    <div id="ytIframeBox" style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center;">
+                        <iframe id="ytIframe" 
+                                src="" 
+                                title="CivilMate HEWP Chrome Extension Demo" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                allowfullscreen 
+                                referrerpolicy="strict-origin-when-cross-origin"
+                                style="width: 100%; max-width: 290px; height: 490px; border: none; border-radius: 10px; display: block; margin: 0 auto; box-shadow: 0 6px 24px rgba(0,0,0,0.6);">
+                        </iframe>
+                    </div>
+                </div>
+                <div style="padding: 10px 20px; background: #fafbfc; border-bottom: 1px solid #e8eaed; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                    <span style="font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 4px;">
+                        <span class="material-icons" style="font-size: 15px; color: #1e8e3e;">verified</span>
+                        HEWP Automation (Shorts &bull; 0:30)
+                    </span>
+                    <a href="https://www.youtube.com/shorts/akO_cG89rkA" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; color: #cc0000; text-decoration: none; padding: 5px 10px; border-radius: 4px; background: rgba(204,0,0,0.08);">
+                        <span class="material-icons" style="font-size: 15px;">smart_display</span> Watch on YouTube Shorts &rarr;
+                    </a>
+                </div>
+
+                <ul class="workflow-features-list">
+                    <li>
+                        <span class="material-icons">check_circle</span>
+                        <span><strong>Direct HEWP Integration:</strong> Syncs staged packages straight into works.haryana.gov.in forms.</span>
+                    </li>
+                    <li>
+                        <span class="material-icons">check_circle</span>
+                        <span><strong>Fast Running Bills Upload:</strong> Submit new, previous, and all bill entries without manual clerical effort.</span>
+                    </li>
+                    <li>
+                        <span class="material-icons">check_circle</span>
+                        <span><strong>BoQ PDF Extractor:</strong> Parse complex tender PDFs into structured, editable table data.</span>
+                    </li>
                 </ul>
-                <a href="portal.html?mode=signup" class="btn btn-primary btn-full">Apply for Access</a>
-                <p class="footnote">* Future subscriptions will be minimal and strictly to balance server expenditures.</p>
             </div>
         </div>
+    </section>
 
-        <div class="install-links" style="text-align: center;">
-            <h3>Get CivilMate Access</h3>
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 14px;">
-                <a href="portal.html?mode=signup" class="btn btn-primary" style="padding: 12px 28px; display: inline-flex; align-items: center; gap: 8px;">
-                    <span class="material-icons" style="font-size: 18px;">how_to_reg</span> Apply for Access
+    <!-- MODERN ADVANTAGES (POSITIVE PRESENTATION WITHOUT ABUSE OR COMPETITOR BASHING) -->
+    <section id="advantages" style="background: var(--bg-gray); padding: 80px 24px;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <div class="header-text">
+                <h2>Built for Modern Engineering Workflows</h2>
+                <p>Designed from the ground up for engineers, technical staff, and contractors who need speed, mobility, and dependable precision.</p>
+            </div>
+
+            <div class="positive-strengths-grid">
+                <div class="strength-card">
+                    <div class="strength-icon">
+                        <span class="material-icons">cloud_done</span>
+                    </div>
+                    <h3 class="strength-title">100% Cloud-Powered & Secure</h3>
+                    <p class="strength-desc">Runs natively in Google Workspace&trade; and modern browsers. No installation of untrusted executables, no hardware lock-in, and zero antivirus false-alarms.</p>
+                </div>
+
+                <div class="strength-card">
+                    <div class="strength-icon">
+                        <span class="material-icons">devices</span>
+                    </div>
+                    <h3 class="strength-title">Work from Any Machine, Anywhere</h3>
+                    <p class="strength-desc">Access your estimates, running bills, and staged packages seamlessly across Windows PC, Mac, iPad, or mobile phone. Your workspace travels with you to the office or field.</p>
+                </div>
+
+                <div class="strength-card">
+                    <div class="strength-icon">
+                        <span class="material-icons">groups</span>
+                    </div>
+                    <h3 class="strength-title">Seamless Team Collaboration</h3>
+                    <p class="strength-desc">Engineers, drafting assistants, and billing contractors can work on the same spreadsheet simultaneously with instant revision history and automatic Google Drive&trade; backups.</p>
+                </div>
+
+                <div class="strength-card">
+                    <div class="strength-icon">
+                        <span class="material-icons">verified</span>
+                    </div>
+                    <h3 class="strength-title">Always Aligned with Haryana Norms</h3>
+                    <p class="strength-desc">Cloud-updated automatically with latest Haryana PWD B&R Plinth Area Rates, HSR rate revisions, and HEWP portal compatibility — no manual software patch downloads required.</p>
+                </div>
+            </div>
+
+            <!-- COMMUNITY ACCESS CARD (CLEAN & NON-REPETITIVE) -->
+            <div style="max-width: 540px; margin: 60px auto 0 auto; background: #fff; border: 2px solid var(--google-blue); border-radius: 12px; padding: 36px 32px; box-shadow: 0 8px 24px rgba(26,115,232,0.08); text-align: center;">
+                <span class="badge" style="position: static; transform: none; display: inline-block; margin-bottom: 12px;">Community Rollout</span>
+                <h3 style="font-size: 24px; font-weight: 700; color: var(--text-primary); margin: 0 0 6px 0;">CivilMate Cloud Access</h3>
+                <p style="font-size: 14px; color: var(--text-secondary); margin: 0 0 20px 0;">Full suite access for departmental engineers, technical staff & contractors.</p>
+                <div style="font-size: 42px; font-weight: 700; color: var(--google-blue); line-height: 1; margin-bottom: 4px;">₹0 <span style="font-size: 16px; font-weight: 500; color: var(--text-secondary);">/ Early Access</span></div>
+                <div style="font-size: 12.5px; color: var(--text-secondary); margin-bottom: 24px;">No credit card, payment, or trial expiration</div>
+
+                <ul style="list-style: none; padding: 0; margin: 0 0 28px 0; text-align: left; display: flex; flex-direction: column; gap: 10px; font-size: 13.5px; color: var(--text-primary);">
+                    <li style="display: flex; align-items: center; gap: 10px;"><span style="color: #1e8e3e; font-weight: bold;">✓</span> <span>Google Sheets&trade; Estimation Add-on included</span></li>
+                    <li style="display: flex; align-items: center; gap: 10px;"><span style="color: #1e8e3e; font-weight: bold;">✓</span> <span>Automated Rough Cost Estimates (Haryana PWD B&R Plinth Rates)</span></li>
+                    <li style="display: flex; align-items: center; gap: 10px;"><span style="color: #1e8e3e; font-weight: bold;">✓</span> <span>Chrome&trade; Extension for HEWP bills & estimate uploads</span></li>
+                    <li style="display: flex; align-items: center; gap: 10px;"><span style="color: #1e8e3e; font-weight: bold;">✓</span> <span>PDF BoQ & Detailed Estimate Extractor</span></li>
+                </ul>
+
+                <a href="portal.html" class="btn btn-primary" style="width: 100%; padding: 13px; font-size: 15px; border-radius: 6px;">
+                    Go to CivilMate Portal
                 </a>
-                <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">
-                    Already have access? <a href="portal.html?mode=login" style="color: var(--google-blue); font-weight: 500; text-decoration: none;">Sign in to Portal</a>
-                </div>
+                <p style="font-size: 11.5px; color: var(--text-secondary); margin: 12px 0 0 0; font-style: italic;">* Future subscriptions will remain minimal and strictly to balance cloud infrastructure expenses.</p>
             </div>
         </div>
-    </div>
-
-    
     </section>
 
-    
-
-    <section id="register-section" style="background: var(--bg-gray); padding: 50px 0;">
-        <h2 style="text-align:center; font-size: 32px; margin-bottom: 8px; font-family: 'Google Sans', sans-serif;">Apply for CivilMate Access</h2>
-        <p style="text-align:center; font-size: 15px; color: var(--text-secondary); max-width: 620px; margin: 0 auto 30px auto; line-height: 1.5;">
-            Early access seats are provisioned sequentially to maintain high server performance, seamless Google Workspace integration, and dedicated user support. Track live capacity below and submit your application to join the workspace.
+    <!-- ONBOARDING & PROGRAM CAPACITY SECTION -->
+    <section id="register-section" style="background: #ffffff; padding: 70px 24px;">
+        <h2 style="text-align:center; font-size: 30px; margin-bottom: 8px; font-family: 'Google Sans', sans-serif;">CivilMate Portal & Onboarding</h2>
+        <p style="text-align:center; font-size: 14.5px; color: var(--text-secondary); max-width: 620px; margin: 0 auto 30px auto; line-height: 1.5;">
+            Seats are provisioned sequentially to maintain high server performance, seamless Google Workspace&trade; integration, and dedicated user support. Track live capacity below and enter the portal.
         </p>
 
         <div class="tester-container" style="max-width: 620px; margin: 0 auto; background: #fff; padding: 32px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
             <!-- Live Program Capacity Metrics (Only numbers shown) -->
             <div class="dash-container" style="margin-bottom: 0; border: 1px solid var(--border-color); border-radius: 8px; padding: 18px; background: var(--bg-gray);">
                 <div class="dash-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                    <h4 style="margin:0; font-size:14px; font-weight:600; text-transform:uppercase; color:var(--text-secondary); letter-spacing:0.5px;">Program Capacity</h4>
+                    <h4 style="margin:0; font-size:14px; font-weight:600; text-transform:uppercase; color:var(--text-secondary); letter-spacing:0.5px;">Live Capacity</h4>
                     <div class="dash-actions" style="display:flex; align-items:center; gap:8px;">
                         <button type="button" class="refresh-btn" onclick="manualRefresh(this)" style="display:inline-flex; align-items:center; gap:4px; padding:4px 10px; font-size:12px; border-radius:4px; border:1px solid #dadce0; background:#fff; cursor:pointer;">
                             <svg class="refresh-icon" style="width:14px; height:14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
@@ -269,14 +608,14 @@
                 </div>
             </div>
 
-            <!-- Single Call-to-Action to Portal (Zero form inputs outside) -->
-            <div style="text-align: center; margin-top: 28px;">
-                <a href="portal.html?mode=signup" class="btn" style="background: var(--google-blue); color: #fff; padding: 14px 34px; border-radius: 6px; font-size: 16px; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 6px rgba(26,115,232,0.3); transition: background 0.2s, box-shadow 0.2s;">
-                    Apply for Access
-                    <span class="material-icons" style="font-size: 20px;">arrow_forward</span>
+            <!-- Single Call-to-Action to Portal -->
+            <div style="text-align: center; margin-top: 24px;">
+                <a href="portal.html" class="btn" style="background: var(--google-blue); color: #fff; padding: 13px 32px; border-radius: 6px; font-size: 15px; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 6px rgba(26,115,232,0.3); transition: background 0.2s, box-shadow 0.2s;">
+                    <span>Open CivilMate Portal</span>
+                    <span class="material-icons" style="font-size: 18px;">arrow_forward</span>
                 </a>
-                <div style="margin-top: 14px; font-size: 13px; color: var(--text-secondary);">
-                    Already have access? <a href="portal.html?mode=login" style="color: var(--google-blue); font-weight: 500; text-decoration: none;">Sign in to Portal</a>
+                <div style="margin-top: 12px; font-size: 13px; color: var(--text-secondary);">
+                    Sign in or register your account to install the Add-on and Extension
                 </div>
             </div>
         </div>
@@ -378,7 +717,70 @@
         }, 500);
     }
 
-    window.addEventListener('DOMContentLoaded', fetchAndPopulateDashboards);
+    // -------------------------------------------------------------
+    // CIVILMATE 60FPS VECTOR PARALLAX SCROLL CONTROLLER
+    // -------------------------------------------------------------
+    (function initParallaxEngine() {
+        let isTicking = false;
+        const stage = document.getElementById('parallaxStage');
+        if (!stage) return;
+
+        const gridLayer = document.getElementById('parallaxGrid');
+        const vectorLayer = document.getElementById('parallaxVectors');
+        const accentsLayer = document.getElementById('parallaxAccents');
+        const heroWrapper = document.getElementById('heroWrapper');
+
+        function onScrollUpdate() {
+            const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+            if (scrollY < 850) {
+                if (gridLayer) {
+                    gridLayer.style.transform = `translate3d(0, ${scrollY * 0.12}px, 0)`;
+                }
+                if (vectorLayer) {
+                    vectorLayer.style.transform = `translate3d(0, ${scrollY * 0.26}px, 0)`;
+                }
+                if (accentsLayer) {
+                    accentsLayer.style.transform = `translate3d(0, ${scrollY * 0.38}px, 0)`;
+                }
+            }
+            isTicking = false;
+        }
+
+        window.addEventListener('scroll', () => {
+            if (!isTicking) {
+                window.requestAnimationFrame(onScrollUpdate);
+                isTicking = true;
+            }
+        }, { passive: true });
+
+        // Subtle desktop cursor dynamic tilt
+        if (heroWrapper && window.innerWidth > 992) {
+            heroWrapper.addEventListener('mousemove', (e) => {
+                const rect = heroWrapper.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width) - 0.5;
+                const y = ((e.clientY - rect.top) / rect.height) - 0.5;
+                if (vectorLayer) {
+                    vectorLayer.style.transform = `translate3d(${x * 14}px, ${y * 10}px, 0)`;
+                }
+            });
+            heroWrapper.addEventListener('mouseleave', () => {
+                onScrollUpdate();
+            });
+        }
+    })();
+        function loadYtShort() {
+            var p = document.getElementById('ytPoster');
+            var b = document.getElementById('ytIframeBox');
+            var f = document.getElementById('ytIframe');
+            if (p && b && f) {
+                p.style.display = 'none';
+                b.style.display = 'flex';
+                f.src = 'https://www.youtube.com/embed/akO_cG89rkA?autoplay=1&rel=0';
+            }
+        }
+        window.loadYtShort = loadYtShort;
+
+        window.addEventListener('DOMContentLoaded', fetchAndPopulateDashboards);
 </script>
 </body>
 </html>
