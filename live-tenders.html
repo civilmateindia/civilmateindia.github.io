@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -215,6 +215,7 @@
         </button>
         <div class="nav-links" id="navLinks">
             <a href="index.html#features">Features</a>
+            <a href="index.html#plinth-rates">Plinth Rates</a>
             <a href="index.html#workflows">Demos</a>
             <a href="index.html#advantages">Advantages</a>
             <a href="faq.html">FAQ</a>
@@ -473,8 +474,8 @@
         if (!valStr || valStr.trim() === '-' || valStr.trim() === '0') return 'TBD';
         let val = parseFloat(valStr.replace(/,/g, ''));
         if (isNaN(val)) return valStr;
-        if (val >= 10000000) return `₹ ${(val/10000000).toFixed(2)} Cr`;
-        if (val >= 100000) return `₹ ${(val/100000).toFixed(2)} Lakh`;
+        if (val >= 10000000) return `â‚¹ ${(val/10000000).toFixed(2)} Cr`;
+        if (val >= 100000) return `â‚¹ ${(val/100000).toFixed(2)} Lakh`;
         return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(val);
     }
 
@@ -652,7 +653,7 @@
             const fDateObj = new Date(activeTimelineFilter.date);
             const fDateStr = fDateObj.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
             const typeStr = activeTimelineFilter.type === 'pub' ? 'Published' : 'Closing';
-            resultMsg += ` • <span style="color:var(--primary);">${typeStr} on ${fDateStr}</span>`;
+            resultMsg += ` â€¢ <span style="color:var(--primary);">${typeStr} on ${fDateStr}</span>`;
         }
         document.getElementById('resultCount').innerHTML = resultMsg;
         
@@ -720,8 +721,8 @@
                 </div>
 
                 <div class="fee-grid">
-                    <div class="fee-item"><span class="fee-label">Total Fee</span><span class="fee-val">₹ ${totalFeeFormatted}</span></div>
-                    <div class="fee-item"><span class="fee-label">EMD</span><span class="fee-val">₹ ${tender['EMD Amount'] || '0'}</span></div>
+                    <div class="fee-item"><span class="fee-label">Total Fee</span><span class="fee-val">â‚¹ ${totalFeeFormatted}</span></div>
+                    <div class="fee-item"><span class="fee-label">EMD</span><span class="fee-val">â‚¹ ${tender['EMD Amount'] || '0'}</span></div>
                     <div class="fee-item"><span class="fee-label">Work Period</span><span class="fee-val">${workPeriodDisplay}</span></div>
                 </div>
                 <button class="btn-view-details" onclick="showTenderDetails('${tender._uid}')">
@@ -738,7 +739,7 @@
                 <td><strong>${dept}</strong><br><span style="font-size:0.75rem; color:var(--text-muted);">${division}</span><br>${category ? `<span class="cat-badge" style="margin-top:4px;">${category}</span>` : ''}</td>
                 <td><span style="font-size:0.8rem;"><strong>ID:</strong> ${tenderId}</span></td>
                 <td style="max-width:300px;line-height:1.4;"><strong>${workDesc}</strong></td>
-                <td><span style="color:var(--success);font-weight:700;">${tenderValue}</span><br><span style="font-size:0.75rem; color:var(--text-muted);">Fee: ₹${totalFeeFormatted} | EMD: ₹${tender['EMD Amount'] || '0'}</span></td>
+                <td><span style="color:var(--success);font-weight:700;">${tenderValue}</span><br><span style="font-size:0.75rem; color:var(--text-muted);">Fee: â‚¹${totalFeeFormatted} | EMD: â‚¹${tender['EMD Amount'] || '0'}</span></td>
                 <td><span style="font-size:0.75rem; color:var(--text-muted);">Start:</span><br>${startDateStr}<br><span style="font-size:0.75rem; color:var(--text-muted); margin-top:4px; display:block;">End:</span><span class="${status.txtClass}"><strong>${endDateStr}</strong></span><br>${closesTodayHtml}</td>
                 <td><button class="btn-view-details" style="padding: 6px 12px; font-size: 0.75rem;" onclick="showTenderDetails('${tender._uid}')">Details</button></td>
             `;
@@ -758,9 +759,9 @@
         document.getElementById('dt_cat').textContent = tender['Product Category'] || '-';
         
         document.getElementById('dt_val').textContent = formatCurrency(tender['Tender Value']);
-        document.getElementById('dt_emd').textContent = tender['EMD Amount'] ? `₹ ${tender['EMD Amount']}` : '0';
-        document.getElementById('dt_tfee').textContent = tender['Tender Fee'] ? `₹ ${tender['Tender Fee']}` : '0';
-        document.getElementById('dt_pfee').textContent = tender['Processing Fee'] ? `₹ ${tender['Processing Fee']}` : '0';
+        document.getElementById('dt_emd').textContent = tender['EMD Amount'] ? `â‚¹ ${tender['EMD Amount']}` : '0';
+        document.getElementById('dt_tfee').textContent = tender['Tender Fee'] ? `â‚¹ ${tender['Tender Fee']}` : '0';
+        document.getElementById('dt_pfee').textContent = tender['Processing Fee'] ? `â‚¹ ${tender['Processing Fee']}` : '0';
 
         document.getElementById('dt_id').textContent = tender['Tender ID'] || '-';
         document.getElementById('dt_ref').textContent = tender['Tender Reference Number'] || '-';
@@ -821,3 +822,5 @@
 </script>
 </body>
 </html>
+
+
