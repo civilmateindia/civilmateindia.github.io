@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -29,9 +29,13 @@
         </button>
         <div class="nav-links" id="navLinks">
             <a href="index.html#features">Features</a>
+            <a href="index.html#tools-suite">Tools Suite</a>
             <a href="index.html#plinth-rates">Plinth Rates</a>
             <a href="index.html#workflows">Demos</a>
             <a href="index.html#advantages">Advantages</a>
+            <a href="portal.html#learn" style="color: var(--google-blue); font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+                <span class="material-icons" style="font-size: 15px;">school</span> Learn &amp; Tutorials
+            </a>
             <a href="faq.html">FAQ</a>
             <a href="live-tenders.html">Tenders</a>
             <div class="dropdown">
@@ -311,22 +315,26 @@
         <div class="hero-content">
             <div class="hero-pill-badge">
                 <span class="pill-dot"></span>
-                <span>Haryana PWD B&R Plinth Rates &bull; HEWP Workflow Automator</span>
+                <span>Complete Civil Engineering Estimating &bull; Rebar BBS &bull; Billing &bull; Statutory Reports</span>
             </div>
-            <h1>Smart Estimation & HEWP Workflow Suite</h1>
-            <p>Built for Engineers, Technical Staff, and Contractors across all departments. Accelerate detailed estimates, automatically calculate Rough Cost Estimates based on the latest Plinth Area Rates published by Haryana PWD B&R Department, upload running bills to HEWP, and extract BoQ PDFs effortlessly.</p>
+            <h1>Comprehensive Civil Engineering Estimating &amp; Billing Suite</h1>
+            <p>Engineered for Civil Engineers, Technical Planning Officers, and Contractors across all departments. Instantly search Master Schedule of Rates (HSR/CSR/CPWD), auto-generate Bar Bending Schedules (BBS), structural steel, IS 1200 earthwork, column footings, RCC pipes, running bills with automated variation flags, statutory GST/cess footers, and print-ready official reports.</p>
             <div class="hero-actions" style="flex-direction: column; align-items: center; gap: 8px;">
                 <div style="display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;">
                     <a href="portal.html" class="btn btn-primary" style="padding: 13px 32px; font-size: 15px; display: inline-flex; align-items: center; gap: 8px;">
                         <span class="material-icons" style="font-size: 18px;">dashboard</span>
                         Open CivilMate Portal
                     </a>
-                    <a href="#workflows" class="btn btn-secondary" style="padding: 13px 26px; font-size: 15px; display: inline-flex; align-items: center; gap: 6px;">
-                        <span class="material-icons" style="font-size: 18px;">play_circle_outline</span>
-                        See Demos
+                    <a href="portal.html#learn" class="btn btn-secondary" style="padding: 13px 26px; font-size: 15px; display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--border-color); background: #ffffff;">
+                        <span class="material-icons" style="font-size: 18px; color: var(--google-blue);">school</span>
+                        Tutorials &amp; Guides
+                    </a>
+                    <a href="#tools-suite" class="btn btn-secondary" style="padding: 13px 26px; font-size: 15px; display: inline-flex; align-items: center; gap: 6px;">
+                        <span class="material-icons" style="font-size: 18px;">construction</span>
+                        Tools Suite
                     </a>
                 </div>
-                <p style="font-size: 12px; color: var(--text-secondary); margin: 6px 0 0 0;">Cloud-powered in Google Workspace&trade; & modern browsers. 100% Free during Early Access.</p>
+                <p style="font-size: 12px; color: var(--text-secondary); margin: 6px 0 0 0;">Native Google Sheets&trade; Add-on &bull; Zero manual calculation errors &bull; Calibrated to Indian Standards &amp; Departmental Codes.</p>
             </div>
         </div>
     </section>
@@ -345,54 +353,730 @@
         </div>
     </section>
 
-    <!-- CORE FEATURES SECTION -->
-    <section id="features" class="features">
-        <div class="features-container">
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <span class="material-icons">calculate</span>
-                </div>
-                <h3>Rough Cost & Plinth Rates Engine</h3>
-                <p>Automatically compiles project estimates using official Haryana PWD B&R Plinth Area Rates. Compute structural cost parameters, contingency margins, and departmental percentages with zero manual lookup.</p>
+        <!-- ==========================================================================
+         CIVILMATE ENGINEERING SUITE INTERACTIVE SHOWCASE
+         ========================================================================== -->
+    <section id="tools-suite" class="tools-suite-section">
+        <div class="tools-suite-container">
+            <div class="section-title-wrap">
+                <span class="section-tag">
+                    <span class="material-icons" style="font-size: 16px;">construction</span>
+                    Modeless Engineering Suite
+                </span>
+                <h2>Specialized Civil Engineering Calculators</h2>
+                <p>CivilMate features a floating modeless suite that works right inside your active spreadsheet. Calculate rebar schedules, structural steel, excavation allowances, footings, and culverts with instant 1-click injection into your measurement sheets.</p>
             </div>
 
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <span class="material-icons">table_chart</span>
-                </div>
-                <h3>Google Sheets&trade; Estimation Add-on</h3>
-                <p>Integrates directly into Google Sheets&trade;. Prepare measurement sheets (L, B, D), format abstracts, evaluate item rates, and manage multi-tier estimates with real-time cloud auto-save.</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <span class="material-icons">extension</span>
-                </div>
-                <h3>Chrome&trade; Extension for HEWP</h3>
-                <p>Bridge your estimates and running bills directly to the Haryana Engineering Works Portal (works.haryana.gov.in). Support for Form entry and Excel uploads with 1-click execution.</p>
+            <!-- Tool Selector Pills -->
+            <div class="tools-nav-pills" role="tablist">
+                <button class="tools-nav-pill active" data-tool="bbs" onclick="switchToolPreview('bbs')">
+                    <span class="material-icons">timeline</span> Steel BBS
+                </button>
+                <button class="tools-nav-pill" data-tool="struct" onclick="switchToolPreview('struct')">
+                    <span class="material-icons">foundation</span> Structural Steel
+                </button>
+                <button class="tools-nav-pill" data-tool="earthwork" onclick="switchToolPreview('earthwork')">
+                    <span class="material-icons">landscape</span> IS 1200 Earthwork
+                </button>
+                <button class="tools-nav-pill" data-tool="footing" onclick="switchToolPreview('footing')">
+                    <span class="material-icons">layers</span> Footings &amp; Foundations
+                </button>
+                <button class="tools-nav-pill" data-tool="pipe" onclick="switchToolPreview('pipe')">
+                    <span class="material-icons">water_drop</span> RCC Hume Pipes
+                </button>
+                <button class="tools-nav-pill" data-tool="ei" onclick="switchToolPreview('ei')">
+                    <span class="material-icons">electrical_services</span> Electrical Installations
+                </button>
+                <button class="tools-nav-pill" data-tool="pdf" onclick="switchToolPreview('pdf')">
+                    <span class="material-icons">picture_as_pdf</span> Document AI &amp; BoQ
+                </button>
             </div>
 
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <span class="material-icons">picture_as_pdf</span>
+            <!-- PANEL 1: BBS -->
+            <div class="tool-preview-panel active" id="tool-panel-bbs">
+                <div class="tool-preview-left">
+                    <span class="tool-preview-badge">Rebar &amp; Reinforcement</span>
+                    <h3>Steel Bar Bending Schedule (BBS)</h3>
+                    <p>Automate cutting length calculations, standard hook allowances, and rebar weights. Queues individual structural members and batches them directly into your measurement rows.</p>
+                    <ul class="tool-specs-list">
+                        <li>
+                            <span class="material-icons">check_circle</span>
+                            <span><strong>Full Diameter Coverage:</strong> Standard 6, 8, 10, 12, 16, 20, 25, and 32 mm rebars with automated unit weight (d&sup2;/162 kg/m).</span>
+                        </li>
+                        <li>
+                            <span class="material-icons">check_circle</span>
+                            <span><strong>IS Code Bend Deductions:</strong> Automatically adjusts cutting lengths for 45&deg;, 90&deg;, and 135&deg; bends and hooks.</span>
+                        </li>
+                        <li>
+                            <span class="material-icons">check_circle</span>
+                            <span><strong>Direct Measurement Sync:</strong> 1-click transfer into your active sheet categorized by bar diameter and member context.</span>
+                        </li>
+                    </ul>
+                    <div>
+                        <a href="portal.html#learn" class="btn btn-primary" style="padding: 9px 20px; font-size: 13.5px; display: inline-flex; align-items: center; gap: 6px;">
+                            <span class="material-icons" style="font-size: 16px;">school</span>
+                            Learn BBS Workflow in Portal
+                        </a>
+                    </div>
                 </div>
-                <h3>BoQ & PDF Extractor</h3>
-                <p>Extract tabulated BoQs, schedule items, quantities, and rates from tender PDFs or HEWP exports back into clean spreadsheets ready for cross-checking and immediate reuse.</p>
+                <div class="tool-preview-right">
+                    <div class="tool-mock-calc">
+                        <div class="calc-header">
+                            <span>BBS Calculation Preview</span>
+                            <span>Beam B1 (Span 4.5m)</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Main Bars (Bottom): 3 Nos &times; 16mm @ 4.85m</span>
+                            <span>23.01 kg</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Top Anchor Bars: 2 Nos &times; 12mm @ 4.85m</span>
+                            <span>8.61 kg</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Stirrups: 32 Nos &times; 8mm @ 1.25m c/c</span>
+                            <span>15.80 kg</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Bend Deductions Applied (IS 2502)</span>
+                            <span>-1.12 kg</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Total Steel Reinforcement (Beam B1)</span>
+                            <span>46.30 kg (0.463 Qtl)</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <span class="material-icons">drafts</span>
+            <!-- PANEL 2: STRUCTURAL STEEL -->
+            <div class="tool-preview-panel" id="tool-panel-struct">
+                <div class="tool-preview-left">
+                    <span class="tool-preview-badge">IS_SP_6 Standard Shapes</span>
+                    <h3>Structural Steel Sections &amp; Plate Modeler</h3>
+                    <p>Integrates the complete Indian Standard Structural Steel Handbook. Select hot-rolled sections or custom built-up plates with real-time unit weight computation.</p>
+                    <ul class="tool-specs-list">
+                        <li>
+                            <span class="material-icons">check_circle</span>
+                            <span><strong>Standard Indian Profiles:</strong> Full database of ISMB (Beams), ISMC (Channels), ISA (Equal/Unequal Angles), Flats, and Structural Tubes.</span>
+                        </li>
+                        <li>
+                            <span class="material-icons">check_circle</span>
+                            <span><strong>Custom Plate &amp; Flange Engine:</strong> Calculate custom gusset plates, stiffeners, and base plates by thickness and dimensions.</span>
+                        </li>
+                        <li>
+                            <span class="material-icons">check_circle</span>
+                            <span><strong>Instant Tonnage Valuation:</strong> Aggregates structural weights and transfers structured measurement lines ready for billing.</span>
+                        </li>
+                    </ul>
+                    <div>
+                        <a href="portal.html#learn" class="btn btn-primary" style="padding: 9px 20px; font-size: 13.5px; display: inline-flex; align-items: center; gap: 6px;">
+                            <span class="material-icons" style="font-size: 16px;">school</span>
+                            Learn Structural Steel in Portal
+                        </a>
+                    </div>
                 </div>
-                <h3>Official Letter &amp; Memo Builder</h3>
-                <p>Quickly prepare standardized bilingual (English &amp; Hindi) official letters, memo numbers, and endorsements. Clean layout, automatic margins, and print-ready formatting built for engineering offices.</p>
-                <div style="margin-top: 16px;">
-                    <a href="letter.html" class="btn btn-primary" style="padding: 8px 16px; font-size: 13.5px; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; border-radius: 6px;">
-                        <span class="material-icons" style="font-size: 16px;">open_in_new</span>
-                        Open Letter Builder
-                    </a>
+                <div class="tool-preview-right">
+                    <div class="tool-mock-calc">
+                        <div class="calc-header">
+                            <span>Structural Schedule Preview</span>
+                            <span>Roof Truss Girders</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Girders: 4 Nos ISMB 250 @ 37.3 kg/m &times; 6.5m</span>
+                            <span>969.80 kg</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Purlins: 8 Nos ISA 75&times;75&times;6 @ 6.8 kg/m &times; 6.0m</span>
+                            <span>326.40 kg</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Tie Angles: 4 Nos ISA 50&times;50&times;6 @ 4.5 kg/m &times; 4.0m</span>
+                            <span>72.00 kg</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Gusset Plates: 10mm M.S. Plate (Density 7850 kg/m&sup3;)</span>
+                            <span>58.20 kg</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Total Structural Steel Weight</span>
+                            <span>1,426.40 kg (1.426 MT)</span>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <!-- PANEL 3: EARTHWORK -->
+            <div class="tool-preview-panel" id="tool-panel-earthwork">
+                <div class="tool-preview-left">
+                    <span class="tool-preview-badge">IS 1200 Auto-Allowances</span>
+                    <h3>Earthwork &amp; Trench Excavation Modeler</h3>
+                    <p>Accurately compute earthwork excavation, side slope banking, and backfilling deductions strictly calibrated to IS 1200 measurement rules.</p>
+                    <ul class="tool-specs-list">
+                        <li>
+                            <span class="material-icons">check_circle</span>
+                            <span><strong>Automated Working Space:</strong> Automatically adds IS 1200 mandatory +0.6m side working allowances (+1.2m on L &amp; W) for deep foundations.</span>
+                        </li>
+                        <li>
+                            <span class="material-icons">check_circle</span>
+                            <span><strong>Dual Profile Modes:</strong> Rectangular pit mode with automatic offsets or sloped trapezoidal trenches with side slope ratios (1:1, 1:1.5).</span>
+                        </li>
+                        <li>
+                            <span class="material-icons">check_circle</span>
+                            <span><strong>Excavation / Backfill Balancing:</strong> Tracks positive excavation volume against negative backfill deductions to determine surplus soil disposal.</span>
+                        </li>
+                    </ul>
+                    <div>
+                        <a href="portal.html#learn" class="btn btn-primary" style="padding: 9px 20px; font-size: 13.5px; display: inline-flex; align-items: center; gap: 6px;">
+                            <span class="material-icons" style="font-size: 16px;">school</span>
+                            Learn Earthwork Workflow in Portal
+                        </a>
+                    </div>
+                </div>
+                <div class="tool-preview-right">
+                    <div class="tool-mock-calc">
+                        <div class="calc-header">
+                            <span>Earthwork Balance Preview</span>
+                            <span>Pit F1 (Depth 1.50m)</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Net Foundation Footprint: 2.00m &times; 2.00m</span>
+                            <span>4.00 m&sup2;</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>IS 1200 Allowances Applied: 3.20m &times; 3.20m &times; 1.50m</span>
+                            <span>+15.36 m&sup3;</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>PCC Bed &amp; RCC Footing Masonry Volume</span>
+                            <span>-4.22 m&sup3;</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Backfilling around Foundation Pit (Compacted)</span>
+                            <span>-7.84 m&sup3;</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Surplus Earth for Lead / Carting Away</span>
+                            <span>+3.30 m&sup3;</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL 4: FOOTINGS -->
+            <div class="tool-preview-panel" id="tool-panel-footing">
+                <div class="tool-preview-left">
+                    <span class="tool-preview-badge">Prismoidal Concrete Math</span>
+                    <h3>Column Footings &amp; Foundation Modeler</h3>
+                    <p>Designed for civil foundation work. Accurately determines concrete volume for isolated, stepped, and sloped trapezoidal footings along with PCC beds and shuttering area.</p>
+                    <ul class="tool-specs-list">
+                        <li>
+                            <span class="material-icons">check_circle</span>
+                            <span><strong>Prismoidal Trapezoidal Formula:</strong> Built-in engineering math [V = h/3 &times; (A1 + A2 + &radic;(A1&times;A2))] eliminates tedious manual calculations.</span>
+                        </li>
+                        <li>
+                            <span class="material-icons">check_circle</span>
+                            <span><strong>PCC Foundation Bedding:</strong> Automatic offset calculation for lean concrete (M10/M15) base extension.</span>
+                        </li>
+                        <li>
+                            <span class="material-icons">check_circle</span>
+                            <span><strong>Formwork &amp; Shuttering:</strong> Instant computation of vertical perimeter contact area for accurate shuttering item billing.</span>
+                        </li>
+                    </ul>
+                    <div>
+                        <a href="portal.html#learn" class="btn btn-primary" style="padding: 9px 20px; font-size: 13.5px; display: inline-flex; align-items: center; gap: 6px;">
+                            <span class="material-icons" style="font-size: 16px;">school</span>
+                            Learn Footings Modeler in Portal
+                        </a>
+                    </div>
+                </div>
+                <div class="tool-preview-right">
+                    <div class="tool-mock-calc">
+                        <div class="calc-header">
+                            <span>Foundation Itemization</span>
+                            <span>Column Footing F1</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>PCC M10 Base (2.40m &times; 2.40m &times; 0.10m)</span>
+                            <span>0.576 m&sup3;</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Lower Rectangular RCC Footing (2.00 &times; 2.00 &times; 0.25)</span>
+                            <span>1.000 m&sup3;</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Trapezoidal Sloped Portion (Prismoidal H=0.35m)</span>
+                            <span>0.505 m&sup3;</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Pedestal Column Neck (0.40m &times; 0.40m &times; 0.80m)</span>
+                            <span>0.128 m&sup3;</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Total RCC Concrete M25 (Footing F1)</span>
+                            <span>1.633 m&sup3;</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL 5: RCC HUME PIPES -->
+            <div class="tool-preview-panel" id="tool-panel-pipe">
+                <div class="tool-preview-left">
+                    <span class="tool-preview-badge">Culverts &amp; Drainage</span>
+                    <h3>RCC Hume Pipe &amp; Culvert Modeler</h3>
+                    <p>Rapidly model drainage crossings, road culverts, and sewer lines with pre-calibrated concrete cradles, bedding, and jointing allowances.</p>
+                    <ul class="tool-specs-list">
+                        <li>
+                            <span class="material-icons">check_circle</span>
+                            <span><strong>NP2, NP3, &amp; NP4 Standards:</strong> Calibrated for standard Indian Road Congress (IRC) culvert pipe classes and diameters (300mm to 1200mm).</span>
+                        </li>
+                        <li>
+                            <span class="material-icons">check_circle</span>
+                            <span><strong>Cradle Bedding &amp; Haunching:</strong> Automatically sizes lean concrete bedding volume and collar protection based on trench width.</span>
+                        </li>
+                        <li>
+                            <span class="material-icons">check_circle</span>
+                            <span><strong>Collar &amp; Mortar Jointing:</strong> Itemizes collar counts, 1:2 cement mortar jointing, and perimeter backfill balancing.</span>
+                        </li>
+                    </ul>
+                    <div>
+                        <a href="portal.html#learn" class="btn btn-primary" style="padding: 9px 20px; font-size: 13.5px; display: inline-flex; align-items: center; gap: 6px;">
+                            <span class="material-icons" style="font-size: 16px;">school</span>
+                            Learn Culvert Tool in Portal
+                        </a>
+                    </div>
+                </div>
+                <div class="tool-preview-right">
+                    <div class="tool-mock-calc">
+                        <div class="calc-header">
+                            <span>Culvert Quantities Preview</span>
+                            <span>900mm NP3 Road Culvert</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Pipe Barrel Length (2 Rows &times; 8.00m)</span>
+                            <span>16.00 R.M.</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Concrete Cradle Bedding M15 (Width 2.80m &times; 0.20m)</span>
+                            <span>4.48 m&sup3;</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Concrete Haunching around Pipe Barrel</span>
+                            <span>1.92 m&sup3;</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Precast RCC Collars &amp; Jointing in C.M. 1:2</span>
+                            <span>8 Nos</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Total Trench Excavation for Culvert</span>
+                            <span>38.40 m&sup3;</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL 6: ELECTRICAL INSTALLATIONS -->
+            <div class="tool-preview-panel" id="tool-panel-ei">
+                <div class="tool-preview-left">
+                    <span class="tool-preview-badge">EI Matrix &amp; Annexures</span>
+                    <h3>Electrical Installation (EI) Grid &amp; Annexures</h3>
+                    <p>Manage complex electrical schedules with a flexible location-wise matrix for conduits, circuit wiring, modular switches, and sub-distribution boards.</p>
+                    <ul class="tool-specs-list">
+                        <li>
+                            <span class="material-icons">check_circle</span>
+                            <span><strong>Location &amp; Room-wise Grid:</strong> Group points by room, floor, or distribution niche without manual spreadsheet clutter.</span>
+                        </li>
+                        <li>
+                            <span class="material-icons">check_circle</span>
+                            <span><strong>Automatic Item Aggregation:</strong> Totals light points, fan points, 6A/16A sockets, AC circuits, and earthing strips automatically.</span>
+                        </li>
+                        <li>
+                            <span class="material-icons">check_circle</span>
+                            <span><strong>Printable Annexure Generation:</strong> 1-click generation of statutory departmental EI Annexure sheets linked directly to the main estimate.</span>
+                        </li>
+                    </ul>
+                    <div>
+                        <a href="portal.html#learn" class="btn btn-primary" style="padding: 9px 20px; font-size: 13.5px; display: inline-flex; align-items: center; gap: 6px;">
+                            <span class="material-icons" style="font-size: 16px;">school</span>
+                            Learn EI Grid in Portal
+                        </a>
+                    </div>
+                </div>
+                <div class="tool-preview-right">
+                    <div class="tool-mock-calc">
+                        <div class="calc-header">
+                            <span>EI Schedule Preview</span>
+                            <span>Admin Block Ground Floor</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Concealed PVC Conduit (25mm Heavy Duty)</span>
+                            <span>240.00 R.M.</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Light &amp; Fan Point Wiring (1.5 sq.mm FRLS)</span>
+                            <span>48 Points</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>6A / 16A Modular Power Sockets</span>
+                            <span>18 Points</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Main Sub-Distribution Board (8-Way TPN VTPN)</span>
+                            <span>1 Set</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Chemical Gel Earthing with Copper Plate</span>
+                            <span>2 Sets</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL 7: PDF & DOCUMENT AI -->
+            <div class="tool-preview-panel" id="tool-panel-pdf">
+                <div class="tool-preview-left">
+                    <span class="tool-preview-badge">Document AI &amp; Extraction</span>
+                    <h3>Tender BoQ &amp; Measurement PDF Extractor</h3>
+                    <p>Eliminate manual re-typing. Automatically extract tabulated Bill of Quantities (BoQ) from tender PDFs and departmental schedules straight into structured spreadsheets.</p>
+                    <ul class="tool-specs-list">
+                        <li>
+                            <span class="material-icons">check_circle</span>
+                            <span><strong>Table Structure Recognition:</strong> Accurately detects item codes, descriptions, units, quantities, and departmental rates.</span>
+                        </li>
+                        <li>
+                            <span class="material-icons">check_circle</span>
+                            <span><strong>Multi-Device Cloud Staging:</strong> Stage extracted tender data safely to your workspace for instant use in Google Sheets.</span>
+                        </li>
+                        <li>
+                            <span class="material-icons">check_circle</span>
+                            <span><strong>PDF Document Merger:</strong> Merge technical sanction orders, drawings, rate analysis, and BoQs into a single clean PDF for submission.</span>
+                        </li>
+                    </ul>
+                    <div>
+                        <a href="portal.html#learn" class="btn btn-primary" style="padding: 9px 20px; font-size: 13.5px; display: inline-flex; align-items: center; gap: 6px;">
+                            <span class="material-icons" style="font-size: 16px;">school</span>
+                            Learn PDF Extractor in Portal
+                        </a>
+                    </div>
+                </div>
+                <div class="tool-preview-right">
+                    <div class="tool-mock-calc">
+                        <div class="calc-header">
+                            <span>Tender Extraction Summary</span>
+                            <span>NIT-74 / PWD B&amp;R BoQ</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Total Schedule Items Detected &amp; Parsed</span>
+                            <span>118 Items</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Civil &amp; Road Works Sub-Packages</span>
+                            <span>4 Sections</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Non-Schedule (NS) Extra Items Identified</span>
+                            <span>6 Items</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Extraction Accuracy Rate</span>
+                            <span>100% Calibrated</span>
+                        </div>
+                        <div class="calc-row">
+                            <span>Total Estimated Tender Amount</span>
+                            <span>&#8377; 1,48,92,400.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ==========================================================================
+         COMPREHENSIVE 16-FEATURE CIVIL ENGINEERING CATALOG
+         ========================================================================== -->
+    <section id="features" class="features-catalog-section">
+        <div class="features-catalog-container">
+            <div class="section-title-wrap">
+                <span class="section-tag">
+                    <span class="material-icons" style="font-size: 16px;">auto_awesome</span>
+                    Feature Capabilities
+                </span>
+                <h2>Everything You Need to Estimate, Bill, and Deliver</h2>
+                <p>Designed by civil engineering practitioners for real government and private infrastructure projects. From preliminary feasibility to final contractor deviation reconciliation, CivilMate handles the entire lifecycle.</p>
+            </div>
+
+            <!-- CATEGORY 1: ESTIMATING & RATES -->
+            <div class="feature-category-block">
+                <div class="feature-category-header">
+                    <div class="category-icon">
+                        <span class="material-icons">menu_book</span>
+                    </div>
+                    <h3>1. Schedule of Rates &amp; Detailed Measurement Engine</h3>
+                </div>
+                <div class="features-grid-3">
+                    
+                    <div class="feature-box-card">
+                        <div class="feature-box-top">
+                            <div class="feature-box-icon"><span class="material-icons">manage_search</span></div>
+                            <span class="feature-box-badge">Instant HSR</span>
+                        </div>
+                        <h4>Master Schedule of Rates Cloud Browser</h4>
+                        <p>Search across tens of thousands of items from Haryana PWD (B&amp;R), Public Health &amp; Water Supply, Irrigation, and CPWD schedules. Filter by chapter, sub-head, or keywords with 1-click batch injection into your sheet.</p>
+                        <div class="feature-box-tags">
+                            <span class="feature-subtag">HSR / CSR / CPWD</span>
+                            <span class="feature-subtag">Cart Batch Injection</span>
+                            <span class="feature-subtag">Chapter Filter</span>
+                        </div>
+                    </div>
+
+                    <div class="feature-box-card">
+                        <div class="feature-box-top">
+                            <div class="feature-box-icon"><span class="material-icons">straighten</span></div>
+                            <span class="feature-box-badge">MB Math</span>
+                        </div>
+                        <h4>Measurement Book &amp; Dimension Math Engine</h4>
+                        <p>Automatically structures hierarchical parent items and detailed child measurement rows (Nos &times; L &times; B &times; D/H). Type mixed mathematical expressions directly into dimension cells for live evaluation.</p>
+                        <div class="feature-box-tags">
+                            <span class="feature-subtag">L&times;B&times;D Hierarchy</span>
+                            <span class="feature-subtag">In-Cell Math</span>
+                            <span class="feature-subtag">Auto-Numbering</span>
+                        </div>
+                    </div>
+
+                    <div class="feature-box-card">
+                        <div class="feature-box-top">
+                            <div class="feature-box-icon"><span class="material-icons">remove_circle_outline</span></div>
+                            <span class="feature-box-badge">Auto Deductions</span>
+                        </div>
+                        <h4>Intelligent Openings &amp; Deduction Syntax</h4>
+                        <p>Automatically detects deductions (doors, windows, voids, cutouts) and applies standard bracketed subtraction notation with bold formatting and live deduction totals.</p>
+                        <div class="feature-box-tags">
+                            <span class="feature-subtag">Door/Window Voids</span>
+                            <span class="feature-subtag">Minus Arithmetic</span>
+                            <span class="feature-subtag">IS 1200 Rules</span>
+                        </div>
+                    </div>
+
+                    <div class="feature-box-card">
+                        <div class="feature-box-top">
+                            <div class="feature-box-icon"><span class="material-icons">link</span></div>
+                            <span class="feature-box-badge">Cross-Item Link</span>
+                        </div>
+                        <h4>Dynamic Quantity Linking &amp; Multi-Unit Converter</h4>
+                        <p>Link quantities dynamically between related civil items (e.g., Earthwork to PCC to Foundation Masonry). Seamlessly convert between Metric (m, m&sup2;, m&sup3;) and Imperial/FPS (ft, in, sqft, cft).</p>
+                        <div class="feature-box-tags">
+                            <span class="feature-subtag">Live Cell Linking</span>
+                            <span class="feature-subtag">Metric &bull; Imperial</span>
+                            <span class="feature-subtag">Zero Duplication</span>
+                        </div>
+                    </div>
+
+                    <div class="feature-box-card">
+                        <div class="feature-box-top">
+                            <div class="feature-box-icon"><span class="material-icons">post_add</span></div>
+                            <span class="feature-box-badge">Non-Schedule</span>
+                        </div>
+                        <h4>Non-Schedule (NS) Item &amp; Rate Analysis Catalog</h4>
+                        <p>Create and manage custom Non-Schedule (NS) rate analysis items with auto-generated NS codes. Save custom descriptions, market rates, and labor-material analyses to your catalog for permanent re-use.</p>
+                        <div class="feature-box-tags">
+                            <span class="feature-subtag">Auto NS Codes</span>
+                            <span class="feature-subtag">Market Rates</span>
+                            <span class="feature-subtag">Catalog Sync</span>
+                        </div>
+                    </div>
+
+                    <div class="feature-box-card">
+                        <div class="feature-box-top">
+                            <div class="feature-box-icon"><span class="material-icons">architecture</span></div>
+                            <span class="feature-box-badge">Plinth Rates</span>
+                        </div>
+                        <h4>Rough Cost Feasibility Estimator (Haryana PWD B&amp;R)</h4>
+                        <p>Generate preliminary budget estimates for Administrative Approval (AA) in seconds. Calibrated with Haryana PWD B&amp;R Plinth Area Rates with floor multipliers, basements, lifts, and services.</p>
+                        <div class="feature-box-tags">
+                            <span class="feature-subtag">Official PAR 2024</span>
+                            <span class="feature-subtag">Multi-Story Factors</span>
+                            <span class="feature-subtag">AA Ready</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- CATEGORY 2: CONTRACTOR BILLING & VARIATIONS -->
+            <div class="feature-category-block">
+                <div class="feature-category-header">
+                    <div class="category-icon">
+                        <span class="material-icons">receipt_long</span>
+                    </div>
+                    <h3>2. Contractor Billing, Running Bills &amp; Statutory Variations</h3>
+                </div>
+                <div class="features-grid-3">
+
+                    <div class="feature-box-card">
+                        <div class="feature-box-top">
+                            <div class="feature-box-icon"><span class="material-icons">dynamic_feed</span></div>
+                            <span class="feature-box-badge">Running Bills</span>
+                        </div>
+                        <h4>Multi-Bill Running Account Manager (B1, B2 &hellip; Final)</h4>
+                        <p>Automate sequential running bills linked directly to the project index. Tracks cumulative quantities previously paid, current bill measurements, and net payable amounts with complete audit integrity.</p>
+                        <div class="feature-box-tags">
+                            <span class="feature-subtag">B1, B2, B3 &hellip; Final</span>
+                            <span class="feature-subtag">Cumulative Memory</span>
+                            <span class="feature-subtag">Audit Trails</span>
+                        </div>
+                    </div>
+
+                    <div class="feature-box-card">
+                        <div class="feature-box-top">
+                            <div class="feature-box-icon"><span class="material-icons">difference</span></div>
+                            <span class="feature-box-badge">Deviation Alert</span>
+                        </div>
+                        <h4>Automated DNIT Variation &amp; Deviation Hook</h4>
+                        <p>Automatically calculates deviation formulas: Variation = DNIT Qty - Already Billed - Current Qty. When executed quantities exceed tender limits, CivilMate automatically injects required "Variation required" statutory flags.</p>
+                        <div class="feature-box-tags">
+                            <span class="feature-subtag">DNIT vs Executed</span>
+                            <span class="feature-subtag">Deviation Warnings</span>
+                            <span class="feature-subtag">Negative Quantity Check</span>
+                        </div>
+                    </div>
+
+                    <div class="feature-box-card">
+                        <div class="feature-box-top">
+                            <div class="feature-box-icon"><span class="material-icons">tune</span></div>
+                            <span class="feature-box-badge">Commercial Ledger</span>
+                        </div>
+                        <h4>Dynamic Statutory Footers &amp; Commercial Ledger Builder</h4>
+                        <p>Drag-and-drop tax and overhead builder with live calculation preview. Apply pre-calibrated templates for GST (18%/12%), Labour Welfare Cess (1%), Contingencies (3%/5%), Water Charges, and Contractor Profit.</p>
+                        <div class="feature-box-tags">
+                            <span class="feature-subtag">GST &amp; Labour Cess</span>
+                            <span class="feature-subtag">Drag &amp; Drop Equation</span>
+                            <span class="feature-subtag">Live Footer Math</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- CATEGORY 3: OFFICIAL REPORTS & DOCUMENT AI -->
+            <div class="feature-category-block">
+                <div class="feature-category-header">
+                    <div class="category-icon">
+                        <span class="material-icons">assessment</span>
+                    </div>
+                    <h3>3. One-Click Statutory Reports, Document AI &amp; Templates</h3>
+                </div>
+                <div class="features-grid-3">
+
+                    <div class="feature-box-card">
+                        <div class="feature-box-top">
+                            <div class="feature-box-icon"><span class="material-icons">summarize</span></div>
+                            <span class="feature-box-badge">Statutory AOC</span>
+                        </div>
+                        <h4>1-Click Abstract of Cost (AOC) Generator</h4>
+                        <p>Compiles clean, print-ready Abstract of Cost sheets in one click. Evaluates schedule totals, non-schedule totals, tender premium/rebate (+/- %), statutory footers, and official sanction signature blocks.</p>
+                        <div class="feature-box-tags">
+                            <span class="feature-subtag">Tender Premium %</span>
+                            <span class="feature-subtag">Dashed Border Layout</span>
+                            <span class="feature-subtag">Executive Summary</span>
+                        </div>
+                    </div>
+
+                    <div class="feature-box-card">
+                        <div class="feature-box-top">
+                            <div class="feature-box-icon"><span class="material-icons">list_alt</span></div>
+                            <span class="feature-box-badge">Detailed DOQ</span>
+                        </div>
+                        <h4>1-Click Detailed Bill of Quantities (DOQ / MB Register)</h4>
+                        <p>Generates the complete technical measurement register with item descriptions, dimensions, quantities, and rates formatted cleanly for departmental technical sanction review.</p>
+                        <div class="feature-box-tags">
+                            <span class="feature-subtag">Measurement Register</span>
+                            <span class="feature-subtag">Technical Sanction</span>
+                            <span class="feature-subtag">Departmental Headers</span>
+                        </div>
+                    </div>
+
+                    <div class="feature-box-card">
+                        <div class="feature-box-top">
+                            <div class="feature-box-icon"><span class="material-icons">inventory</span></div>
+                            <span class="feature-box-badge">Material Abstract</span>
+                        </div>
+                        <h4>1-Click Resource Abstract (Materials &amp; Labor Forecast)</h4>
+                        <p>Instantly forecasts primary construction material consumption (Cement bags, Sand, Aggregate, Steel in quintals/MT, Bricks) and labor trade days (Masons, Beldars, Barbenders) for procurement planning.</p>
+                        <div class="feature-box-tags">
+                            <span class="feature-subtag">Cement &amp; Steel Bags</span>
+                            <span class="feature-subtag">Labor Trade Days</span>
+                            <span class="feature-subtag">Procurement Forecast</span>
+                        </div>
+                    </div>
+
+                    <div class="feature-box-card">
+                        <div class="feature-box-top">
+                            <div class="feature-box-icon"><span class="material-icons">drag_indicator</span></div>
+                            <span class="feature-box-badge">Visual Reorder</span>
+                        </div>
+                        <h4>Visual Canvas Organizer &amp; Drag-and-Drop Reorder</h4>
+                        <p>Reorder estimate parent items and child measurement rows visually in a drag-and-drop side panel. Automatically updates item serial numbers on the spreadsheet without breaking cell formulas.</p>
+                        <div class="feature-box-tags">
+                            <span class="feature-subtag">Drag &amp; Drop</span>
+                            <span class="feature-subtag">Auto Serial Renumbering</span>
+                            <span class="feature-subtag">Zero Formula Break</span>
+                        </div>
+                    </div>
+
+                    <div class="feature-box-card">
+                        <div class="feature-box-top">
+                            <div class="feature-box-icon"><span class="material-icons">storefront</span></div>
+                            <span class="feature-box-badge">Reusable Templates</span>
+                        </div>
+                        <h4>Community Project Templates &amp; Storefront</h4>
+                        <p>Save approved estimates as reusable project templates (Boundary Walls, CC Roads, Interlocking Drains, School Buildings). Preview full item breakdowns and clone into your workbook with 1 click.</p>
+                        <div class="feature-box-tags">
+                            <span class="feature-subtag">Clone in 1-Click</span>
+                            <span class="feature-subtag">Full BoQ Preview</span>
+                            <span class="feature-subtag">Shareable Catalog</span>
+                        </div>
+                    </div>
+
+                    <div class="feature-box-card">
+                        <div class="feature-box-top">
+                            <div class="feature-box-icon"><span class="material-icons">mail</span></div>
+                            <span class="feature-box-badge">Official Letter</span>
+                        </div>
+                        <h4>Bilingual Official Departmental Letter &amp; Memo Builder</h4>
+                        <p>Prepare standardized official letters, memos, technical sanction orders, and handing-over notes in English and Hindi. Professional letterhead, automatic margins, and clean PDF output.</p>
+                        <div class="feature-box-tags">
+                            <span class="feature-subtag">English &bull; Hindi</span>
+                            <span class="feature-subtag">Endorsement Copies</span>
+                            <span class="feature-subtag">Print-Ready Margins</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ==========================================================================
+         LEARNING HUB & TUTORIALS CALLOUT BANNER
+         ========================================================================== -->
+    <section class="learn-cta-section">
+        <div class="learn-cta-card">
+            <div class="learn-cta-text">
+                <span class="section-tag" style="background: rgba(255,255,255,0.2); color: #ffffff; margin-bottom: 8px;">
+                    <span class="material-icons" style="font-size: 15px;">school</span>
+                    CivilMate Knowledge Hub
+                </span>
+                <h3>Master Every Feature with Step-by-Step Practical Tutorials</h3>
+                <p>Curious how the Bar Bending Schedule handles bend deductions, or how the Earthwork tool balances IS 1200 offsets? Our complete, illustrated Tutorial Center is accessible inside the CivilMate Portal for registered and authorized users.</p>
+            </div>
+            <a href="portal.html#learn" class="learn-cta-btn">
+                <span class="material-icons">lock_open</span>
+                Access Tutorials in Portal
+            </a>
         </div>
     </section>
 
@@ -458,7 +1142,7 @@
                                 <span class="material-icons" style="font-size: 34px; color: #ffffff; margin-left: 3px;">play_arrow</span>
                             </div>
                             <div style="position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: #ffffff; padding: 4px 12px; border-radius: 14px; font-size: 11px; font-weight: 600; white-space: nowrap; backdrop-filter: blur(4px);">
-                                ▶ Click to Play Video
+                                â–¶ Click to Play Video
                             </div>
                         </div>
                     </div>
@@ -541,7 +1225,7 @@
                         <span class="material-icons">verified</span>
                     </div>
                     <h3 class="strength-title">Always Aligned with Haryana Norms</h3>
-                    <p class="strength-desc">Cloud-updated automatically with latest Haryana PWD B&R Plinth Area Rates, HSR rate revisions, and HEWP portal compatibility — no manual software patch downloads required.</p>
+                    <p class="strength-desc">Cloud-updated automatically with latest Haryana PWD B&R Plinth Area Rates, HSR rate revisions, and HEWP portal compatibility â€” no manual software patch downloads required.</p>
                 </div>
             </div>
 
@@ -550,14 +1234,14 @@
                 <span class="badge" style="position: static; transform: none; display: inline-block; margin-bottom: 12px;">Community Rollout</span>
                 <h3 style="font-size: 24px; font-weight: 700; color: var(--text-primary); margin: 0 0 6px 0;">CivilMate Cloud Access</h3>
                 <p style="font-size: 14px; color: var(--text-secondary); margin: 0 0 20px 0;">Full suite access for departmental engineers, technical staff & contractors.</p>
-                <div style="font-size: 42px; font-weight: 700; color: var(--google-blue); line-height: 1; margin-bottom: 4px;">₹0 <span style="font-size: 16px; font-weight: 500; color: var(--text-secondary);">/ Early Access</span></div>
+                <div style="font-size: 42px; font-weight: 700; color: var(--google-blue); line-height: 1; margin-bottom: 4px;">â‚¹0 <span style="font-size: 16px; font-weight: 500; color: var(--text-secondary);">/ Early Access</span></div>
                 <div style="font-size: 12.5px; color: var(--text-secondary); margin-bottom: 24px;">No credit card, payment, or trial expiration</div>
 
                 <ul style="list-style: none; padding: 0; margin: 0 0 28px 0; text-align: left; display: flex; flex-direction: column; gap: 10px; font-size: 13.5px; color: var(--text-primary);">
-                    <li style="display: flex; align-items: center; gap: 10px;"><span style="color: #1e8e3e; font-weight: bold;">✓</span> <span>Google Sheets&trade; Estimation Add-on included</span></li>
-                    <li style="display: flex; align-items: center; gap: 10px;"><span style="color: #1e8e3e; font-weight: bold;">✓</span> <span>Automated Rough Cost Estimates (Haryana PWD B&R Plinth Rates)</span></li>
-                    <li style="display: flex; align-items: center; gap: 10px;"><span style="color: #1e8e3e; font-weight: bold;">✓</span> <span>Chrome&trade; Extension for HEWP bills & estimate uploads</span></li>
-                    <li style="display: flex; align-items: center; gap: 10px;"><span style="color: #1e8e3e; font-weight: bold;">✓</span> <span>PDF BoQ & Detailed Estimate Extractor</span></li>
+                    <li style="display: flex; align-items: center; gap: 10px;"><span style="color: #1e8e3e; font-weight: bold;">âœ“</span> <span>Google Sheets&trade; Estimation Add-on included</span></li>
+                    <li style="display: flex; align-items: center; gap: 10px;"><span style="color: #1e8e3e; font-weight: bold;">âœ“</span> <span>Automated Rough Cost Estimates (Haryana PWD B&R Plinth Rates)</span></li>
+                    <li style="display: flex; align-items: center; gap: 10px;"><span style="color: #1e8e3e; font-weight: bold;">âœ“</span> <span>Chrome&trade; Extension for HEWP bills & estimate uploads</span></li>
+                    <li style="display: flex; align-items: center; gap: 10px;"><span style="color: #1e8e3e; font-weight: bold;">âœ“</span> <span>PDF BoQ & Detailed Estimate Extractor</span></li>
                 </ul>
 
                 <a href="portal.html" class="btn btn-primary" style="width: 100%; padding: 13px; font-size: 15px; border-radius: 6px;">
@@ -782,5 +1466,17 @@
 
         window.addEventListener('DOMContentLoaded', fetchAndPopulateDashboards);
 </script>
+    <script>
+        function switchToolPreview(toolId) {
+            document.querySelectorAll('.tools-nav-pill').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tool-preview-panel').forEach(panel => panel.classList.remove('active'));
+            const btn = document.querySelector(`.tools-nav-pill[data-tool="${toolId}"]`);
+            const panel = document.getElementById(`tool-panel-${toolId}`);
+            if (btn) btn.classList.add('active');
+            if (panel) panel.classList.add('active');
+        }
+    </script>
 </body>
 </html>
+
+
