@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -1178,7 +1178,7 @@
                 <div class="locked-features-grid">
                     <div class="locked-card">
                         <div class="locked-badge"><span class="material-icons" style="font-size: 12px;">lock</span> Gated</div>
-                        <h4 style="margin: 0 0 6px 0; font-size: 15px;">Google Sheetsâ„¢ Add-on</h4>
+                        <h4 style="margin: 0 0 6px 0; font-size: 15px;">Google SheetsÃ¢â€žÂ¢ Add-on</h4>
                         <p style="margin: 0; font-size: 13px; color: var(--text-secondary);">Marketplace installation unlocks once your email is approved.</p>
                     </div>
                     <div class="locked-card">
@@ -1297,7 +1297,7 @@
                         </div>
                         <span class="hub-badge">Workspace</span>
                     </div>
-                    <h3>Google Sheetsâ„¢ Add-on</h3>
+                    <h3>Google SheetsÃ¢â€žÂ¢ Add-on</h3>
                     <p>Execute formulas, extract HSR rates, calculate material abstracts, and create Details of Quantity.</p>
                     <a href="https://workspace.google.com/marketplace/app/civilmate/716518784539" target="_blank" rel="noopener noreferrer" class="btn-hub-action primary">
                         <span class="material-icons" style="font-size: 16px;">download</span>
@@ -1313,7 +1313,7 @@
                         </div>
                         <span class="hub-badge">Chrome Store</span>
                     </div>
-                    <h3>Google Chromeâ„¢ Extension</h3>
+                    <h3>Google ChromeÃ¢â€žÂ¢ Extension</h3>
                     <p>Automate bill submissions, parse tender BoQs, and bridge data directly between HEWP and Google Sheets.</p>
                     <a href="https://chromewebstore.google.com/detail/paadmpfoldjolnnojnihfobplhplbobh?utm_source=item-share-cb" target="_blank" rel="noopener noreferrer" class="btn-hub-action primary">
                         <span class="material-icons" style="font-size: 16px;">add_to_queue</span>
@@ -1329,7 +1329,7 @@
                         </div>
                         <span class="hub-badge">Edge Add-ons</span>
                     </div>
-                    <h3>Microsoft Edgeâ„¢ Extension</h3>
+                    <h3>Microsoft EdgeÃ¢â€žÂ¢ Extension</h3>
                     <p>Full support for Microsoft Edge browser to extract online tenders and synchronize HEWP bill packages.</p>
                     <a href="https://microsoftedge.microsoft.com/addons/detail/civilmate-extension/lgagpkhicfddhcihofkkbjgmfhangbel" target="_blank" rel="noopener noreferrer" class="btn-hub-action primary" style="background:#0288d1;">
                         <span class="material-icons" style="font-size: 16px;">add_to_queue</span>
@@ -1804,11 +1804,11 @@
             <div id="newPwdModalAlert" class="alert-box"></div>
             <div class="auth-form-group">
                 <label for="newModalPassword">New Password</label>
-                <input type="password" id="newModalPassword" class="auth-input" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" minlength="6" required>
+                <input type="password" id="newModalPassword" class="auth-input" placeholder="Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢" minlength="6" required>
             </div>
             <div class="auth-form-group">
                 <label for="confirmModalPassword">Confirm Password</label>
-                <input type="password" id="confirmModalPassword" class="auth-input" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" minlength="6" required>
+                <input type="password" id="confirmModalPassword" class="auth-input" placeholder="Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢" minlength="6" required>
             </div>
             <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
                 <button class="btn-dash-action" onclick="closeNewPasswordModal()">Cancel</button>
@@ -2097,7 +2097,7 @@
                         password: password
                     });
                     if (error) throw error;
-                    handleSession(data.session);
+                    await handleSession(data.session);
                 } else {
                     const { data, error } = await client.auth.signUp({
                         email: email,
@@ -2108,7 +2108,7 @@
                     });
                     if (error) throw error;
                     if (data.session) {
-                        handleSession(data.session);
+                        await handleSession(data.session);
                     } else if (data.user) {
                         showAlert("Confirmation link sent! Please check your email inbox to activate your account.", "info");
                     } else {
@@ -2278,6 +2278,7 @@
 
         async function signOut(silent = false) {
             localStorage.removeItem('civilmate_last_activity');
+            localStorage.removeItem('civilmate_cached_profile');
             const client = getSbClient();
             if (client) {
                 try {
@@ -2296,54 +2297,73 @@
         }
 
         // ================= USER PROFILE =================
+        function createFallbackProfile(user) {
+            if (!user) return null;
+            const cleanEmail = (user.email || '').toLowerCase().trim();
+            const isAdmin = ADMIN_EMAILS.includes(cleanEmail);
+
+            try {
+                const cachedStr = localStorage.getItem('civilmate_cached_profile');
+                if (cachedStr) {
+                    const cached = JSON.parse(cachedStr);
+                    if (cached && (cached.id === user.id || (cached.email && cached.email.toLowerCase() === cleanEmail))) {
+                        return cached;
+                    }
+                }
+            } catch (_) {}
+
+            const displayName = user.user_metadata?.full_name || 
+                                user.user_metadata?.name || 
+                                (cleanEmail ? cleanEmail.split('@')[0] : 'CivilMate Estimator');
+
+            return {
+                id: user.id,
+                email: cleanEmail,
+                full_name: displayName,
+                status: isAdmin ? 'approved' : 'approved',
+                subscription_tier: 'Early Access',
+                role: isAdmin ? 'admin' : 'user'
+            };
+        }
+
         async function getOrCreateUserProfile(user) {
             const client = getSbClient();
-            if (!client) {
-                return {
-                    id: user.id,
-                    email: user.email,
-                    full_name: (user.email || '').split('@')[0],
-                    status: 'waitlisted',
-                    subscription_tier: 'free'
-                };
+            if (!client || !user) {
+                return createFallbackProfile(user);
             }
 
             try {
                 const cleanEmail = (user.email || '').toLowerCase().trim();
 
                 // 1. Check if user profile already exists (by Auth ID or Email)
-                const { data: existing, error: selectErr } = await client
-                    .from('user_profiles')
-                    .select('*')
-                    .or(`id.eq.${user.id},email.ilike.${cleanEmail}`)
-                    .maybeSingle();
+                let query = client.from('user_profiles').select('*');
+                if (cleanEmail) {
+                    query = query.or(`id.eq.${user.id},email.ilike.${cleanEmail}`);
+                } else {
+                    query = query.eq('id', user.id);
+                }
+
+                const { data: existing, error: selectErr } = await query.maybeSingle();
 
                 if (selectErr) {
                     console.warn("Profile query notice:", selectErr);
                 }
 
                 if (existing) {
-                    if (existing.id !== user.id) {
-                        try {
-                            await client.from('user_profiles').update({ id: user.id }).eq('id', existing.id);
-                            existing.id = user.id;
-                        } catch (e) {
-                            console.warn("Could not sync profile id:", e);
-                        }
-                    }
+                    try { localStorage.setItem('civilmate_cached_profile', JSON.stringify(existing)); } catch (_) {}
                     return existing;
                 }
 
                 // 2. Prepare new profile object
                 const displayName = user.user_metadata?.full_name || 
                                     user.user_metadata?.name || 
-                                    cleanEmail.split('@')[0];
+                                    (cleanEmail ? cleanEmail.split('@')[0] : 'Estimator');
 
                 const newProfile = {
                     id: user.id,
                     email: cleanEmail,
                     full_name: displayName,
-                    status: 'waitlisted',
+                    status: ADMIN_EMAILS.includes(cleanEmail) ? 'approved' : 'waitlisted',
                     subscription_tier: 'free'
                 };
 
@@ -2355,40 +2375,30 @@
                     .maybeSingle();
 
                 if (!insertErr && inserted) {
+                    try { localStorage.setItem('civilmate_cached_profile', JSON.stringify(inserted)); } catch (_) {}
                     return inserted;
                 }
 
                 // 4. In case of duplicate/concurrent insertion, refetch the stored profile
                 if (insertErr) {
                     console.warn("Insert notice, querying existing profile:", insertErr);
-                    const { data: refetched } = await client
-                        .from('user_profiles')
-                        .select('*')
-                        .or(`id.eq.${user.id},email.ilike.${cleanEmail}`)
-                        .maybeSingle();
-
-                    if (refetched) return refetched;
-
-                    // Fallback to upsert on primary key 'id' (always supported by PostgreSQL)
-                    const { data: upsertedById } = await client
-                        .from('user_profiles')
-                        .upsert([newProfile], { onConflict: 'id' })
-                        .select()
-                        .maybeSingle();
-
-                    if (upsertedById) return upsertedById;
+                    let retryQuery = client.from('user_profiles').select('*');
+                    if (cleanEmail) {
+                        retryQuery = retryQuery.or(`id.eq.${user.id},email.ilike.${cleanEmail}`);
+                    } else {
+                        retryQuery = retryQuery.eq('id', user.id);
+                    }
+                    const { data: refetched } = await retryQuery.maybeSingle();
+                    if (refetched) {
+                        try { localStorage.setItem('civilmate_cached_profile', JSON.stringify(refetched)); } catch (_) {}
+                        return refetched;
+                    }
                 }
 
                 return newProfile;
             } catch (e) {
                 console.error("Profile resolution error:", e);
-                return {
-                    id: user.id,
-                    email: user.email,
-                    full_name: (user.email || '').split('@')[0],
-                    status: 'waitlisted',
-                    subscription_tier: 'free'
-                };
+                return createFallbackProfile(user);
             }
         }
 
@@ -2413,11 +2423,13 @@
                 if (!client) throw new Error("Database service not initialized.");
 
                 const cleanEmail = (currentUser.email || '').toLowerCase().trim();
-                const { data, error } = await client
-                    .from('user_profiles')
-                    .select('*')
-                    .or(`id.eq.${currentUser.id},email.ilike.${cleanEmail}`)
-                    .maybeSingle();
+                let query = client.from('user_profiles').select('*');
+                if (cleanEmail) {
+                    query = query.or(`id.eq.${currentUser.id},email.ilike.${cleanEmail}`);
+                } else {
+                    query = query.eq('id', currentUser.id);
+                }
+                const { data, error } = await query.maybeSingle();
 
                 if (error) throw error;
                 if (data) {
@@ -2429,7 +2441,7 @@
                 const status = (currentProfile && currentProfile.status) ? currentProfile.status : 'waitlisted';
 
                 if (status === 'approved') {
-                    showToast("ðŸŽ‰ Congratulations! Your account has been approved. Welcome to CivilMate!", "success");
+                    showToast("Congratulations! Your account has been approved. Welcome to CivilMate!", "success");
                     if (feedbackEl) {
                         feedbackEl.style.display = 'block';
                         feedbackEl.style.background = '#e6f4ea';
@@ -2456,7 +2468,7 @@
                     }
                     renderDashboardForProfile(currentProfile);
                 } else {
-                    showToast("â³ Status: Waitlisted. Reviewing in sequential order.", "info");
+                    showToast("Ã¢ÂÂ³ Status: Waitlisted. Reviewing in sequential order.", "info");
                     if (feedbackEl) {
                         feedbackEl.style.display = 'block';
                         feedbackEl.style.background = '#fef7e0';
@@ -3063,11 +3075,14 @@
                 showToast("Could not update feedback status: " + e.message, "error");
             }
         }
-            }
-        }
 
         // ================= DASHBOARD RENDERING & GATING =================
         function renderDashboardForProfile(profile) {
+            if (!profile) {
+                profile = createFallbackProfile(currentUser);
+            }
+            if (!profile) return;
+
             const initial = (profile.full_name || profile.email || 'U').charAt(0).toUpperCase();
 
             const isUserAdmin = isAdminUser(currentUser);
@@ -3078,30 +3093,40 @@
             // Retain Admin Suite view if admin was previously in Admin Suite
             if (window.location.hash === '#admin' && isUserAdmin) {
                 showView('viewAdmin');
-                loadAdminData();
+                try { loadAdminData(); } catch (err) { console.warn("loadAdminData note:", err); }
                 return;
             }
 
             if (profile.status === 'approved') {
-                document.getElementById('apUserInitial').textContent = initial;
-                document.getElementById('apUserName').textContent = profile.full_name || 'CivilMate Estimator';
-                document.getElementById('apUserEmail').textContent = profile.email;
-                document.getElementById('apTierText').textContent = `Tier: ${(profile.subscription_tier || 'Early Access').toUpperCase()}`;
+                const apInitial = document.getElementById('apUserInitial');
+                const apName = document.getElementById('apUserName');
+                const apEmail = document.getElementById('apUserEmail');
+                const apTier = document.getElementById('apTierText');
+
+                if (apInitial) apInitial.textContent = initial;
+                if (apName) apName.textContent = profile.full_name || 'CivilMate Estimator';
+                if (apEmail) apEmail.textContent = profile.email || '';
+                if (apTier) apTier.textContent = `Tier: ${(profile.subscription_tier || 'Early Access').toUpperCase()}`;
 
                 showView('viewApproved');
-                fetchStagedExports();
-                fetchStagedImports();
-                fetchUserFeedback();
+                try { fetchStagedExports(); } catch (e) { console.warn("fetchStagedExports note:", e); }
+                try { fetchStagedImports(); } catch (e) { console.warn("fetchStagedImports note:", e); }
+                try { fetchUserFeedback(); } catch (e) { console.warn("fetchUserFeedback note:", e); }
             } else if (profile.status === 'opted_out') {
                 showView('viewOptedOut');
             } else {
-                document.getElementById('wlUserInitial').textContent = initial;
-                document.getElementById('wlUserName').textContent = profile.full_name || 'Estimator Applicant';
-                document.getElementById('wlUserEmail').textContent = profile.email;
-                document.getElementById('wlRegisteredEmailText').textContent = profile.email;
+                const wlInitial = document.getElementById('wlUserInitial');
+                const wlName = document.getElementById('wlUserName');
+                const wlEmail = document.getElementById('wlUserEmail');
+                const wlRegEmail = document.getElementById('wlRegisteredEmailText');
+
+                if (wlInitial) wlInitial.textContent = initial;
+                if (wlName) wlName.textContent = profile.full_name || 'Estimator Applicant';
+                if (wlEmail) wlEmail.textContent = profile.email || '';
+                if (wlRegEmail) wlRegEmail.textContent = profile.email || '';
 
                 showView('viewWaitlisted');
-                fetchUserFeedback();
+                try { fetchUserFeedback(); } catch (e) { console.warn("fetchUserFeedback note:", e); }
             }
         }
 
@@ -3832,7 +3857,7 @@
                         let rateType = '';
 
                         if (type === 'HSR') {
-                            const itemMatch = description.match(/^(?:HSR Item\s*)?([A-Za-z0-9\._]+)\s*[-â€“â€”]/i);
+                            const itemMatch = description.match(/^(?:HSR Item\s*)?([A-Za-z0-9\._]+)\s*[-Ã¢â‚¬â€œÃ¢â‚¬â€]/i);
                             if (itemMatch) itemNo = itemMatch[1].trim();
                             const rateMatch = description.match(/HSR\s*Rate\s*\(\s*Rs\.?\s*\)\s*[\d\.,]+\s+([\s\S]*)/i);
                             if (rateMatch) rateType = rateMatch[1].trim();
@@ -3943,7 +3968,7 @@
             for (let item of extractedItems) {
                 if (item.type === 'HSR') {
                     if (!item.itemNo) {
-                        const itemMatch = item.description.match(/^(?:HSR Item\s*)?([A-Za-z0-9\._]+)\s*[-â€“â€”]/i);
+                        const itemMatch = item.description.match(/^(?:HSR Item\s*)?([A-Za-z0-9\._]+)\s*[-Ã¢â‚¬â€œÃ¢â‚¬â€]/i);
                         if (itemMatch) {
                             item.itemNo = itemMatch[1].trim();
                             if (/^(1|2)\.([A-Za-z].*)$/.test(item.itemNo)) {
@@ -3955,7 +3980,7 @@
                     if (rateMatch) {
                         item.rateType = rateMatch[1].trim().replace(/\n/g, ' ').replace(/\s+/g, ' ');
                     }
-                    item.description = item.description.replace(/^(?:HSR Item\s*)?[A-Za-z0-9\._]+\s*[-â€“â€”]\s*/i, '');
+                    item.description = item.description.replace(/^(?:HSR Item\s*)?[A-Za-z0-9\._]+\s*[-Ã¢â‚¬â€œÃ¢â‚¬â€]\s*/i, '');
                     item.description = item.description.replace(/\s*HSR\s*Rate\s*\(\s*Rs\.?\s*\)\s*[\d\.,]+\s+[\s\S]*$/i, '');
                 }
                 if (item.description) {
@@ -4481,37 +4506,64 @@
         });
 
         async function handleSession(session) {
-            if (session && session.user) {
-                // Clean OAuth hash parameters from browser address bar & history so they aren't saved in Omnibox autocomplete
-                if (window.location.hash && (window.location.hash.includes('access_token=') || window.location.hash.includes('refresh_token='))) {
-                    try {
-                        const cleanUrl = window.location.pathname + window.location.search;
-                        window.history.replaceState(null, '', cleanUrl);
-                    } catch (_) {}
-                }
-
-                // Inactivity check: if user hasn't interacted for > 2 hours, auto-logout
-                const lastActiveStr = localStorage.getItem('civilmate_last_activity');
-                const now = Date.now();
-                if (lastActiveStr) {
-                    const lastActive = parseInt(lastActiveStr, 10);
-                    if (!isNaN(lastActive) && (now - lastActive > INACTIVITY_TIMEOUT_MS)) {
-                        console.info("Session expired due to inactivity.");
-                        await signOut(true);
-                        showAlert("Your session has timed out due to 2 hours of inactivity. Please sign in again.", "info");
-                        return;
+            try {
+                if (session && session.user) {
+                    // Clean OAuth hash parameters from browser address bar & history so they aren't saved in Omnibox autocomplete
+                    if (window.location.hash && (window.location.hash.includes('access_token=') || window.location.hash.includes('refresh_token='))) {
+                        try {
+                            const cleanUrl = window.location.pathname + window.location.search;
+                            window.history.replaceState(null, '', cleanUrl);
+                        } catch (_) {}
                     }
-                }
-                updateActivityTimestamp();
 
-                currentUser = session.user;
-                currentProfile = await getOrCreateUserProfile(currentUser);
-                renderDashboardForProfile(currentProfile);
-            } else {
-                currentUser = null;
-                currentProfile = null;
-                localStorage.removeItem('civilmate_last_activity');
-                showView('viewAuth');
+                    // Inactivity check: if user hasn't interacted for > 2 hours, auto-logout
+                    const lastActiveStr = localStorage.getItem('civilmate_last_activity');
+                    const now = Date.now();
+                    if (lastActiveStr) {
+                        const lastActive = parseInt(lastActiveStr, 10);
+                        if (!isNaN(lastActive) && (now - lastActive > INACTIVITY_TIMEOUT_MS)) {
+                            console.info("Session expired due to inactivity.");
+                            await signOut(true);
+                            showAlert("Your session has timed out due to 2 hours of inactivity. Please sign in again.", "info");
+                            return;
+                        }
+                    }
+                    updateActivityTimestamp();
+
+                    currentUser = session.user;
+
+                    // 1. Instantly transition away from viewLoading by rendering fallback/cached profile
+                    const instantProfile = createFallbackProfile(currentUser);
+                    currentProfile = instantProfile;
+                    renderDashboardForProfile(instantProfile);
+
+                    // 2. Concurrently fetch/sync live profile from cloud with a fast 2.5s timeout
+                    try {
+                        const liveProfile = await Promise.race([
+                            getOrCreateUserProfile(currentUser),
+                            new Promise((_, reject) => setTimeout(() => reject(new Error('Profile sync timeout')), 2500))
+                        ]);
+                        if (liveProfile) {
+                            currentProfile = liveProfile;
+                            renderDashboardForProfile(currentProfile);
+                        }
+                    } catch (syncErr) {
+                        console.warn("Background profile resolution notice:", syncErr.message);
+                    }
+                } else {
+                    currentUser = null;
+                    currentProfile = null;
+                    localStorage.removeItem('civilmate_last_activity');
+                    localStorage.removeItem('civilmate_cached_profile');
+                    showView('viewAuth');
+                }
+            } catch (err) {
+                console.error("handleSession uncaught notice:", err);
+                if (currentUser) {
+                    renderDashboardForProfile(currentProfile || createFallbackProfile(currentUser));
+                } else {
+                    showView('viewAuth');
+                }
             }
         }
 
@@ -4559,7 +4611,7 @@
         });
 
         // ================= LIFECYCLE =================
-        window.addEventListener('DOMContentLoaded', async () => {
+        async function initPortal() {
             const tabLoginEl = document.getElementById('tabLogin');
             const tabSignupEl = document.getElementById('tabSignup');
             const authToggleBtnEl = document.getElementById('authToggleBtn');
@@ -4576,45 +4628,72 @@
                 setAuthMode('login');
             }
 
-            const client = getSbClient();
-            if (client) {
-                // Safety watchdog: ensure loading spinner never gets stuck if network or session check hangs
-                const sessionWatchdog = setTimeout(() => {
-                    const loadingEl = document.getElementById('viewLoading');
-                    if (loadingEl && loadingEl.classList.contains('active')) {
-                        console.warn("Session verification watchdog triggered: falling back to auth view");
+            // Universal 3.5s Safety Watchdog: Guarantees viewLoading is ALWAYS dismissed
+            const sessionWatchdog = setTimeout(() => {
+                const loadingEl = document.getElementById('viewLoading');
+                if (loadingEl && (loadingEl.classList.contains('active') || loadingEl.style.display !== 'none')) {
+                    console.warn("Global session verification watchdog fired - forcing transition");
+                    if (currentUser) {
+                        renderDashboardForProfile(currentProfile || createFallbackProfile(currentUser));
+                    } else {
                         showView('viewAuth');
                     }
-                }, 6000);
+                }
+            }, 3500);
 
+            const client = getSbClient();
+            if (client) {
                 try {
                     let initialHandled = false;
-                    const { data: { session } } = await client.auth.getSession();
+
+                    // Race getSession against a 2.5s timeout so network hangs never stall the portal
+                    let session = null;
+                    try {
+                        const sessionResult = await Promise.race([
+                            client.auth.getSession(),
+                            new Promise((_, reject) => setTimeout(() => reject(new Error('getSession timeout')), 2500))
+                        ]);
+                        session = sessionResult?.data?.session || null;
+                    } catch (sessErr) {
+                        console.warn("Session check notice:", sessErr.message);
+                    }
+
                     initialHandled = true;
-                    clearTimeout(sessionWatchdog);
                     await handleSession(session);
+                    clearTimeout(sessionWatchdog);
 
                     client.auth.onAuthStateChange(async (event, session) => {
-                        // Prevent redundant second render on initial load
-                        if (event === 'INITIAL_SESSION' && initialHandled) {
-                            return;
-                        }
-                        if (event === 'PASSWORD_RECOVERY') {
-                            openNewPasswordModal();
-                            return;
-                        }
-                        if (event === 'SIGNED_OUT') {
-                            await handleSession(null);
-                        } else if (event === 'SIGNED_IN') {
-                            await handleSession(session);
+                        try {
+                            if (event === 'INITIAL_SESSION' && initialHandled) {
+                                return;
+                            }
+                            if (event === 'PASSWORD_RECOVERY') {
+                                openNewPasswordModal();
+                                return;
+                            }
+                            if (event === 'SIGNED_OUT') {
+                                await handleSession(null);
+                            } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
+                                if (session) {
+                                    await handleSession(session);
+                                }
+                            }
+                        } catch (authChangeErr) {
+                            console.error("onAuthStateChange handling notice:", authChangeErr);
+                            if (currentUser) {
+                                renderDashboardForProfile(currentProfile || createFallbackProfile(currentUser));
+                            } else {
+                                showView('viewAuth');
+                            }
                         }
                     });
                 } catch (e) {
                     clearTimeout(sessionWatchdog);
-                    console.warn("Session check error:", e);
+                    console.warn("Portal init error:", e);
                     showView('viewAuth');
                 }
             } else {
+                clearTimeout(sessionWatchdog);
                 showView('viewAuth');
             }
 
@@ -4630,7 +4709,13 @@
                     }
                 }
             }, 60000);
-        });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initPortal);
+        } else {
+            initPortal();
+        }
     </script>
 </body>
 </html>
