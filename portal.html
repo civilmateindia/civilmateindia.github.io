@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -1086,7 +1086,7 @@
 
                     <div class="auth-form-group">
                         <label for="inputPassword">Password</label>
-                        <input type="password" id="inputPassword" class="auth-input" required placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" minlength="6">
+                        <input type="password" id="inputPassword" class="auth-input" required placeholder="Password (min. 6 characters)" minlength="6">
                         <span id="pwdHelperText" style="display:none; font-size: 11px; color: var(--text-secondary); margin-top: 4px;">Minimum 6 characters</span>
                     </div>
 
@@ -1178,7 +1178,7 @@
                 <div class="locked-features-grid">
                     <div class="locked-card">
                         <div class="locked-badge"><span class="material-icons" style="font-size: 12px;">lock</span> Gated</div>
-                        <h4 style="margin: 0 0 6px 0; font-size: 15px;">Google SheetsÃ¢â€žÂ¢ Add-on</h4>
+                        <h4 style="margin: 0 0 6px 0; font-size: 15px;">Google Sheets&trade; Add-on</h4>
                         <p style="margin: 0; font-size: 13px; color: var(--text-secondary);">Marketplace installation unlocks once your email is approved.</p>
                     </div>
                     <div class="locked-card">
@@ -1297,7 +1297,7 @@
                         </div>
                         <span class="hub-badge">Workspace</span>
                     </div>
-                    <h3>Google SheetsÃ¢â€žÂ¢ Add-on</h3>
+                    <h3>Google Sheets&trade; Add-on</h3>
                     <p>Execute formulas, extract HSR rates, calculate material abstracts, and create Details of Quantity.</p>
                     <a href="https://workspace.google.com/marketplace/app/civilmate/716518784539" target="_blank" rel="noopener noreferrer" class="btn-hub-action primary">
                         <span class="material-icons" style="font-size: 16px;">download</span>
@@ -1313,7 +1313,7 @@
                         </div>
                         <span class="hub-badge">Chrome Store</span>
                     </div>
-                    <h3>Google ChromeÃ¢â€žÂ¢ Extension</h3>
+                    <h3>Google Chrome&trade; Extension</h3>
                     <p>Automate bill submissions, parse tender BoQs, and bridge data directly between HEWP and Google Sheets.</p>
                     <a href="https://chromewebstore.google.com/detail/paadmpfoldjolnnojnihfobplhplbobh?utm_source=item-share-cb" target="_blank" rel="noopener noreferrer" class="btn-hub-action primary">
                         <span class="material-icons" style="font-size: 16px;">add_to_queue</span>
@@ -1329,7 +1329,7 @@
                         </div>
                         <span class="hub-badge">Edge Add-ons</span>
                     </div>
-                    <h3>Microsoft EdgeÃ¢â€žÂ¢ Extension</h3>
+                    <h3>Microsoft Edge&trade; Extension</h3>
                     <p>Full support for Microsoft Edge browser to extract online tenders and synchronize HEWP bill packages.</p>
                     <a href="https://microsoftedge.microsoft.com/addons/detail/civilmate-extension/lgagpkhicfddhcihofkkbjgmfhangbel" target="_blank" rel="noopener noreferrer" class="btn-hub-action primary" style="background:#0288d1;">
                         <span class="material-icons" style="font-size: 16px;">add_to_queue</span>
@@ -1804,11 +1804,11 @@
             <div id="newPwdModalAlert" class="alert-box"></div>
             <div class="auth-form-group">
                 <label for="newModalPassword">New Password</label>
-                <input type="password" id="newModalPassword" class="auth-input" placeholder="Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢" minlength="6" required>
+                <input type="password" id="newModalPassword" class="auth-input" placeholder="New password (min. 6 characters)" minlength="6" required>
             </div>
             <div class="auth-form-group">
                 <label for="confirmModalPassword">Confirm Password</label>
-                <input type="password" id="confirmModalPassword" class="auth-input" placeholder="Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢" minlength="6" required>
+                <input type="password" id="confirmModalPassword" class="auth-input" placeholder="Confirm new password" minlength="6" required>
             </div>
             <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
                 <button class="btn-dash-action" onclick="closeNewPasswordModal()">Cancel</button>
@@ -2468,7 +2468,7 @@
                     }
                     renderDashboardForProfile(currentProfile);
                 } else {
-                    showToast("Ã¢ÂÂ³ Status: Waitlisted. Reviewing in sequential order.", "info");
+                    showToast("Status: Waitlisted. Reviewing in sequential order.", "info");
                     if (feedbackEl) {
                         feedbackEl.style.display = 'block';
                         feedbackEl.style.background = '#fef7e0';
@@ -3857,7 +3857,7 @@
                         let rateType = '';
 
                         if (type === 'HSR') {
-                            const itemMatch = description.match(/^(?:HSR Item\s*)?([A-Za-z0-9\._]+)\s*[-Ã¢â‚¬â€œÃ¢â‚¬â€]/i);
+                            const itemMatch = description.match(/^(?:HSR Item\s*)?([A-Za-z0-9\._]+)\s*[-–—:]/i);
                             if (itemMatch) itemNo = itemMatch[1].trim();
                             const rateMatch = description.match(/HSR\s*Rate\s*\(\s*Rs\.?\s*\)\s*[\d\.,]+\s+([\s\S]*)/i);
                             if (rateMatch) rateType = rateMatch[1].trim();
@@ -3968,7 +3968,7 @@
             for (let item of extractedItems) {
                 if (item.type === 'HSR') {
                     if (!item.itemNo) {
-                        const itemMatch = item.description.match(/^(?:HSR Item\s*)?([A-Za-z0-9\._]+)\s*[-Ã¢â‚¬â€œÃ¢â‚¬â€]/i);
+                        const itemMatch = item.description.match(/^(?:HSR Item\s*)?([A-Za-z0-9\._]+)\s*[-–—:]/i);
                         if (itemMatch) {
                             item.itemNo = itemMatch[1].trim();
                             if (/^(1|2)\.([A-Za-z].*)$/.test(item.itemNo)) {
@@ -3980,7 +3980,7 @@
                     if (rateMatch) {
                         item.rateType = rateMatch[1].trim().replace(/\n/g, ' ').replace(/\s+/g, ' ');
                     }
-                    item.description = item.description.replace(/^(?:HSR Item\s*)?[A-Za-z0-9\._]+\s*[-Ã¢â‚¬â€œÃ¢â‚¬â€]\s*/i, '');
+                    item.description = item.description.replace(/^(?:HSR Item\s*)?[A-Za-z0-9\._]+\s*[-–—:]\s*/i, '');
                     item.description = item.description.replace(/\s*HSR\s*Rate\s*\(\s*Rs\.?\s*\)\s*[\d\.,]+\s+[\s\S]*$/i, '');
                 }
                 if (item.description) {
